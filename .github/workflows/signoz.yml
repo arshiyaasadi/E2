@@ -40,10 +40,11 @@ jobs:
           submodules: recursive
           fetch-depth: 1
 
-      - name: Read SIGNOZ_VERSION
+      - name: Read SIGNOZ image tag
         id: ver
         run: |
-          VER=$(grep -E '^SIGNOZ_VERSION=' platform/observability/VERSION | cut -d= -f2 | tr -d '[:space:]')
+          # Docker Hub tags are like v0.88.0 (see SIGNOZ_GIT_REF in VERSION).
+          VER=$(grep -E '^SIGNOZ_GIT_REF=' platform/observability/VERSION | cut -d= -f2 | tr -d '[:space:]')
           echo "version=$VER" >> "$GITHUB_OUTPUT"
 
       - name: Image metadata
@@ -69,7 +70,7 @@ jobs:
           file: ${{ env.DOCKERFILE }}
           push: false
           build-args: |
-            SIGNOZ_VERSION=${{ steps.ver.outputs.version }}
+            SIGNOZ_IMAGE_TAG=${{ steps.ver.outputs.version }}
           tags: ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.sha }}
 
       - name: Build and push
@@ -80,7 +81,7 @@ jobs:
           file: ${{ env.DOCKERFILE }}
           push: true
           build-args: |
-            SIGNOZ_VERSION=${{ steps.ver.outputs.version }}
+            SIGNOZ_IMAGE_TAG=${{ steps.ver.outputs.version }}
           tags: |
             ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.sha }}
             ${{ steps.meta.outputs.image }}:main

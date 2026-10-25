@@ -1,16 +1,14 @@
 # First-party SigNoz app image for the SHA / :main channel (ADR 0008, ADR 0009).
 # Build from repository root (after submodule init):
 #   docker build -f platform/observability/Dockerfile \
-#     --build-arg SIGNOZ_VERSION=0.88.0 \
+#     --build-arg SIGNOZ_IMAGE_TAG=v0.88.0 \
 #     -t REPLACE_IMAGE_REGISTRY/signoz:local .
 #
-# Default: start from the upstream image matching VERSION, then apply Abysso
-# SSO overlay scripts (CE-safe; no Enterprise SSO code).
-# When platform/observability/upstream is present, CI can switch to
-# BUILD_FROM_SUBMODULE=1 later without changing the image name contract.
+# Default: start from the upstream image matching VERSION (Docker Hub tag includes
+# the leading "v", e.g. signoz/signoz:v0.88.0), then apply Abysso SSO overlay.
 
-ARG SIGNOZ_VERSION=0.88.0
-FROM docker.io/signoz/signoz:${SIGNOZ_VERSION}
+ARG SIGNOZ_IMAGE_TAG=v0.88.0
+FROM docker.io/signoz/signoz:${SIGNOZ_IMAGE_TAG}
 
 USER root
 COPY platform/observability/sso/entrypoint-abysso.sh /usr/local/bin/entrypoint-abysso.sh
