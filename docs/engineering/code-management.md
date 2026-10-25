@@ -6,15 +6,17 @@ A single monorepo containing services, platform components, infrastructure defin
 
 ## Branching
 
-| Branch | Purpose | Deploys to |
-|---|---|---|
-| `main` | Always releasable | Edge CD channel `main` (cluster reconciler) |
-| `feature/<topic>` | Short-lived work | Nothing (CI only) |
-| `fix/<topic>` | Bug fixes | Nothing (CI only) |
-| `hotfix/<topic>` | Urgent production fix | Same as `main` after merge |
+| Branch | Purpose | CI | Deploys to |
+|---|---|---|---|
+| `develop` | Day-to-day integration (default working branch) | Build/test (no image push to deploy channel) | Nothing |
+| `main` | Live edge / always releasable | Build + push `:<sha>` and `:main` | Edge CD channel `main` (cluster reconciler) |
+| `feature/<topic>` | Short-lived work off `develop` | CI only | Nothing |
+| `fix/<topic>` | Bug fixes | CI only | Nothing |
+| `hotfix/<topic>` | Urgent production fix into `main` | Same as `main` after merge | Edge after merge to `main` |
 
-- Changes reach `main` only through a reviewed pull request.
-- `main` is protected: no direct pushes, CI must pass.
+- Day-to-day work lands on **`develop`** (direct push or PR into `develop`).
+- **`main` is what the server runs.** Promote by opening a PR **`develop` → `main`** (or hotfix → `main`). When that PR is merged (accepted), CI publishes images and CD rolls them out.
+- Protect `main`: no direct pushes; CI must pass on the PR.
 - Developers do not cut release tags for routine deploys; optional `v*` tags are only for deliberate freezes later.
 
 ## Commits

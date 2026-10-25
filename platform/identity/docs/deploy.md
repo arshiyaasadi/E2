@@ -13,7 +13,7 @@ Environment overlays / references: `infrastructure/environments/<env>/`
 ## Prerequisites
 
 - Kubernetes cluster (staging or production) — node inventory and kubeconfig bound in a later step
-- Container image built from `platform/identity/upstream` at the pin in `VERSION`
+- Container image from CI: `REGISTRY/keycloak:<sha>` / `:main` (Dockerfile + `VERSION` pin; see ADR 0009). Source submodule remains the reviewable pin.
 - PostgreSQL instance for identity (see `../database/`)
 - Secrets in the secret manager: DB password, admin bootstrap secret, TLS material
 

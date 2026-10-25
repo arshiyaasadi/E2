@@ -1,0 +1,8 @@
+# Example env for Abysso Keycloak OIDC (operators realm). Materialize as a
+# Kubernetes Secret — never commit real values.
+ABYSSO_OIDC_ENABLED=true
+ABYSSO_OIDC_ISSUER=https://sso.abysso.ir/realms/operators
+ABYSSO_OIDC_CLIENT_ID=signoz
+ABYSSO_OIDC_CLIENT_SECRET=REPLACE_FROM_SECRET_MANAGER
+ABYSSO_OIDC_REDIRECT_URI=https://noz.abysso.ir/api/v1/complete/oidc
+ABYSSO_DISABLE_SIGNUP=true

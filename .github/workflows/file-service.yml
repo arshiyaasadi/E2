@@ -1,0 +1,76 @@
+# CI only: build and push. CD on the cluster watches the `main` channel tag.
+name: file-service-ci
+
+on:
+  pull_request:
+    branches: [develop, main]
+    paths:
+      - "services/file-service/**"
+      - "packages/**"
+      - "pipelines/ci/github-actions/file-service.yml"
+  push:
+    branches: [develop, main]
+    paths:
+      - "services/file-service/**"
+      - "packages/**"
+      - "pipelines/ci/github-actions/file-service.yml"
+
+env:
+  SERVICE: file-service
+  # Dockerfile expects monorepo root (see services/file-service/Dockerfile header).
+  DOCKERFILE: services/file-service/Dockerfile
+  # Set REGISTRY in GitHub Actions variables, e.g. ghcr.io/org or edge registry URL.
+  REGISTRY: ${{ vars.IMAGE_REGISTRY }}
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Yarn
+        run: |
+          corepack enable
+          yarn install --frozen-lockfile
+
+      - name: Test
+        run: yarn workspace @e2/file-service test || yarn workspace file-service test || (cd services/file-service && yarn test)
+
+      - name: Image metadata
+        id: meta
+        run: |
+          SHA=$(echo "${{ github.sha }}" | cut -c1-12)
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "image=${{ env.REGISTRY }}/${{ env.SERVICE }}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to registry
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build (develop / PR — no push)
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/develop')
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE }}
+          push: false
+          tags: ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.sha }}
+
+      # Publish only on main: immutable SHA + mutable channel for CD.
+      - name: Build and push
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE }}
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.sha }}
+            ${{ steps.meta.outputs.image }}:main

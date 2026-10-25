@@ -1,15 +1,15 @@
 # CI only: build and push. CD on the cluster watches the `main` channel tag.
-# Copy to .github/workflows/file-service.yml when GitHub Actions is enabled for this repo.
 name: file-service-ci
 
 on:
   pull_request:
+    branches: [develop, main]
     paths:
       - "services/file-service/**"
       - "packages/**"
       - "pipelines/ci/github-actions/file-service.yml"
   push:
-    branches: [main]
+    branches: [develop, main]
     paths:
       - "services/file-service/**"
       - "packages/**"
@@ -54,7 +54,16 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      # CI only: push immutable SHA + mutable channel `main`. CD on the cluster does the rest.
+      - name: Build (develop / PR — no push)
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/develop')
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE }}
+          push: false
+          tags: ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.sha }}
+
+      # Publish only on main: immutable SHA + mutable channel for CD.
       - name: Build and push
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v6

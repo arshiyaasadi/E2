@@ -23,19 +23,18 @@ Keep the in-repo Keycloak source current without drifting silently. Every upgrad
 
 3. Update `platform/identity/VERSION` so `KEYCLOAK_VERSION` and `KEYCLOAK_GIT_REF` match `<NEW_TAG>`.
 4. Review the diff of the submodule commit (security fixes, breaking changes, DB migrations).
-5. Rebuild the Keycloak container image from `upstream/` and push to the project registry with an immutable tag.
-6. Deploy to `staging`. Watch health, login flows for both realms, and migration logs.
-7. Run a smoke test: operator login with MFA path, customer login path, client-credentials token for a machine client.
-8. Only after staging is healthy, deploy to `production` via the normal release process.
-9. Record the upgrade in the service change log / PR description (old pin → new pin).
+5. Open a PR. CI workflow `keycloak-ci` builds `REGISTRY/keycloak:<git-sha>` from `platform/identity/Dockerfile` (VERSION pin) and on merge to `main` also tags `:main`.
+6. CD channel-reconciler rolls `platform-identity/keycloak` to `:main`. Prefer staging soak when a second environment exists; on the single-node edge, use a maintenance window.
+7. Smoke test: operator login, customer login path, JWKS, machine client if used.
+8. Record the upgrade in the PR description (old pin → new pin).
 
 ## Rules
 
-- Never deploy an unpinned or `latest` image.
-- Never skip staging.
+- Never deploy an unpinned or `latest` image on the channel.
+- Source pin in `VERSION` + submodule must match what CI baked into the image build-arg.
 - If the upgrade requires a database migration, take a verified backup (or confirm PITR window) before production.
 - Theme customization is out of scope; do not carry unreviewed template overrides into an upgrade.
 
 ## Rollback
 
-Redeploy the previous image tag built from the previous submodule pin. See [rollback release](../../../docs/runbooks/rollback-release.md). Database migrations follow Keycloak's own migration rules; do not invent reverse SQL without an upstream-supported path.
+Re-promote a previous git SHA to `:main` (or pin the Deployment image temporarily). See [rollback release](../../../docs/runbooks/rollback-release.md). Database migrations follow Keycloak's own migration rules; do not invent reverse SQL without an upstream-supported path.

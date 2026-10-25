@@ -1,5 +1,6 @@
-# SigNoz Helm values for the single-node edge (conservative memory).
+# SigNoz Helm values for the single-node edge (8 GiB RAM, ~23 GiB disk).
 # Install: see docs/deploy.md
+# Persistence kept small so PVCs fit beside Keycloak/MinIO/file-service on local-path.
 global:
   storageClass: local-path
   imageRegistry: ""
@@ -7,7 +8,7 @@ global:
 clickhouse:
   installCustomStorageClass: false
   persistence:
-    size: 15Gi
+    size: 4Gi
   resources:
     requests:
       cpu: 250m
@@ -15,12 +16,17 @@ clickhouse:
     limits:
       cpu: "1"
       memory: 1280Mi
-  # Nested Bitnami ZK (chart default heapSize=1024 blows a 4Gi node).
+  # Nested Bitnami ZK (chart default heapSize=1024 is too heavy for a shared edge).
   zookeeper:
     replicaCount: 1
     persistence:
-      size: 5Gi
+      size: 1Gi
     heapSize: 256
+    # docker.io/bitnami/zookeeper moved off Hub; use legacy mirror for this chart pin.
+    image:
+      registry: docker.io
+      repository: bitnamilegacy/zookeeper
+      tag: 3.7.1
     resources:
       requests:
         cpu: 50m
@@ -31,13 +37,20 @@ clickhouse:
 
 signoz:
   replicaCount: 1
+  # First-party channel image (CI → REGISTRY/signoz:main). Until the first
+  # successful push, keep the vendor tag by commenting image: and using chart default.
+  image:
+    registry: ghcr.io/arshiyaasadi
+    repository: signoz
+    tag: main
+    pullPolicy: Always
   resources:
     requests:
       cpu: 100m
       memory: 256Mi
     limits:
       cpu: 500m
-      memory: 512Mi
+      memory: 768Mi
 
 otelCollector:
   replicaCount: 1

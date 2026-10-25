@@ -28,7 +28,14 @@ See [ADR 0009](../architecture/decisions/0009-ci-push-cd-on-cluster.md).
 
 ## Vendor / upstream images
 
-Pinned in Git overlays by upstream version (for example Keycloak `26.8.1`, MinIO release tag). Changing those is a deliberate platform PR, not part of app feature work.
+| Component | How it versions |
+|---|---|
+| Keycloak | Source pin in `platform/identity/VERSION` + submodule; **runtime** image is first-party `keycloak:<sha>` / `:main` |
+| SigNoz **app** | Source pin in `platform/observability/VERSION` + submodule; **runtime** image is first-party `signoz:<sha>` / `:main` |
+| SigNoz ClickHouse / ZK / collector | Helm chart / vendor tags (not SHA channel) |
+| MinIO, Postgres | Pinned by upstream version in overlays |
+
+Changing a source pin is a deliberate platform PR. Day-to-day merges only move the SHA / `:main` channel for first-party images.
 
 ## Kubernetes labels and OpenTelemetry
 

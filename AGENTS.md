@@ -74,4 +74,4 @@ For trivial requests (typo fixes, a single obvious edit), steps 1–3 can be a s
 └── apps/                     Client apps (`admin-panel` UI lab; storefront later)
 ```
 
-Identity source is a git submodule at `platform/identity/upstream/`. After clone run `git submodule update --init --recursive`. JS packages: use Yarn from the repo root. Admin UI lab: `yarn dev:ui` (Prisma SQLite; no platform stack required).
+Git submodules (after clone run `git submodule update --init --recursive`): Keycloak at `platform/identity/upstream/`, SigNoz at `platform/observability/upstream/`. JS packages: use Yarn from the repo root. Admin UI lab: `yarn dev:ui` (Prisma SQLite; no platform stack required). CI workflows under `.github/workflows/` push first-party images (`file-service`, `keycloak`, `signoz`) as `:<sha>` and `:main`.

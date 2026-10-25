@@ -7,5 +7,6 @@ These documents describe OIDC clients related to file storage. Create clients at
 | `minio-console` | Confidential | MinIO Console browser login via Keycloak |
 | `file-service` | Bearer-only / resource or confidential machine | Audience for API tokens; optional client-credentials for jobs |
 | `file-service-api` | Confidential (optional) | Machine client if a backend calls file-service without a user |
+| `signoz` | Confidential | SigNoz UI (`noz.abysso.ir`) OIDC login |
 
-Apply by merging into `operators` after first realm import, or extend the realm import Job. See [minio-console.md](minio-console.md) and [file-service.md](file-service.md).
+Apply by merging into `operators` after first realm import, or extend the realm import Job. See [minio-console.md](minio-console.md), [file-service.md](file-service.md), and [signoz.md](signoz.md).

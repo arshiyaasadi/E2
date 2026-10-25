@@ -1,0 +1,86 @@
+# CI only: build and push. CD on the cluster watches the `main` channel tag.
+name: signoz-ci
+
+on:
+  pull_request:
+    branches: [develop, main]
+    paths:
+      - "platform/observability/Dockerfile"
+      - "platform/observability/VERSION"
+      - "platform/observability/sso/**"
+      - "platform/observability/patches/**"
+      - "platform/observability/upstream/**"
+      - "pipelines/ci/github-actions/signoz.yml"
+      - ".github/workflows/signoz.yml"
+  push:
+    branches: [develop, main]
+    paths:
+      - "platform/observability/Dockerfile"
+      - "platform/observability/VERSION"
+      - "platform/observability/sso/**"
+      - "platform/observability/patches/**"
+      - "platform/observability/upstream/**"
+      - "pipelines/ci/github-actions/signoz.yml"
+      - ".github/workflows/signoz.yml"
+
+env:
+  SERVICE: signoz
+  DOCKERFILE: platform/observability/Dockerfile
+  REGISTRY: ${{ vars.IMAGE_REGISTRY }}
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Read SIGNOZ_VERSION
+        id: ver
+        run: |
+          VER=$(grep -E '^SIGNOZ_VERSION=' platform/observability/VERSION | cut -d= -f2 | tr -d '[:space:]')
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+
+      - name: Image metadata
+        id: meta
+        run: |
+          SHA=$(echo "${{ github.sha }}" | cut -c1-12)
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "image=${{ env.REGISTRY }}/${{ env.SERVICE }}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to registry
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build (develop / PR — no push)
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/develop')
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE }}
+          push: false
+          build-args: |
+            SIGNOZ_VERSION=${{ steps.ver.outputs.version }}
+          tags: ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.sha }}
+
+      - name: Build and push
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE }}
+          push: true
+          build-args: |
+            SIGNOZ_VERSION=${{ steps.ver.outputs.version }}
+          tags: |
+            ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.sha }}
+            ${{ steps.meta.outputs.image }}:main

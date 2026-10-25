@@ -6,8 +6,11 @@ metadata:
   labels:
     app.kubernetes.io/name: channel-reconciler
 data:
-  # In-cluster registry default for first bind; change when external registry is bound.
-  REGISTRY: "registry.platform-cd.svc:5000"
-  # Lines: namespace|deployment|container|image-name
+  # Must match GitHub Actions var IMAGE_REGISTRY (see pipelines/ci/github-actions/REGISTRY.md).
+  REGISTRY: "ghcr.io/arshiyaasadi"
+  # Lines: namespace|workload|container|image-name
+  # workload = Deployment or StatefulSet name (auto-detected by reconciler)
   CHANNELS: |
     services-file|file-service|file-service|file-service
+    platform-identity|keycloak|keycloak|keycloak
+    platform-observability|signoz|signoz|signoz

@@ -3,6 +3,11 @@ kind: Kustomization
 namespace: platform-identity
 resources:
   - ../../../../platform/identity/deploy/kubernetes
+images:
+  # CD watches channel tag `main` (ADR 0009). Upstream pin remains in platform/identity/VERSION.
+  - name: REPLACE_IMAGE_REGISTRY/keycloak
+    newName: ghcr.io/arshiyaasadi/keycloak
+    newTag: "main"
 replicas:
   - name: keycloak
     count: 1

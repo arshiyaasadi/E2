@@ -16,8 +16,10 @@ Configure ConfigMap `cd-channels` with registry and service list. Create Secret 
 
 Every few minutes the CronJob:
 
-1. Ensures each listed Deployment image is `REGISTRY/SERVICE:main`
+1. Ensures each listed workload image is `REGISTRY/SERVICE:main` (Deployment **or** StatefulSet; auto-detected)
 2. Annotates `cd.abysso.ir/channel=main` when it updates
 3. Waits for rollout (best-effort)
+
+Example CHANNELS rows: `file-service` and `keycloak` (Deployments), `signoz` (StatefulSet).
 
 The Job image is `alpine:3.20` plus a **static** `kubectl` on the node at `/opt/e2/bin/kubectl` (install once from `dl.k8s.io`). Do not mount the k3s `kubectl` symlink — that binary is the full k3s server and stalls the API on a small node.

@@ -7,6 +7,7 @@ OIDC identity provider for the whole platform.
 - **RBAC split:** roles in Keycloak, permissions in apps ([ADR 0004](../../docs/architecture/decisions/0004-keycloak-roles-app-permissions.md))
 - **Pinned version:** see [VERSION](VERSION)
 - **Source:** git submodule [upstream/](upstream/)
+- **Runtime image:** first-party `REGISTRY/keycloak:<sha>` / `:main` via [Dockerfile](Dockerfile) and CI `.github/workflows/keycloak.yml` (ADR 0009)
 
 ## Layout
 

@@ -1,3 +1,6 @@
 [submodule "platform/identity/upstream"]
 	path = platform/identity/upstream
 	url = https://github.com/keycloak/keycloak.git
+[submodule "platform/observability/upstream"]
+	path = platform/observability/upstream
+	url = https://github.com/SigNoz/signoz.git

@@ -29,5 +29,10 @@ Workloads should export to `http://signoz-otel-collector.platform-observability.
 
 - UI only is public via Traefik on `noz.abysso.ir`.
 - Do not publish OTLP NodePorts.
-- **RAM:** full SigNoz (ClickHouse + ZooKeeper + UI + collector) does **not** fit on the current 4 GiB edge alongside Keycloak, SeaweedFS, and first-party services. It OOMs the node and stalls the Kubernetes API. Re-install only after the edge has ≥8 GiB RAM, or place SigNoz on a dedicated node (for example DE) and keep the `noz` Ingress / OTLP path documented here.
+- **RAM:** edge target is **≥8 GiB** when running SigNoz beside Keycloak, object storage, and first-party services. On 4 GiB the install OOMs the node; use a dedicated node if RAM is below 8 GiB.
+- **Disk:** keep ClickHouse/ZK PVC sizes in `values-edge.yaml` conservative on a small root volume; raise them when disk is expanded.
 - `values-edge.yaml` sets `clickhouse.zookeeper.heapSize: 256` (chart default is 1024 MiB).
+- ZooKeeper image is pinned to `bitnamilegacy/zookeeper:3.7.1` because `docker.io/bitnami/zookeeper:3.7.1` is no longer published on Docker Hub.
+- **App image channel:** `values-edge.yaml` points `signoz.image` at `registry.platform-cd.svc:5000/signoz:main` (CI). ClickHouse / ZooKeeper / collector stay on chart vendor images.
+- **SSO:** see [sso.md](sso.md). Materialize `signoz-oidc` from [../deploy/kubernetes/signoz-oidc.secret.example.yaml](../deploy/kubernetes/signoz-oidc.secret.example.yaml), then patch the workload envFrom (see `signoz-image-patch.yaml`).
+- **Source pin:** [../VERSION](../VERSION) and submodule `platform/observability/upstream/`. Upgrade: [upgrade-from-upstream.md](upgrade-from-upstream.md).

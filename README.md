@@ -22,7 +22,12 @@ cp apps/admin-panel/.env.example apps/admin-panel/.env
 yarn dev:ui
 ```
 
-Keycloak source lives at `platform/identity/upstream/` (git submodule). Pin: see `platform/identity/VERSION`.
+Submodules (after clone run `git submodule update --init --recursive`):
+
+- Keycloak: `platform/identity/upstream/` — pin in `platform/identity/VERSION`
+- SigNoz: `platform/observability/upstream/` — pin in `platform/observability/VERSION`
+
+CI/CD: `.github/workflows/` builds `file-service`, `keycloak`, and `signoz` images (`:<sha>` + `:main`). Set GitHub `IMAGE_REGISTRY` / registry secrets before relying on pushes.
 
 ## Where to start
 

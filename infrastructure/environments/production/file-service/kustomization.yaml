@@ -6,7 +6,7 @@ resources:
 images:
   # CD watches channel tag `main` (ADR 0009). SHA tags are immutable artifacts from CI.
   - name: REPLACE_IMAGE_REGISTRY/file-service
-    newName: registry.platform-cd.svc:5000/file-service
+    newName: ghcr.io/arshiyaasadi/file-service
     newTag: "main"
 replicas:
   - name: file-service

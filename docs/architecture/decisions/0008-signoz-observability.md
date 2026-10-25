@@ -18,5 +18,6 @@ The platform requires correlated logs, metrics, and traces with a single operato
 
 - Manifests live under `platform/observability/deploy/kubernetes/` and production overlays under `infrastructure/environments/production/observability/`.
 - ClickHouse retention and memory limits must stay conservative on the single-node edge until a data node is added.
-- On the current **4 GiB** edge (with Keycloak + SeaweedFS + app services), a full SigNoz install stalls the node and API server. Defer live install until ≥8 GiB on edge or a dedicated node; keep Helm values and Ingress overlays ready.
+- Edge target for co-located SigNoz is **≥8 GiB RAM** (with Keycloak + object storage + app services). Below that, place SigNoz on a dedicated node. Helm values and Ingress overlays live under `platform/observability/` and `infrastructure/environments/production/observability/`.
+- The **SigNoz app** image is first-party (`REGISTRY/signoz:<sha>` / `:main`) from a controlled submodule + SSO overlay; ClickHouse / ZooKeeper / collector remain chart vendor images. Operator SSO uses Keycloak (`operators` realm) via a CE-safe Abysso adapter — not Enterprise SSO code.
 - SigNoz is for observation (metrics, logs, traces, alerts), not for deploy/scale control; orchestration remains Kubernetes.

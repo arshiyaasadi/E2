@@ -35,21 +35,31 @@ spec:
                   export PATH="/opt/e2/bin:${PATH}"
                   command -v kubectl >/dev/null
                   echo "CD reconcile at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-                  # CHANNELS lines: namespace|deployment|container|image-name
+                  # CHANNELS lines: namespace|workload|container|image-name
+                  # Workload may be a Deployment or StatefulSet (auto-detected).
                   printf '%s\n' "$CHANNELS" | while IFS='|' read -r NS DEP CONTAINER IMG; do
                     case "${NS:-}" in ""|\#*) continue ;; esac
                     REF="${REGISTRY}/${IMG}:main"
-                    echo "Checking $REF -> $NS/$DEP"
-                    CURRENT=$(kubectl -n "$NS" get deploy "$DEP" -o jsonpath="{.spec.template.spec.containers[?(@.name==\"${CONTAINER}\")].image}" 2>/dev/null || true)
-                    DESIRED="$REF"
-                    ANN=$(kubectl -n "$NS" get deploy "$DEP" -o jsonpath='{.metadata.annotations.cd\.abysso\.ir/channel}' 2>/dev/null || true)
-                    if [ "$CURRENT" != "$DESIRED" ] || [ "$ANN" != "main" ]; then
-                      echo "Updating $NS/$DEP to $DESIRED"
-                      kubectl -n "$NS" set image "deployment/${DEP}" "${CONTAINER}=${DESIRED}"
-                      kubectl -n "$NS" annotate deploy "$DEP" cd.abysso.ir/channel=main --overwrite
-                      kubectl -n "$NS" rollout status "deployment/${DEP}" --timeout=180s || true
+                    KIND=""
+                    if kubectl -n "$NS" get deploy "$DEP" >/dev/null 2>&1; then
+                      KIND=deployment
+                    elif kubectl -n "$NS" get sts "$DEP" >/dev/null 2>&1; then
+                      KIND=statefulset
                     else
-                      echo "OK $NS/$DEP already on $DESIRED"
+                      echo "SKIP $NS/$DEP: not a Deployment or StatefulSet"
+                      continue
+                    fi
+                    echo "Checking $REF -> $NS/$KIND/$DEP"
+                    CURRENT=$(kubectl -n "$NS" get "$KIND" "$DEP" -o jsonpath="{.spec.template.spec.containers[?(@.name==\"${CONTAINER}\")].image}" 2>/dev/null || true)
+                    DESIRED="$REF"
+                    ANN=$(kubectl -n "$NS" get "$KIND" "$DEP" -o jsonpath='{.metadata.annotations.cd\.abysso\.ir/channel}' 2>/dev/null || true)
+                    if [ "$CURRENT" != "$DESIRED" ] || [ "$ANN" != "main" ]; then
+                      echo "Updating $NS/$KIND/$DEP to $DESIRED"
+                      kubectl -n "$NS" set image "${KIND}/${DEP}" "${CONTAINER}=${DESIRED}"
+                      kubectl -n "$NS" annotate "$KIND" "$DEP" cd.abysso.ir/channel=main --overwrite
+                      kubectl -n "$NS" rollout status "${KIND}/${DEP}" --timeout=180s || true
+                    else
+                      echo "OK $NS/$KIND/$DEP already on $DESIRED"
                     fi
                   done
               volumeMounts:

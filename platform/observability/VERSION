@@ -1,1 +1,7 @@
-0.1.0
+# Pinned SigNoz app line (controlled fork / submodule platform/observability/upstream)
+SIGNOZ_VERSION=0.88.0
+SIGNOZ_GIT_REF=v0.88.0
+SIGNOZ_GIT_SHA=9a3a8c8305b8ca9e493e0b12bc19db47775bc809
+UPSTREAM_URL=https://github.com/SigNoz/signoz.git
+# When an org fork exists, point UPSTREAM_URL at it and keep SIGNOZ_GIT_REF as the vendor tag baseline.
+HELM_CHART_VERSION=0.85.0

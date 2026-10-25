@@ -20,12 +20,18 @@ Public UI: `https://noz.abysso.ir` (Traefik Ingress only).
 ```
 platform/observability/
 ├── README.md
-├── VERSION
-├── deploy/kubernetes/     # base manifests / Helm-rendered kustomize
-└── docs/                  # retention and collector notes
+├── VERSION                 # app pin + submodule SHA
+├── Dockerfile              # first-party signoz image (SHA / :main)
+├── upstream/               # git submodule (SigNoz; org fork URL later)
+├── sso/                    # CE-safe OIDC overlay hooks
+├── patches/                # SSO patch policy
+├── deploy/kubernetes/      # Helm values, Ingress, OIDC secret example
+└── docs/                   # deploy, SSO, upgrade
 ```
 
 Production overlay: `infrastructure/environments/production/observability/`.
+
+SSO: [docs/sso.md](docs/sso.md). CI: `.github/workflows/signoz.yml`.
 
 ## Ingestion
 

@@ -1,0 +1,18 @@
+# Optional strategic merge / documented patch: point the SigNoz app workload
+# at the first-party channel image. Apply after CI has pushed :main.
+# Container name must stay `signoz` for channel-reconciler CHANNELS.
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: signoz
+  namespace: platform-observability
+spec:
+  template:
+    spec:
+      containers:
+        - name: signoz
+          image: ghcr.io/arshiyaasadi/signoz:main
+          envFrom:
+            - secretRef:
+                name: signoz-oidc
+                optional: true
