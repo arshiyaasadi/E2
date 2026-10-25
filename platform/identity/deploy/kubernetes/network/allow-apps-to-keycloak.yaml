@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-apps-to-keycloak
+  namespace: platform-identity
+  labels:
+    app.kubernetes.io/name: keycloak
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: keycloak
+  policyTypes:
+    - Ingress
+  ingress:
+    # BFFs and services that validate tokens / exchange codes server-side.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              platform.e2/access-identity: "true"
+      ports:
+        - protocol: TCP
+          port: 8443
+    # Same-namespace jobs (seed) and peers.
+    - from:
+        - podSelector: {}
+      ports:
+        - protocol: TCP
+          port: 8443
+        - protocol: TCP
+          port: 9000

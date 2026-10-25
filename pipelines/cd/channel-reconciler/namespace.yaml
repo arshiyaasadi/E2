@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: platform-cd
+  labels:
+    app.kubernetes.io/part-of: abysso-platform
+    app.kubernetes.io/name: channel-reconciler

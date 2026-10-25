@@ -1,0 +1,26 @@
+# Placeholders until TLS and DNS are wired. Prefer Console-only public exposure.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minio-console
+  namespace: platform-storage
+  labels:
+    app.kubernetes.io/name: minio
+  annotations:
+    kubernetes.io/ingress.class: REPLACE_INGRESS_CLASS
+spec:
+  tls:
+    - hosts:
+        - REPLACE_MINIO_CONSOLE_HOSTNAME
+      secretName: minio-console-tls
+  rules:
+    - host: REPLACE_MINIO_CONSOLE_HOSTNAME
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: minio
+                port:
+                  name: console

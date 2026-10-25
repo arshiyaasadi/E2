@@ -1,0 +1,18 @@
+{
+  "clientId": "minio-console",
+  "name": "MinIO Console",
+  "description": "OIDC login for MinIO Console. Secret not stored in Git.",
+  "enabled": true,
+  "publicClient": false,
+  "secret": "REPLACE_AT_APPLY_TIME",
+  "redirectUris": ["https://REPLACE_MINIO_CONSOLE_HOSTNAME/oauth_callback"],
+  "webOrigins": ["https://REPLACE_MINIO_CONSOLE_HOSTNAME"],
+  "standardFlowEnabled": true,
+  "implicitFlowEnabled": false,
+  "directAccessGrantsEnabled": false,
+  "serviceAccountsEnabled": false,
+  "protocol": "openid-connect",
+  "attributes": {
+    "pkce.code.challenge.method": "S256"
+  }
+}

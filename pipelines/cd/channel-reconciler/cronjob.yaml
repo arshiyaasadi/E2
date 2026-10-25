@@ -1,0 +1,70 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: channel-reconciler
+  namespace: platform-cd
+  labels:
+    app.kubernetes.io/name: channel-reconciler
+    app.kubernetes.io/part-of: abysso-platform
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: channel-reconciler
+        spec:
+          serviceAccountName: channel-reconciler
+          restartPolicy: OnFailure
+          # alpine + static kubectl at /opt/e2/bin (not k3s symlink — that binary is ~70Mi and stalls the API).
+          containers:
+            - name: reconcile
+              image: alpine:3.20
+              imagePullPolicy: IfNotPresent
+              envFrom:
+                - configMapRef:
+                    name: cd-channels
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  set -eu
+                  export PATH="/opt/e2/bin:${PATH}"
+                  command -v kubectl >/dev/null
+                  echo "CD reconcile at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+                  # CHANNELS lines: namespace|deployment|container|image-name
+                  printf '%s\n' "$CHANNELS" | while IFS='|' read -r NS DEP CONTAINER IMG; do
+                    case "${NS:-}" in ""|\#*) continue ;; esac
+                    REF="${REGISTRY}/${IMG}:main"
+                    echo "Checking $REF -> $NS/$DEP"
+                    CURRENT=$(kubectl -n "$NS" get deploy "$DEP" -o jsonpath="{.spec.template.spec.containers[?(@.name==\"${CONTAINER}\")].image}" 2>/dev/null || true)
+                    DESIRED="$REF"
+                    ANN=$(kubectl -n "$NS" get deploy "$DEP" -o jsonpath='{.metadata.annotations.cd\.abysso\.ir/channel}' 2>/dev/null || true)
+                    if [ "$CURRENT" != "$DESIRED" ] || [ "$ANN" != "main" ]; then
+                      echo "Updating $NS/$DEP to $DESIRED"
+                      kubectl -n "$NS" set image "deployment/${DEP}" "${CONTAINER}=${DESIRED}"
+                      kubectl -n "$NS" annotate deploy "$DEP" cd.abysso.ir/channel=main --overwrite
+                      kubectl -n "$NS" rollout status "deployment/${DEP}" --timeout=180s || true
+                    else
+                      echo "OK $NS/$DEP already on $DESIRED"
+                    fi
+                  done
+              volumeMounts:
+                - name: e2-bin
+                  mountPath: /opt/e2/bin
+                  readOnly: true
+              resources:
+                requests:
+                  cpu: 20m
+                  memory: 64Mi
+                limits:
+                  cpu: 200m
+                  memory: 128Mi
+          volumes:
+            - name: e2-bin
+              hostPath:
+                path: /opt/e2/bin
+                type: Directory

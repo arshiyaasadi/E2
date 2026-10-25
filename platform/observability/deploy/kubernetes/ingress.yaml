@@ -1,0 +1,28 @@
+# Applied after the SigNoz Helm release exists (service name signoz).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: signoz
+  namespace: platform-observability
+  labels:
+    app.kubernetes.io/name: signoz
+    app.kubernetes.io/part-of: abysso-platform
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: REPLACE_INGRESS_CLASS
+  tls:
+    - hosts:
+        - REPLACE_SIGNOZ_HOSTNAME
+      secretName: signoz-tls
+  rules:
+    - host: REPLACE_SIGNOZ_HOSTNAME
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: signoz
+                port:
+                  number: 8080

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: services-file
+  labels:
+    app.kubernetes.io/part-of: e2-platform
+    platform.e2/access-storage: "true"
+    platform.e2/access-identity: "true"

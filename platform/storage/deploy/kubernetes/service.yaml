@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: platform-storage
+  labels:
+    app.kubernetes.io/name: minio
+    app.kubernetes.io/part-of: abysso-platform
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: minio
+  ports:
+    - name: api
+      port: 9000
+      targetPort: api
+    - name: console
+      port: 9333
+      targetPort: console

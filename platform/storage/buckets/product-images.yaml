@@ -1,0 +1,27 @@
+# Bucket definition (applied via mc / bootstrap job — no secrets here)
+apiVersion: e2.platform/v1
+kind: BucketDefinition
+metadata:
+  name: product-images
+spec:
+  bucketName: product-images
+  owner: file-service
+  visibility: private
+  versioning: enabled
+  objectLock: disabled
+  keyPattern: "stores/{store_id}/products/{owner_ref}/{file_id}.{ext}"
+  allowedContentTypes:
+    - image/jpeg
+    - image/png
+    - image/webp
+  maxObjectSizeBytes: 5242880
+  lifecycle:
+    - id: expire-pending-orphans
+      # Objects under tmp/ or unmarked pending prefixes older than 7 days
+      prefix: "_pending/"
+      expireDays: 7
+    - id: noncurrent-version-expire
+      noncurrentExpireDays: 30
+  replication:
+    mode: site-replication-or-mc-mirror
+    target: REPLACE_BACKUP_BUCKET_ENDPOINT

@@ -1,0 +1,17 @@
+# Base identity manifests. Environment overlays reference this directory once.
+# Paths here are local (no multi-level ../ outside this folder).
+# Use POSIX forward slashes only.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: platform-identity
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - postgres/simple.yaml
+# network/*.yaml: re-enable after labeling Traefik namespace platform.e2/ingress-controller=true
+# and updating allow ports to http/8080.
+# postgres/cluster.yaml (CloudNativePG) is optional for multi-instance later.
+# secret.example.yaml and seed-job.yaml are applied deliberately, not in the base.

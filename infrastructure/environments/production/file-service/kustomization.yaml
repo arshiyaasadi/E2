@@ -1,0 +1,34 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: services-file
+resources:
+  - ../../../../services/file-service/deploy/kubernetes
+images:
+  # CD watches channel tag `main` (ADR 0009). SHA tags are immutable artifacts from CI.
+  - name: REPLACE_IMAGE_REGISTRY/file-service
+    newName: registry.platform-cd.svc:5000/file-service
+    newTag: "main"
+replicas:
+  - name: file-service
+    count: 1
+patches:
+  - target:
+      kind: Ingress
+      name: file-service
+    patch: |-
+      - op: replace
+        path: /spec/ingressClassName
+        value: traefik
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: file.abysso.ir
+      - op: replace
+        path: /spec/rules/0/host
+        value: file.abysso.ir
+  - target:
+      kind: ConfigMap
+      name: file-service-config
+    patch: |-
+      - op: replace
+        path: /data/KEYCLOAK_ISSUER
+        value: https://sso.abysso.ir/realms/operators

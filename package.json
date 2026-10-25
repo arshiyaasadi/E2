@@ -1,0 +1,20 @@
+{
+  "name": "e2-platform",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "services/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "lint": "echo \"No root lint yet; add workspace scripts as packages grow.\"",
+    "dev:ui": "yarn workspace ecommerce-admin dev:ui"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "yarn@1.22.22",
+  "resolutions": {
+    "@types/node": "^22.13.10"
+  }
+}

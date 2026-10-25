@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: platform-identity
+resources:
+  - ../../../../platform/identity/deploy/kubernetes
+replicas:
+  - name: keycloak
+    count: 1
+# Ensure only one pod on the single-node edge (avoid double build/OOM).
+patches:
+  - target:
+      kind: Ingress
+      name: keycloak
+    patch: |-
+      - op: replace
+        path: /spec/ingressClassName
+        value: traefik
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: sso.abysso.ir
+      - op: replace
+        path: /spec/rules/0/host
+        value: sso.abysso.ir
+  - target:
+      kind: ConfigMap
+      name: keycloak-config
+    patch: |-
+      - op: replace
+        path: /data/KC_HOSTNAME
+        value: https://sso.abysso.ir
+      - op: replace
+        path: /data/KC_HOSTNAME_ADMIN
+        value: https://sso.abysso.ir

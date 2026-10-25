@@ -1,0 +1,186 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #721bd9;
+  --color-primary-50: #f5effd;
+  --color-primary-100: #eadffb;
+  --color-primary-300: #b985ef;
+  --color-primary-400: #9a52e4;
+  --color-primary-600: #5c15b0;
+  --color-primary-700: #4a1090;
+
+  --color-secondary: #0ea5e9;
+  --color-secondary-600: #0284c7;
+  --color-secondary-700: #0369a1;
+
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+
+  --color-background: #eef2ff;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-foreground: #0f172a;
+  --color-muted: #64748b;
+  --color-auth-accent: #3f5efb;
+  --color-auth-accent-strong: #304ffe;
+  --color-auth-accent-soft: #e8edff;
+  --color-auth-background: #f4f5f9;
+  --color-auth-panel: #ffffff;
+  --color-auth-banner: #f8f9fd;
+  --color-auth-border: #d7deea;
+  --color-auth-muted: #6b7280;
+
+  --spacing-atom-sm: 0.25rem;
+  --spacing-atom-md: 0.5rem;
+  --spacing-atom-lg: 0.75rem;
+  --spacing-mol-sm: 1rem;
+  --spacing-mol-md: 1.5rem;
+  --spacing-mol-lg: 2rem;
+  --spacing-pad-atom: 0.5rem;
+  --spacing-pad-atom-md: 0.75rem;
+  --spacing-pad-mol: 1rem;
+  --spacing-pad-addon: 2.5rem;
+}
+
+@layer utilities {
+  .gap-atom-md {
+    gap: var(--spacing-atom-md);
+  }
+  .gap-pad-atom {
+    gap: var(--spacing-pad-atom);
+  }
+  .gap-mol {
+    gap: var(--spacing-mol-sm);
+  }
+  .gap-mol-md {
+    gap: var(--spacing-mol-md);
+  }
+  .p-pad-mol {
+    padding: var(--spacing-pad-mol);
+  }
+  .px-pad-atom-md {
+    padding-inline: var(--spacing-pad-atom-md);
+  }
+  .px-pad-mol {
+    padding-inline: var(--spacing-pad-mol);
+  }
+  .px-mol-md {
+    padding-inline: var(--spacing-mol-md);
+  }
+  .py-atom-md {
+    padding-block: var(--spacing-atom-md);
+  }
+  .ps-pad-addon {
+    padding-inline-start: var(--spacing-pad-addon);
+  }
+  .pe-pad-addon {
+    padding-inline-end: var(--spacing-pad-addon);
+  }
+  .start-pad-atom-md {
+    inset-inline-start: var(--spacing-pad-atom-md);
+  }
+  .end-pad-atom-md {
+    inset-inline-end: var(--spacing-pad-atom-md);
+  }
+  .ms-atom {
+    margin-inline-start: var(--spacing-atom-sm);
+  }
+  .mr-atom {
+    margin-inline-end: var(--spacing-atom-sm);
+  }
+  .py-mol-md {
+    padding-block: var(--spacing-mol-md);
+  }
+  .p-mol-md {
+    padding: var(--spacing-mol-md);
+  }
+  .py-mol-lg {
+    padding-block: var(--spacing-mol-lg);
+  }
+  .p-mol-lg {
+    padding: var(--spacing-mol-lg);
+  }
+
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow:
+      0 10px 40px rgba(15, 23, 42, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  }
+
+  .glass-sidebar {
+    background: rgba(255, 255, 255, 0.52);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border-inline-start: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: -8px 0 32px rgba(15, 23, 42, 0.04);
+  }
+
+  .glass-toolbar {
+    background: rgba(255, 255, 255, 0.42);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .admin-mesh-bg {
+    background:
+      radial-gradient(circle at 100% 0%, rgba(114, 27, 217, 0.12), transparent 42%),
+      radial-gradient(circle at 0% 100%, rgba(14, 165, 233, 0.1), transparent 38%),
+      linear-gradient(160deg, #eef2ff 0%, #f8fafc 45%, #f5effd 100%);
+  }
+
+  .auth-login-bg {
+    background:
+      radial-gradient(circle at top right, rgba(63, 94, 251, 0.08), transparent 24%),
+      linear-gradient(180deg, #f3f4f6 0%, #eceff4 100%);
+  }
+
+  .auth-panel-surface {
+    background-color: var(--color-auth-panel);
+  }
+
+  .auth-banner-surface {
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.92), transparent 18%),
+      radial-gradient(circle at 84% 80%, rgba(63, 94, 251, 0.08), transparent 18%),
+      linear-gradient(180deg, #fcfcfe 0%, #f5f7fb 100%);
+  }
+
+  .auth-soft-shadow {
+    box-shadow: 0 28px 60px rgba(15, 23, 42, 0.08);
+  }
+}
+
+/* Keep Leaflet map panes below modals/overlays */
+.leaflet-container,
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 0 !important;
+}
+
+html {
+  direction: rtl;
+}
+
+body {
+  @apply text-foreground antialiased;
+  font-family: "Vazirmatn", "Inter", system-ui, sans-serif;
+}
+
+.font-mono,
+code,
+pre {
+  font-family: "Inter", ui-monospace, monospace;
+}
+
+.font-mono {
+  direction: ltr;
+  unicode-bidi: plaintext;
+  text-align: start;
+}

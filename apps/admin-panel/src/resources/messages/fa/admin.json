@@ -1,0 +1,1849 @@
+{
+  "nav": {
+    "dashboard": "داشبورد",
+    "reports": "گزارش‌ها",
+    "catalogGroup": "کاتالوگ محصول",
+    "storePagesGroup": "صفحات فروشگاه",
+    "homepage": "صفحه اصلی",
+    "blogGroup": "وبلاگ",
+    "blogPosts": "مقالات",
+    "products": "محصولات",
+    "categories": "دسته‌بندی‌ها",
+    "brands": "برندها",
+    "tags": "برچسب‌ها",
+    "shopPages": "صفحات لندینگ",
+    "media": "بانک تصویر",
+    "blog": "وبلاگ",
+    "blogCategories": "دسته‌های وبلاگ",
+    "blogTags": "برچسب‌های وبلاگ",
+    "projectGroup": "مدیریت پروژه",
+    "projectSettings": "تنظیمات پروژه",
+    "smsProviders": "پروایدر پیامک",
+    "shippingProviders": "پروایدر ارسال",
+    "paymentAccounts": "حساب‌های کارت‌به‌کارت",
+    "notifications": "اعلان و پیامک",
+    "database": "جداول دیتابیس",
+    "accessGroup": "مدیریت دسترسی",
+    "users": "کاربران ادمین",
+    "roles": "نقش‌ها و دسترسی‌ها",
+    "commerceGroup": "تجارت و پرداخت",
+    "orders": "سفارش‌ها",
+    "customers": "مشتریان",
+    "deposits": "واریزی‌ها",
+    "coupons": "کپن‌ها",
+    "promotions": "پروموشن‌ها",
+    "productJourneyLab": "جرنی محصول (فیک)"
+  },
+  "overview": {
+    "title": "داشبورد",
+    "subtitle": "نمای کلی فروش، سفارش‌ها و عملکرد فروشگاه.",
+    "products": "محصولات",
+    "orders": "سفارش‌ها",
+    "customers": "مشتریان",
+    "error": "بارگذاری آمار با خطا مواجه شد"
+  },
+  "header": {
+    "guest": "ادمین",
+    "logout": "خروج"
+  },
+  "sidebar": {
+    "tagline": "مدیریت فروشگاه",
+    "collapse": "جمع کردن منو",
+    "expand": "باز کردن منو"
+  },
+  "users": {
+    "title": "مدیریت کاربران ادمین",
+    "subtitle": "ایجاد، ویرایش و غیرفعال‌سازی کاربران پنل با نقش‌های مختلف.",
+    "createTitle": "کاربر ادمین جدید",
+    "editTitle": "ویرایش کاربر ادمین",
+    "error": "بارگذاری کاربران با خطا مواجه شد",
+    "emptyTitle": "کاربری ثبت نشده",
+    "emptyDescription": "اولین کاربر ادمین را ایجاد کنید.",
+    "confirmDelete": "آیا از حذف {email} مطمئن هستید؟",
+    "fields": {
+      "email": "ایمیل",
+      "fullName": "نام کامل",
+      "password": "رمز عبور",
+      "passwordOptional": "رمز عبور جدید (اختیاری)",
+      "role": "نقش",
+      "isActive": "حساب فعال"
+    },
+    "columns": {
+      "fullName": "نام",
+      "email": "ایمیل",
+      "role": "نقش",
+      "status": "وضعیت",
+      "lastLogin": "آخرین ورود",
+      "actions": "عملیات"
+    },
+    "status": {
+      "active": "فعال",
+      "inactive": "غیرفعال"
+    },
+    "actions": {
+      "create": "کاربر جدید",
+      "edit": "ویرایش",
+      "delete": "حذف",
+      "cancel": "انصراف",
+      "save": "ذخیره"
+    }
+  },
+  "roles": {
+    "title": "نقش‌ها و دسترسی‌ها",
+    "subtitle": "برای هر نقش، مجوزهای دسترسی به بخش‌های پنل را تنظیم کنید.",
+    "roleList": "فهرست نقش‌ها",
+    "userCount": "{count} کاربر",
+    "permissionCount": "{count} مجوز",
+    "superAdminLocked": "نقش super_admin همیشه تمام مجوزها را دارد و قابل محدودسازی نیست.",
+    "emptyTitle": "نقشی یافت نشد",
+    "emptyDescription": "ابتدا seed دیتابیس را اجرا کنید.",
+    "fields": {
+      "description": "توضیحات نقش"
+    },
+    "actions": {
+      "save": "ذخیره دسترسی‌ها"
+    },
+    "historyTitle": "تاریخچه تغییرات نقش {name}"
+  },
+  "audit": {
+    "title": "تاریخچه تغییرات",
+    "subtitle": "فقط super_admin — آخرین عملیات ثبت‌شده در این بخش",
+    "error": "بارگذاری تاریخچه با خطا مواجه شد",
+    "emptyTitle": "تاریخچه‌ای ثبت نشده",
+    "emptyDescription": "پس از ایجاد یا ویرایش، رویدادها اینجا نمایش داده می‌شوند.",
+    "columns": {
+      "time": "زمان",
+      "action": "عملیات",
+      "entity": "موجودیت",
+      "actor": "انجام‌دهنده"
+    },
+    "actions": {
+      "adminUserCreated": "ایجاد کاربر ادمین",
+      "adminUserUpdated": "ویرایش کاربر ادمین",
+      "adminUserDeleted": "حذف کاربر ادمین",
+      "roleUpdated": "ویرایش نقش",
+      "categoryCreated": "ایجاد دسته‌بندی",
+      "categoryUpdated": "ویرایش دسته‌بندی",
+      "categoryDeleted": "حذف دسته‌بندی",
+      "productCreated": "ایجاد محصول",
+      "productUpdated": "ویرایش محصول",
+      "productDeleted": "حذف محصول",
+      "brandCreated": "ایجاد برند",
+      "brandUpdated": "ویرایش برند",
+      "brandDeleted": "حذف برند",
+      "tagCreated": "ایجاد برچسب",
+      "tagUpdated": "ویرایش برچسب",
+      "tagDeleted": "حذف برچسب",
+      "shopPageCreated": "ایجاد صفحه فروشگاه",
+      "shopPageUpdated": "ویرایش صفحه فروشگاه",
+      "shopPageDeleted": "حذف صفحه فروشگاه",
+      "warehouseCreated": "ایجاد انبار",
+      "warehouseUpdated": "ویرایش انبار",
+      "warehouseDeleted": "حذف انبار",
+      "couponCreated": "ایجاد کپن",
+      "couponUpdated": "ویرایش کپن",
+      "couponDeleted": "حذف کپن",
+      "promotionCreated": "ایجاد پروموشن",
+      "promotionUpdated": "ویرایش پروموشن",
+      "promotionDeleted": "حذف پروموشن",
+      "orderStatusUpdated": "تغییر وضعیت سفارش",
+      "customerUpdated": "ویرایش مشتری",
+      "customerDeleted": "حذف مشتری"
+    }
+  },
+  "reports": {
+    "title": "گزارش‌ها",
+    "subtitle": "نمای کلی فروش، سفارش‌ها، موجودی و عملکرد فروشگاه.",
+    "noAccess": "برای مشاهده گزارش‌ها به مجوز reports.view نیاز دارید.",
+    "error": "بارگذاری گزارش‌ها با خطا مواجه شد",
+    "emptyOrders": "سفارشی ثبت نشده",
+    "emptyProducts": "فروشی ثبت نشده",
+    "sections": {
+      "revenue": "درآمد",
+      "orders": "سفارش‌ها",
+      "store": "فروشگاه",
+      "ordersByStatus": "سفارش‌ها بر اساس وضعیت",
+      "topProducts": "پرفروش‌ترین محصولات",
+      "recentOrders": "آخرین سفارش‌ها"
+    },
+    "metrics": {
+      "totalRevenue": "درآمد کل (پرداخت‌شده)",
+      "revenueThisMonth": "درآمد این ماه",
+      "averageOrderValue": "میانگین مبلغ سفارش",
+      "paidOrders": "سفارش‌های پرداخت‌شده",
+      "ordersToday": "سفارش امروز",
+      "ordersThisWeek": "سفارش این هفته",
+      "ordersThisMonth": "سفارش این ماه",
+      "pendingOrders": "سفارش در انتظار",
+      "activeProducts": "محصول فعال",
+      "activeCustomers": "مشتری فعال",
+      "newCustomersThisMonth": "مشتری جدید (ماه)",
+      "activeCoupons": "کپن فعال"
+    },
+    "columns": {
+      "status": "وضعیت",
+      "count": "تعداد",
+      "revenue": "درآمد",
+      "product": "محصول",
+      "quantity": "تعداد فروش",
+      "orderNumber": "شماره سفارش",
+      "customer": "مشتری",
+      "total": "مبلغ"
+    }
+  },
+  "database": {
+    "title": "مرورگر ساختار دیتابیس",
+    "subtitle": "جداول و ستون‌های PostgreSQL را جستجو کنید و جزئیات هر جدول را ببینید.",
+    "statsTables": "کل جداول",
+    "statsColumns": "کل ستون‌ها",
+    "statsFiltered": "نتیجه فیلتر (جدول / ستون)",
+    "tableList": "فهرست جداول",
+    "selectTable": "یک جدول از فهرست انتخاب کنید",
+    "columnCount": "{count} ستون",
+    "searchLabel": "جستجو",
+    "searchPlaceholder": "نام جدول، ستون یا نوع داده...",
+    "column": "ستون",
+    "type": "نوع",
+    "nullable": "Nullable",
+    "default": "پیش‌فرض",
+    "yes": "بله",
+    "no": "خیر",
+    "loading": "در حال بارگذاری ساختار دیتابیس...",
+    "error": "بارگذاری جداول با خطا مواجه شد",
+    "emptyTitle": "نتیجه‌ای یافت نشد",
+    "emptyDescription": "عبارت جستجو را تغییر دهید",
+    "configBadge": "کانفیگ"
+  },
+  "project": {
+    "title": "تنظیمات پروژه",
+    "subtitle": "پیکربندی فروشگاه، ارسال، پرداخت و وضعیت سفارش‌ها",
+    "noAccess": "برای مشاهده این بخش به مجوز settings.manage نیاز دارید.",
+    "tabs": {
+      "general": "عمومی",
+      "shipping": "ارسال",
+      "payments": "درگاه‌ها",
+      "orderStatuses": "وضعیت سفارش"
+    },
+    "status": {
+      "active": "فعال",
+      "inactive": "غیرفعال"
+    },
+    "actions": {
+      "save": "ذخیره",
+      "edit": "ویرایش",
+      "delete": "حذف",
+      "cancel": "انصراف"
+    },
+    "general": {
+      "error": "بارگذاری تنظیمات فروشگاه با خطا مواجه شد",
+      "fields": {
+        "taxRate": "نرخ مالیات (%)",
+        "currency": "واحد پول",
+        "cartTtl": "انقضای سبد (ثانیه)",
+        "reservationTtl": "انقضای رزرو موجودی (ثانیه)"
+      }
+    },
+    "shipping": {
+      "title": "روش‌های ارسال",
+      "error": "بارگذاری روش‌های ارسال با خطا مواجه شد",
+      "emptyTitle": "روش ارسالی ثبت نشده",
+      "emptyDescription": "اولین روش ارسال را ایجاد کنید.",
+      "createTitle": "روش ارسال جدید",
+      "editTitle": "ویرایش روش ارسال",
+      "confirmDelete": "آیا از حذف {name} مطمئن هستید؟",
+      "fields": {
+        "name": "نام",
+        "description": "توضیحات",
+        "baseCost": "هزینه پایه (ریال)",
+        "isActive": "فعال"
+      },
+      "columns": {
+        "name": "نام",
+        "baseCost": "هزینه پایه",
+        "status": "وضعیت",
+        "actions": "عملیات"
+      },
+      "actions": {
+        "create": "روش جدید"
+      }
+    },
+    "payments": {
+      "error": "بارگذاری درگاه‌های پرداخت با خطا مواجه شد",
+      "emptyTitle": "درگاهی یافت نشد",
+      "emptyDescription": "ابتدا migration/seed دیتابیس را اجرا کنید.",
+      "columns": {
+        "name": "نام",
+        "code": "کد",
+        "settlement": "نوع تسویه",
+        "active": "فعال",
+        "enabled": "فعال در فروشگاه"
+      },
+      "cardToCard": {
+        "title": "تنظیمات کارت به کارت",
+        "subtitle": "اطلاعات حساب برای نمایش به مشتری هنگام تسویه حساب.",
+        "bankName": "نام بانک",
+        "cardNumber": "شماره کارت",
+        "accountHolder": "نام صاحب حساب",
+        "save": "ذخیره مشخصات کارت"
+      }
+    },
+    "orderStatuses": {
+      "error": "بارگذاری وضعیت‌های سفارش با خطا مواجه شد",
+      "subtitle": "این جدول lookup است و از migration مدیریت می‌شود (فقط مشاهده).",
+      "emptyTitle": "وضعیتی یافت نشد",
+      "emptyDescription": "ابتدا migration دیتابیس را اجرا کنید.",
+      "terminalYes": "نهایی",
+      "terminalNo": "میانی",
+      "columns": {
+        "code": "کد",
+        "labelFa": "برچسب فارسی",
+        "labelEn": "برچسب انگلیسی",
+        "terminal": "نوع",
+        "next": "وضعیت‌های بعدی"
+      }
+    }
+  },
+  "smsProviders": {
+    "title": "پروایدرهای پیامک",
+    "subtitle": "مدیریت ارسال پیامک، فعال‌سازی پروایدر و ابزارهای تست SMS.ir",
+    "noAccess": "برای مشاهده این بخش به مجوز settings.manage نیاز دارید.",
+    "error": "بارگذاری پروایدرهای پیامک با خطا مواجه شد",
+    "emptyTitle": "پروایدری یافت نشد",
+    "emptyDescription": "ابتدا migration دیتابیس را اجرا کنید.",
+    "supportedCount": "{count} قابلیت پشتیبانی‌شده",
+    "hero": {
+      "title": "ارسال پیامک به‌صورت ماژولار",
+      "description": "یک پروایدر را به‌عنوان فعال انتخاب کنید. بقیه غیرفعال می‌مانند تا بعداً اضافه یا جایگزین شوند."
+    },
+    "status": {
+      "enabled": "فعال برای ارسال",
+      "disabled": "غیرفعال",
+      "primary": "پروایدر فعال",
+      "inactive": "خاموش",
+      "dev": "محیط توسعه"
+    },
+    "fields": {
+      "enabled": "ارسال",
+      "active": "در دسترس"
+    },
+    "actions": {
+      "configure": "پیکربندی",
+      "setApiKey": "تنظیم کلید API",
+      "save": "ذخیره",
+      "saveConfig": "ذخیره تنظیمات",
+      "cancel": "انصراف"
+    },
+    "slider": {
+      "title": "پروایدرها",
+      "prev": "قبلی",
+      "next": "بعدی"
+    },
+    "features": {
+      "verify": "Verify / OTP",
+      "bulk": "ارسال گروهی",
+      "likeToLike": "نظیر به نظیر",
+      "scheduled": "زمان‌بندی",
+      "cancelScheduled": "لغو زمان‌بندی",
+      "messageStatus": "وضعیت پیام",
+      "packReports": "گزارش پک",
+      "liveReports": "گزارش زنده",
+      "archiveReports": "آرشیو ارسال",
+      "receive": "پیامک دریافتی",
+      "credit": "اعتبار",
+      "lines": "خطوط",
+      "sandbox": "Sandbox"
+    },
+    "config": {
+      "title": "پیکربندی SMS.ir",
+      "inlineTitle": "کلید و تنظیمات پروایدر",
+      "inlineHint": "API Key فقط در دیتابیس ذخیره می‌شود و در env قرار نمی‌گیرد. برای Sandbox کلید تستی پنل را اینجا وارد کنید.",
+      "consoleOnly": "پروایدر Console نیاز به تنظیمات API ندارد.",
+      "apiKey": "API Key",
+      "apiKeyPlaceholder": "کلید وب‌سرویس / Sandbox را وارد کنید",
+      "apiKeyPlaceholderSet": "برای تغییر، کلید جدید وارد کنید",
+      "apiKeyMasked": "کلید فعلی: {masked}",
+      "apiKeyMissing": "هنوز کلید API تنظیم نشده است.",
+      "needsKey": "نیاز به کلید",
+      "keyReady": "کلید تنظیم شده",
+      "saved": "تنظیمات با موفقیت ذخیره شد.",
+      "lineNumber": "شماره خط",
+      "verifyTemplateId": "شناسه قالب Verify",
+      "otpParamName": "نام پارامتر OTP در قالب",
+      "sandbox": "حالت Sandbox",
+      "sandboxHint": "با کلید Sandbox پیامک واقعی ارسال نمی‌شود. قالب پیش‌فرض: 123456 / CODE"
+    },
+    "tools": {
+      "title": "ابزارهای {name}",
+      "subtitle": "تست و فراخوانی قابلیت‌های پروایدر انتخاب‌شده",
+      "capabilities": "قابلیت‌ها",
+      "tabs": {
+        "overview": "نمای کلی",
+        "config": "تنظیمات / کلید",
+        "verify": "Verify",
+        "bulk": "ارسال",
+        "reports": "گزارش‌ها",
+        "receive": "دریافت",
+        "account": "حساب"
+      },
+      "fields": {
+        "mobile": "شماره موبایل",
+        "code": "کد / پارامتر",
+        "messageText": "متن پیامک",
+        "messageId": "شناسه پیامک",
+        "packId": "شناسه پک"
+      },
+      "actions": {
+        "sendVerify": "ارسال Verify",
+        "sendBulk": "ارسال گروهی",
+        "sendLikeToLike": "ارسال نظیر به نظیر",
+        "cancelScheduled": "لغو زمان‌بندی",
+        "messageStatus": "وضعیت پیام",
+        "todayPacks": "پک‌های امروز",
+        "packMessages": "پیام‌های پک",
+        "liveMessages": "ارسال‌های امروز",
+        "archiveMessages": "آرشیو ارسال",
+        "latestReceived": "تازه‌ترین دریافتی",
+        "liveReceived": "دریافتی امروز",
+        "archiveReceived": "آرشیو دریافتی",
+        "credit": "موجودی اعتبار",
+        "lines": "لیست خطوط"
+      }
+    },
+    "hints": {
+      "title": "نکات مهم",
+      "onePrimary": "در هر لحظه فقط یک پروایدر برای ارسال فعال است؛ فعال‌کردن یکی، دیگری را خاموش می‌کند.",
+      "consoleDev": "Console برای توسعه است و OTP را در لاگ سرور چاپ می‌کند.",
+      "smsirConfig": "قبل از فعال‌کردن SMS.ir، API Key و قالب Verify را در پیکربندی ذخیره کنید.",
+      "security": "کلید API در دیتابیس ذخیره می‌شود و در پاسخ‌ها ماسک می‌گردد. برای production از Sandbox خارج شوید.",
+      "billing": "گزارش اعتبار و خطوط فقط برای پروایدرهایی که این قابلیت را دارند در دسترس است."
+    }
+  },
+  "shippingProviders": {
+    "title": "پروایدرهای ارسال و دلیوری",
+    "subtitle": "مدیریت Tipax و پروایدرهای ارسال، تنظیم توکن و ابزارهای تست API",
+    "noAccess": "برای مشاهده این بخش به مجوز settings.manage نیاز دارید.",
+    "error": "بارگذاری پروایدرهای ارسال با خطا مواجه شد",
+    "emptyTitle": "پروایدری یافت نشد",
+    "emptyDescription": "ابتدا migration دیتابیس را اجرا کنید.",
+    "supportedCount": "{count} قابلیت پشتیبانی‌شده",
+    "hero": {
+      "title": "ارسال ماژولار با Tipax",
+      "description": "یک پروایدر را فعال کنید، credential و توکن را از پنل ست کنید، و قابلیت‌های API v3 را تست کنید."
+    },
+    "status": {
+      "enabled": "فعال برای ارسال",
+      "disabled": "غیرفعال",
+      "primary": "پروایدر فعال"
+    },
+    "fields": {
+      "enabled": "ارسال",
+      "active": "در دسترس"
+    },
+    "actions": {
+      "setCredentials": "تنظیم کلید و توکن",
+      "saveConfig": "ذخیره تنظیمات",
+      "obtainToken": "دریافت توکن"
+    },
+    "slider": {
+      "title": "پروایدرها"
+    },
+    "features": {
+      "auth": "احراز هویت",
+      "addresses": "آدرس‌ها",
+      "cities": "شهرها",
+      "customers": "مشتریان",
+      "orders": "سفارش ارسال",
+      "pricing": "برآورد هزینه",
+      "parcels": "مرسوله‌ها",
+      "tracking": "رهگیری",
+      "financial": "مالی",
+      "ticketing": "تیکت",
+      "webhooks": "وب‌هوک",
+      "locker": "لاکر"
+    },
+    "config": {
+      "inlineTitle": "کلید، کاربر و توکن Tipax",
+      "inlineHint": "username، password و apiKey فقط در دیتابیس ذخیره می‌شوند. پس از ذخیره، «دریافت توکن» را بزنید.",
+      "manualOnly": "پروایدر Manual نیاز به تنظیمات API ندارد.",
+      "baseUrl": "Base URL",
+      "username": "نام کاربری",
+      "password": "رمز عبور",
+      "passwordPlaceholder": "رمز عبور omtest.tipax.ir",
+      "passwordPlaceholderSet": "برای تغییر، رمز جدید وارد کنید",
+      "apiKey": "API Key",
+      "apiKeyPlaceholder": "کلید API تیپاکس",
+      "apiKeyPlaceholderSet": "برای تغییر، کلید جدید وارد کنید",
+      "defaultOriginAddressId": "آیدی آدرس مبدأ پیش‌فرض",
+      "defaultServiceId": "ServiceId پیش‌فرض",
+      "defaultPaymentType": "PaymentType پیش‌فرض",
+      "defaultPickupType": "PickupType پیش‌فرض",
+      "defaultDistributionType": "DistributionType پیش‌فرض",
+      "tokenStatus": "وضعیت توکن",
+      "tokenReady": "توکن فعال است — انقضا: {expiresAt}",
+      "tokenMissing": "هنوز توکنی دریافت نشده است.",
+      "tokenOk": "توکن با موفقیت دریافت و ذخیره شد.",
+      "tokenBadge": "توکن دارد",
+      "needsKey": "نیاز به کلید",
+      "saved": "تنظیمات ذخیره شد."
+    },
+    "tools": {
+      "title": "ابزارهای {name}",
+      "subtitle": "فراخوانی قابلیت‌های پروایدر انتخاب‌شده",
+      "capabilities": "قابلیت‌ها",
+      "jsonBody": "بدنه JSON درخواست",
+      "invalidJson": "JSON نامعتبر است",
+      "tabs": {
+        "overview": "نمای کلی",
+        "config": "تنظیمات / توکن",
+        "cities": "شهر و آدرس",
+        "pricing": "قیمت",
+        "orders": "سفارش",
+        "tracking": "رهگیری",
+        "parcels": "مرسوله",
+        "account": "حساب",
+        "financial": "مالی",
+        "tickets": "تیکت"
+      },
+      "fields": {
+        "trackingCode": "کد رهگیری / بارکد",
+        "orderId": "شناسه سفارش Tipax"
+      },
+      "actions": {
+        "listStates": "لیست استان‌ها",
+        "listCities": "لیست شهرها",
+        "listCitiesWithState": "شهرها + استان",
+        "listBranchCities": "شهرهای دارای نمایندگی",
+        "listAddressBook": "دفترچه آدرس",
+        "price": "برآورد هزینه",
+        "priceForAllServices": "قیمت همه سرویس‌ها",
+        "getServicesBetweenCities": "سرویس بین دو شهر",
+        "createOrder": "ثبت سفارش",
+        "createOrderWithPreDefinedOrigin": "سفارش با مبدأ ذخیره‌شده",
+        "createOrderWithCoordinates": "سفارش با مختصات",
+        "cancelOrder": "ابطال سفارش",
+        "trackBrief": "رهگیری سریع",
+        "trackByOrderId": "رهگیری با orderId",
+        "trackByTraceCode": "رهگیری با traceCode",
+        "listPackContentRates": "محتوای بسته",
+        "listPackingPrices": "بسته‌بندی‌ها",
+        "searchParcelTypes": "انواع مرسوله",
+        "searchPaymentTypes": "انواع پرداخت",
+        "listParcelBooks": "ParcelBooks",
+        "getParcelsByOrderId": "مرسوله‌های سفارش",
+        "getCurrentCustomer": "مشتری جاری",
+        "getCredit": "اعتبار",
+        "getWallet": "کیف پول",
+        "getRemain": "مانده حساب",
+        "listMySubstations": "شعب من",
+        "listFinancialDocuments": "تراکنش‌ها",
+        "listWebhooks": "وب‌هوک‌ها",
+        "getNextDayTimeTable": "برنامه زمانی",
+        "listTickets": "تیکت‌ها",
+        "listTicketDepartments": "دپارتمان‌ها"
+      }
+    },
+    "hints": {
+      "title": "نکات مهم",
+      "onePrimary": "فقط یک پروایدر ارسال در هر لحظه فعال است.",
+      "tipaxAuth": "برای Tipax ابتدا username/password/apiKey را ذخیره کنید، سپس توکن بگیرید.",
+      "addressFields": "آدرس مشتری فیلدهای پلاک، واحد، طبقه و tipax_city_id دارد تا با API سازگار باشد.",
+      "security": "رمز و کلید و توکن در پاسخ API ماسک می‌شوند و در env ذخیره نمی‌گردند.",
+      "cities": "از تب شهر و آدرس می‌توانید لیست شهرهای Tipax را همگام‌سازی/مشاهده کنید."
+    }
+  },
+  "media": {
+    "selectFile": "انتخاب تصویر",
+    "remove": "حذف تصویر",
+    "dropHint": "تصویر را انتخاب کنید یا بکشید (اختیاری)",
+    "limits": "حداکثر {maxMb} مگابایت — JPEG, PNG, WebP, GIF, SVG",
+    "library": {
+      "title": "بانک تصاویر",
+      "subtitle": "مدیریت تصاویر سایت، محصولات، دسته‌ها، برندها و وبلاگ.",
+      "detailTitle": "جزئیات تصویر",
+      "detailError": "بارگذاری فایل با خطا مواجه شد",
+      "error": "بارگذاری بانک تصاویر با خطا مواجه شد",
+      "noAccess": "دسترسی مشاهده تصاویر را ندارید.",
+      "emptyTitle": "تصویری آپلود نشده",
+      "emptyDescription": "اولین تصویر را آپلود کنید یا از فرم محصولات/دسته‌ها اضافه کنید.",
+      "uploading": "در حال آپلود…",
+      "confirmDelete": "آیا از حذف این فایل مطمئن هستید؟ فایل از فضای ذخیره‌سازی هم پاک می‌شود.",
+      "copied": "آدرس کپی شد",
+      "sizeUnknown": "نامشخص",
+      "resultCount": "{count} فایل",
+      "usageCount": "{count} استفاده",
+      "usageNone": "استفاده نشده",
+      "folders": {
+        "site": "سایت",
+        "products": "محصولات",
+        "categories": "دسته‌بندی‌ها",
+        "brands": "برندها",
+        "blog": "وبلاگ",
+        "pages": "صفحات",
+        "general": "عمومی"
+      },
+      "fields": {
+        "search": "جستجو",
+        "typeFilter": "نوع فایل",
+        "folderFilter": "دسته‌بندی",
+        "uploadFolder": "دسته‌بندی آپلود",
+        "folder": "دسته‌بندی",
+        "title": "عنوان",
+        "altText": "متن جایگزین (alt)",
+        "url": "آدرس عمومی",
+        "mimeType": "نوع MIME",
+        "size": "ابعاد",
+        "createdAt": "تاریخ آپلود",
+        "usage": "استفاده در سایت"
+      },
+      "filters": {
+        "all": "همه",
+        "allFolders": "همه دسته‌ها",
+        "images": "تصاویر"
+      },
+      "actions": {
+        "upload": "آپلود فایل",
+        "copyUrl": "کپی آدرس",
+        "close": "بستن",
+        "save": "ذخیره",
+        "delete": "حذف"
+      }
+    }
+  },
+  "categories": {
+    "title": "دسته‌بندی‌ها",
+    "subtitle": "مدیریت دسته‌بندی محصولات با تصویر اختیاری.",
+    "createTitle": "دسته‌بندی جدید",
+    "editTitle": "ویرایش دسته‌بندی",
+    "error": "بارگذاری دسته‌بندی‌ها با خطا مواجه شد",
+    "emptyTitle": "دسته‌بندی‌ای ثبت نشده",
+    "emptyDescription": "اولین دسته‌بندی را ایجاد کنید یا seed را اجرا کنید.",
+    "confirmDelete": "آیا از حذف {name} مطمئن هستید؟",
+    "noImage": "بدون تصویر",
+    "tableTitle": "فهرست flat (مرتب‌شده درختی)",
+    "tree": {
+      "title": "پیش‌نمایش درختی",
+      "subtitle": "ساختار والد / فرزند دسته‌بندی‌ها",
+      "nested": "لیست تو در تو",
+      "d3": "نمودار D3",
+      "empty": "دسته‌ای برای نمایش نیست",
+      "selectHint": "یک دسته از درخت انتخاب کنید",
+      "searchLabel": "جستجو",
+      "searchPlaceholder": "نام انگلیسی، فارسی یا اسلاگ...",
+      "filterLabel": "فیلتر",
+      "filters": {
+        "all": "همه",
+        "roots": "فقط ریشه‌ها",
+        "parents": "فقط والدها",
+        "leaves": "فقط برگ‌ها"
+      },
+      "expand": "باز کردن زیردسته‌ها",
+      "collapse": "بستن زیردسته‌ها",
+      "expandAll": "باز کردن همه",
+      "collapseAll": "بستن همه",
+      "d3Expand": "نمایش بزرگ",
+      "d3Minimize": "کوچک‌کردن",
+      "d3Close": "بستن",
+      "d3ModalTitle": "نمودار D3 دسته‌بندی‌ها",
+      "d3ModalSubtitle": "برای ویرایش، مشاهده یا حذف روی دکمه‌های هر گره کلیک کنید"
+    },
+    "megaMenu": {
+      "title": "پیش‌نمایش مگا منو",
+      "subtitle": "نمایش منوی فروشگاه بر اساس JSON ساخته‌شده از درخت دسته‌بندی‌ها",
+      "previewBadge": "پیش‌نمایش",
+      "previewHint": "هاور روی دسته‌ها برای باز شدن زیرمنو — الگوی Amazon",
+      "allDepartments": "همه دسته‌ها",
+      "sidebarTitle": "زیردسته‌ها",
+      "shopAll": "مشاهده همه",
+      "empty": "دسته‌ای برای ساخت منو وجود ندارد",
+      "panelClosed": "برای نمایش منو روی «همه دسته‌ها» کلیک کنید"
+    },
+    "tabs": {
+      "general": "عمومی",
+      "merch": "فیلتر و محصولات",
+      "seo": "SEO",
+      "tree": "درخت",
+      "megaMenu": "مگا‌منو"
+    },
+    "kind": {
+      "real": "دسته واقعی",
+      "virtual": "دسته مجازی",
+      "virtualHint": "این دسته مجازی است — محصول به آن وصل نمی‌شود؛ فیلتر و محصولات دستی صفحه را می‌سازند."
+    },
+    "menu": {
+      "visible": "نمایش در منو",
+      "hidden": "مخفی از منو"
+    },
+    "details": {
+      "filtersTitle": "فیلترهای صفحه",
+      "pinnedTitle": "محصولات پین‌شده",
+      "noPinned": "محصول پین‌شده‌ای نیست"
+    },
+    "seo": {
+      "sectionTitle": "SEO و شبکه‌های اجتماعی",
+      "sectionHint": "اختیاری — برای نتایج جستجو و اشتراک‌گذاری",
+      "fields": {
+        "title": "عنوان SEO",
+        "description": "توضیحات SEO",
+        "ogTitle": "عنوان Open Graph",
+        "ogDescription": "توضیحات Open Graph",
+        "ogImage": "تصویر Open Graph",
+        "ogImageHint": "اگر خالی باشد از تصویر دسته استفاده می‌شود",
+        "canonicalUrl": "آدرس Canonical",
+        "metaRobots": "Meta Robots"
+      }
+    },
+    "fields": {
+      "name": "نام",
+      "nameEn": "نام انگلیسی",
+      "nameFa": "نام فارسی",
+      "slug": "اسلاگ",
+      "slugHint": "خالی بگذارید تا از نام ساخته شود",
+      "description": "توضیح کوتاه (داخلی)",
+      "kind": "نوع دسته",
+      "menuVisible": "نمایش در مگامنوی فروشگاه",
+      "collectionUrl": "آدرس فروشگاه",
+      "parent": "دسته والد",
+      "parentHint": "اختیاری — برای زیردسته بودن، دستهٔ بالادستی را انتخاب کنید",
+      "noParent": "بدون والد (دستهٔ اصلی)",
+      "gallery": "تصاویر بنر صفحه",
+      "galleryHint": "تصاویر بنر بالای صفحه collection — ترتیب با دکمه‌ها",
+      "image": "تصویر",
+      "imageHint": "اختیاری — برای نمایش در فروشگاه"
+    },
+    "columns": {
+      "image": "تصویر",
+      "name": "نام انگلیسی",
+      "nameFa": "نام فارسی",
+      "slug": "اسلاگ",
+      "position": "ترتیب",
+      "actions": "عملیات"
+    },
+    "actions": {
+      "create": "دسته جدید",
+      "close": "بستن",
+      "edit": "ویرایش",
+      "delete": "حذف",
+      "cancel": "انصراف",
+      "save": "ذخیره"
+    },
+    "detailsTitle": "جزئیات دسته‌بندی",
+    "deleteModal": {
+      "title": "حذف دسته‌بندی",
+      "description": "آیا از حذف «{name}» مطمئن هستید؟ این تغییر در تاریخچه ثبت می‌شود."
+    },
+    "historyTitle": "تاریخچه تغییرات دسته‌بندی‌ها"
+  },
+  "brands": {
+    "title": "برندها",
+    "subtitle": "مدیریت برندهای محصولات فروشگاه.",
+    "createTitle": "برند جدید",
+    "editTitle": "ویرایش برند",
+    "detailsTitle": "جزئیات برند",
+    "error": "بارگذاری برندها با خطا مواجه شد",
+    "noAccess": "دسترسی مشاهده برندها را ندارید.",
+    "emptyTitle": "برندی ثبت نشده",
+    "emptyDescription": "اولین برند را ایجاد کنید یا seed را اجرا کنید.",
+    "confirmDelete": "آیا از حذف {name} مطمئن هستید؟",
+    "fields": {
+      "search": "جستجو نام یا اسلاگ",
+      "name": "نام",
+      "nameEn": "نام انگلیسی",
+      "nameFa": "نام فارسی",
+      "slug": "اسلاگ",
+      "slugHint": "به‌صورت پیش‌فرض از نام انگلیسی ساخته می‌شود",
+      "image": "تصویر برند",
+      "imageHint": "لوگو یا تصویر نمایشی برند",
+      "createdAt": "تاریخ ایجاد"
+    },
+    "columns": {
+      "brand": "برند",
+      "name": "نام",
+      "nameFa": "نام فارسی",
+      "slug": "اسلاگ",
+      "actions": "عملیات"
+    },
+    "actions": {
+      "create": "برند جدید",
+      "view": "مشاهده",
+      "edit": "ویرایش",
+      "delete": "حذف",
+      "cancel": "انصراف",
+      "close": "بستن",
+      "save": "ذخیره",
+      "apply": "اعمال",
+      "advancedFilters": "فیلتر پیشرفته",
+      "resetFilters": "پاک کردن فیلترها"
+    }
+  },
+  "tags": {
+    "title": "برچسب‌ها",
+    "subtitle": "مدیریت برچسب‌های محصول برای فیلتر و جستجو.",
+    "createTitle": "برچسب جدید",
+    "editTitle": "ویرایش برچسب",
+    "detailsTitle": "جزئیات برچسب",
+    "error": "بارگذاری برچسب‌ها با خطا مواجه شد",
+    "noAccess": "دسترسی مشاهده برچسب‌ها را ندارید.",
+    "emptyTitle": "برچسبی ثبت نشده",
+    "emptyDescription": "اولین برچسب را ایجاد کنید یا seed را اجرا کنید.",
+    "confirmDelete": "آیا از حذف {name} مطمئن هستید؟",
+    "fields": {
+      "search": "جستجو نام یا اسلاگ",
+      "nameEn": "نام انگلیسی",
+      "nameFa": "نام فارسی",
+      "slug": "اسلاگ",
+      "slugHint": "به‌صورت پیش‌فرض از نام انگلیسی ساخته می‌شود",
+      "createdAt": "تاریخ ایجاد"
+    },
+    "columns": {
+      "name": "نام",
+      "nameFa": "نام فارسی",
+      "slug": "اسلاگ",
+      "actions": "عملیات"
+    },
+    "actions": {
+      "create": "برچسب جدید",
+      "view": "مشاهده",
+      "edit": "ویرایش",
+      "delete": "حذف",
+      "cancel": "انصراف",
+      "close": "بستن",
+      "save": "ذخیره",
+      "apply": "اعمال",
+      "advancedFilters": "فیلتر پیشرفته",
+      "resetFilters": "پاک کردن فیلترها"
+    }
+  },
+  "shopPages": {
+    "title": "صفحات لندینگ",
+    "subtitle": "مدیریت صفحات مرچندایزینگ (/main و /collection) برای فروشگاه.",
+    "createTitle": "صفحه جدید",
+    "editTitle": "ویرایش صفحه",
+    "error": "بارگذاری صفحات با خطا مواجه شد",
+    "noAccess": "دسترسی مشاهده صفحات فروشگاه را ندارید.",
+    "emptyTitle": "صفحه‌ای ثبت نشده",
+    "emptyDescription": "اولین صفحه فروشگاه را ایجاد کنید یا seed را اجرا کنید.",
+    "confirmDelete": "آیا از حذف {title} مطمئن هستید؟",
+    "validation": {
+      "invalidJson": "JSON وارد شده معتبر نیست"
+    },
+    "types": {
+      "search": "جستجو (PLP)",
+      "landing": "لندینگ"
+    },
+    "status": {
+      "draft": "پیش‌نویس",
+      "published": "منتشر شده"
+    },
+    "labels": {
+      "main": "اصلی (/main)",
+      "collection": "مجموعه (/collection)"
+    },
+    "filters": {
+      "all": "همه",
+      "mainOnly": "فقط /main",
+      "collectionOnly": "فقط /collection"
+    },
+    "fields": {
+      "search": "جستجو عنوان یا اسلاگ",
+      "title": "عنوان",
+      "slug": "اسلاگ",
+      "slugHint": "به‌صورت پیش‌فرض از عنوان ساخته می‌شود",
+      "type": "نوع",
+      "status": "وضعیت",
+      "isMain": "صفحه اصلی",
+      "isMainHint": "در مسیر /main/:slug نمایش داده می‌شود",
+      "mapsCategorySlug": "نگاشت دسته",
+      "mapsCategorySlugHint": "اسلاگ دسته برای لینک‌های legacy",
+      "filters": "فیلترها (JSON)",
+      "filtersHint": "برای type=search — آبجکت JSON",
+      "pinnedProductIds": "محصولات پین‌شده (JSON)",
+      "pinnedProductIdsHint": "آرایه UUID محصولات فعال — قبل از نتایج فیلتر نمایش داده می‌شوند",
+      "blocks": "بلوک‌ها (JSON)",
+      "blocksHint": "برای type=landing — آرایه JSON با typeهای hero|productRail|richText|cta",
+      "seoTitle": "عنوان SEO",
+      "seoDescription": "توضیح SEO",
+      "seoImageId": "شناسه تصویر SEO",
+      "seoImageIdHint": "UUID از بانک تصاویر",
+      "titleFa": "عنوان فارسی",
+      "description": "توضیحات"
+    },
+    "columns": {
+      "title": "عنوان",
+      "slug": "اسلاگ",
+      "type": "نوع",
+      "status": "وضعیت",
+      "isMain": "مسیر",
+      "actions": "عملیات"
+    },
+    "actions": {
+      "create": "صفحه جدید",
+      "edit": "ویرایش",
+      "delete": "حذف",
+      "cancel": "انصراف",
+      "save": "ذخیره",
+      "apply": "اعمال",
+      "advancedFilters": "فیلتر پیشرفته",
+      "resetFilters": "پاک کردن فیلترها"
+    }
+  },
+  "homepage": {
+    "title": "صفحه اصلی",
+    "subtitle": "مدیریت سکشن‌های محصول در صفحه هوم فروشگاه — ترتیب، فیلتر و لینک مشاهده همه.",
+    "createTitle": "سکشن جدید",
+    "editTitle": "ویرایش سکشن",
+    "error": "بارگذاری سکشن‌ها با خطا مواجه شد",
+    "noAccess": "دسترسی مشاهده صفحه اصلی را ندارید.",
+    "emptyTitle": "سکشنی ثبت نشده",
+    "emptyDescription": "اولین سکشن هوم را بسازید یا seed را اجرا کنید.",
+    "confirmDelete": "آیا از حذف {title} مطمئن هستید؟",
+    "validation": {
+      "productLimit": "تعداد محصول باید بین ۱ تا ۴۸ باشد"
+    },
+    "types": {
+      "product_grid": "گرید محصول",
+      "product_rail": "ریل افقی",
+      "sale_grid": "گرید حراج"
+    },
+    "layouts": {
+      "cols3": "۳ ستونه",
+      "cols4": "۴ ستونه"
+    },
+    "filterModes": {
+      "audience": "مخاطب",
+      "sale": "حراج",
+      "featured": "ویژه",
+      "none": "بدون فیلتر"
+    },
+    "audiences": {
+      "men": "مردانه",
+      "women": "زنانه",
+      "kids": "بچه‌گانه"
+    },
+    "status": {
+      "enabled": "فعال",
+      "disabled": "غیرفعال"
+    },
+    "fields": {
+      "title": "عنوان",
+      "subtitle": "زیرعنوان",
+      "sectionType": "نوع نمایش",
+      "gridLayout": "چیدمان گرید",
+      "filterMode": "فیلتر محصولات",
+      "audience": "مخاطب",
+      "productLimit": "حداکثر محصول",
+      "shopPage": "صفحه لینک (مشاهده همه)",
+      "shopPageHint": "اختیاری — صفحه /main یا /collection",
+      "noShopPage": "بدون لینک صفحه",
+      "isEnabled": "نمایش در فروشگاه"
+    },
+    "columns": {
+      "order": "ترتیب",
+      "title": "عنوان",
+      "type": "نوع",
+      "link": "لینک",
+      "status": "وضعیت",
+      "actions": "عملیات"
+    },
+    "actions": {
+      "create": "سکشن جدید",
+      "cancel": "انصراف",
+      "save": "ذخیره",
+      "enable": "فعال‌سازی",
+      "disable": "غیرفعال",
+      "moveUp": "بالا",
+      "moveDown": "پایین"
+    }
+  },
+  "products": {
+    "title": "محصولات",
+    "subtitle": "مدیریت کالاهای فیزیکی و سرویس‌های دیجیتال.",
+    "createTitle": "محصول جدید",
+    "editTitle": "ویرایش محصول",
+    "error": "بارگذاری محصولات با خطا مواجه شد",
+    "emptyTitle": "محصولی ثبت نشده",
+    "emptyDescription": "اولین محصول را ایجاد کنید یا seed را اجرا کنید.",
+    "confirmDelete": "آیا از حذف {title} مطمئن هستید؟",
+    "noImage": "بدون تصویر",
+    "digitalNotice": "محصول دیجیتال — تحویل سرویس در فاز بعدی پیاده‌سازی می‌شود.",
+    "validation": {
+      "invalidPrice": "قیمت وارد شده معتبر نیست"
+    },
+    "tabs": {
+      "general": "عمومی",
+      "pricing": "قیمت‌گذاری",
+      "catalog": "دسته و برند",
+      "variants": "ورینت‌ها",
+      "media": "تصویر",
+      "seo": "SEO"
+    },
+    "types": {
+      "physical": "فیزیکی",
+      "digital": "دیجیتال / سرویس"
+    },
+    "status": {
+      "draft": "پیش‌نویس",
+      "active": "فعال",
+      "archived": "آرشیو"
+    },
+    "filters": {
+      "search": "جستجو",
+      "searchPlaceholder": "عنوان یا اسلاگ...",
+      "status": "وضعیت",
+      "type": "نوع",
+      "brand": "برند",
+      "category": "دسته",
+      "all": "همه"
+    },
+    "fields": {
+      "title": "عنوان",
+      "slug": "اسلاگ",
+      "slugHint": "خالی بگذارید تا از عنوان ساخته شود",
+      "description": "توضیحات کوتاه",
+      "descriptionBlocks": "توضیحات غنی (متن / چک‌لیست / جدول)",
+      "productType": "نوع محصول",
+      "productTypeHint": "فیزیکی نیاز به ارسال دارد؛ دیجیتال برای سرویس و محتوا",
+      "status": "وضعیت انتشار",
+      "basePrice": "قیمت (ریال)",
+      "comparePrice": "قیمت قبل از تخفیف",
+      "comparePriceHint": "اختیاری — برای نمایش خط‌خورده",
+      "isRefundable": "قابل استرداد",
+      "isRefundableHint": "برای کالای فیزیکی",
+      "isRefundableDigitalHint": "سرویس‌های دیجیتال معمولاً غیرقابل استرداد هستند",
+      "isFeatured": "محصول ویژه",
+      "isFeaturedHint": "در فیلتر featured صفحه اصلی و PLP نمایش داده می‌شود",
+      "popularityScore": "امتیاز محبوبیت",
+      "popularityScoreHint": "برای مرتب‌سازی «محبوب‌ترین» — عدد بزرگ‌تر = بالاتر",
+      "category": "دسته‌بندی",
+      "noCategory": "بدون دسته",
+      "brand": "برند",
+      "noBrand": "بدون برند",
+      "featuredImage": "تصویر شاخص",
+      "featuredImageHint": "برای نمایش در لیست و صفحه محصول",
+      "gallery": "گالری تصاویر",
+      "galleryHint": "اولین تصویر به‌عنوان تصویر شاخص استفاده می‌شود"
+    },
+    "categorySelect": {
+      "title": "دسته‌بندی‌ها",
+      "hint": "می‌توانید محصول را در چند دسته قرار دهید",
+      "selectedCount": "{count} دسته انتخاب شده",
+      "primaryLabel": "دسته اصلی",
+      "primaryHint": "برای breadcrumb و فیلتر اصلی فروشگاه",
+      "noPrimary": "بدون دسته اصلی"
+    },
+    "tagSelect": {
+      "title": "برچسب‌ها",
+      "hint": "برچسب‌ها برای فیلتر و گروه‌بندی محصولات",
+      "selectedCount": "{count} برچسب انتخاب شده",
+      "empty": "برچسبی تعریف نشده — از بخش برچسب‌ها اضافه کنید"
+    },
+    "variants": {
+      "optionsTitle": "گزینه‌های محصول",
+      "optionsHint": "مثلاً سایز، رنگ — مقادیر را با ویرگول جدا کنید",
+      "addOption": "گزینه جدید",
+      "noOptions": "هنوز گزینه‌ای تعریف نشده",
+      "optionName": "نام گزینه",
+      "optionValues": "مقادیر",
+      "optionValuesHint": "مثلاً S, M, L",
+      "variantsTitle": "ورینت‌ها",
+      "variantsHint": "پس از تعریف گزینه‌ها، ورینت‌ها را خودکار بسازید",
+      "generateVariants": "ساخت ورینت‌ها",
+      "noVariants": "ورینتی ثبت نشده",
+      "defaultYes": "پیش‌فرض",
+      "setDefault": "پیش‌فرض کن",
+      "columns": {
+        "options": "ترکیب",
+        "sku": "SKU",
+        "price": "قیمت",
+        "comparePrice": "قیمت قبل",
+        "default": "پیش‌فرض",
+        "actions": "عملیات"
+      }
+    },
+    "preview": {
+      "title": "مشاهده محصول",
+      "error": "بارگذاری جزئیات محصول با خطا مواجه شد",
+      "close": "بستن",
+      "noImage": "بدون تصویر",
+      "noVariants": "ورینتی ثبت نشده",
+      "noPriceHistory": "تاریخچه قیمت ثبت نشده",
+      "noProductHistory": "تاریخچه تغییرات محصول ثبت نشده",
+      "defaultYes": "بله",
+      "basePrice": "قیمت پایه محصول",
+      "tabs": {
+        "overview": "خلاصه",
+        "variants": "ورینت‌ها",
+        "priceHistory": "تاریخچه قیمت",
+        "productHistory": "تاریخچه محصول"
+      },
+      "sections": {
+        "general": "اطلاعات عمومی",
+        "seo": "SEO",
+        "options": "گزینه‌ها"
+      },
+      "fields": {
+        "slug": "اسلاگ",
+        "status": "وضعیت",
+        "type": "نوع",
+        "basePrice": "قیمت پایه",
+        "comparePrice": "قیمت قبل از تخفیف",
+        "brand": "برند",
+        "categories": "دسته‌بندی‌ها",
+        "tags": "برچسب‌ها",
+        "description": "توضیحات",
+        "seoTitle": "عنوان SEO",
+        "seoDescription": "توضیحات SEO",
+        "canonicalUrl": "Canonical"
+      },
+      "columns": {
+        "sku": "SKU",
+        "options": "گزینه‌ها",
+        "price": "قیمت",
+        "comparePrice": "قیمت قبل",
+        "default": "پیش‌فرض",
+        "time": "زمان",
+        "target": "هدف",
+        "oldPrice": "قیمت قبلی",
+        "newPrice": "قیمت جدید",
+        "actor": "انجام‌دهنده"
+      }
+    },
+    "mediaGallery": {
+      "featured": "شاخص",
+      "empty": "هنوز تصویری اضافه نشده",
+      "addImage": "افزودن تصویر",
+      "remove": "حذف",
+      "moveUp": "بالا",
+      "moveDown": "پایین",
+      "limits": "حداکثر {maxMb} مگابایت — JPEG, PNG, WebP, GIF, SVG"
+    },
+    "seo": {
+      "sectionTitle": "SEO و شبکه‌های اجتماعی",
+      "sectionHint": "اختیاری — برای نتایج جستجو و اشتراک‌گذاری",
+      "fields": {
+        "title": "عنوان SEO",
+        "description": "توضیحات SEO",
+        "ogTitle": "عنوان Open Graph",
+        "ogDescription": "توضیحات Open Graph",
+        "ogImage": "تصویر Open Graph",
+        "ogImageHint": "اگر خالی باشد از تصویر شاخص استفاده می‌شود",
+        "canonicalUrl": "آدرس Canonical",
+        "metaRobots": "Meta Robots"
+      }
+    },
+    "columns": {
+      "image": "تصویر",
+      "title": "عنوان",
+      "type": "نوع",
+      "status": "وضعیت",
+      "price": "قیمت",
+      "brand": "برند",
+      "category": "دسته",
+      "actions": "عملیات"
+    },
+    "actions": {
+      "create": "محصول جدید",
+      "view": "مشاهده",
+      "edit": "ویرایش",
+      "delete": "حذف",
+      "cancel": "انصراف",
+      "save": "ذخیره"
+    }
+  },
+  "orders": {
+    "title": "سفارش‌ها",
+    "subtitle": "مشاهده و مدیریت وضعیت سفارش‌های مشتریان.",
+    "detailTitle": "جزئیات سفارش",
+    "detailError": "بارگذاری سفارش با خطا مواجه شد",
+    "error": "بارگذاری سفارش‌ها با خطا مواجه شد",
+    "noAccess": "دسترسی مشاهده سفارش‌ها را ندارید.",
+    "emptyTitle": "سفارشی ثبت نشده",
+    "emptyDescription": "پس از ثبت سفارش توسط مشتریان، اینجا نمایش داده می‌شود.",
+    "fields": {
+      "search": "جستجو",
+      "statusFilter": "فیلتر وضعیت",
+      "allStatuses": "همه وضعیت‌ها",
+      "subtotal": "جمع جزء",
+      "discount": "تخفیف",
+      "shipping": "ارسال",
+      "grandTotal": "مبلغ نهایی",
+      "method": "روش ارسال",
+      "tracking": "کد رهگیری",
+      "coupon": "کپن",
+      "nextStatus": "وضعیت بعدی",
+      "selectStatus": "انتخاب وضعیت"
+    },
+    "sections": {
+      "totals": "مبالغ",
+      "shipping": "ارسال",
+      "items": "اقلام",
+      "payment": "پرداخت",
+      "changeStatus": "تغییر وضعیت",
+      "history": "تاریخچه وضعیت"
+    },
+    "payment": {
+      "gateway": "درگاه پرداخت",
+      "viewReceipt": "مشاهده رسید",
+      "noReceipt": "رسیدی ارسال نشده",
+      "rejectReason": "دلیل رد",
+      "rejectReasonLabel": "دلیل رد رسید (الزامی برای رد)",
+      "rejectReasonPlaceholder": "مثلاً مبلغ اشتباه است یا تصویر ناخوانا است",
+      "rejectReasonRequired": "برای رد رسید، نوشتن دلیل الزامی است."
+    },
+    "columns": {
+      "orderNumber": "شماره سفارش",
+      "customer": "مشتری",
+      "status": "وضعیت",
+      "total": "مبلغ",
+      "date": "تاریخ",
+      "product": "محصول",
+      "sku": "SKU",
+      "qty": "تعداد",
+      "lineTotal": "جمع خط",
+      "actions": "عملیات"
+    },
+    "actions": {
+      "view": "مشاهده",
+      "applyStatus": "اعمال وضعیت",
+      "close": "بستن",
+      "approvePayment": "تأیید پرداخت",
+      "rejectPayment": "رد رسید"
+    }
+  },
+  "customers": {
+    "title": "مشتریان",
+    "subtitle": "پروفایل، آدرس‌ها، سفارش‌ها و علاقه‌مندی‌های مشتریان.",
+    "detailTitle": "پروفایل مشتری",
+    "detailError": "بارگذاری مشتری با خطا مواجه شد",
+    "error": "بارگذاری مشتریان با خطا مواجه شد",
+    "noAccess": "دسترسی مشاهده مشتریان را ندارید.",
+    "emptyTitle": "مشتری ثبت نشده",
+    "emptyDescription": "پس از ثبت‌نام مشتریان، اینجا نمایش داده می‌شود.",
+    "emptyAddresses": "آدرسی ثبت نشده",
+    "emptyOrders": "سفارشی ثبت نشده",
+    "emptyWishlist": "لیست علاقه‌مندی خالی است",
+    "emptyCart": "سبد خرید فعالی وجود ندارد",
+    "noCoordinates": "بدون مختصات",
+    "addressType": {
+      "shipping": "ارسال",
+      "billing": "صورتحساب"
+    },
+    "confirmDelete": "آیا از حذف {email} مطمئن هستید؟",
+    "confirmActivateTitle": "فعال‌سازی حساب",
+    "confirmActivateBody": "آیا مطمئن هستید که می‌خواهید حساب این مشتری را فعال کنید؟",
+    "confirmDeactivateTitle": "غیرفعال‌سازی حساب",
+    "confirmDeactivateBody": "آیا مطمئن هستید که می‌خواهید حساب این مشتری را غیرفعال کنید؟ پس از غیرفعال‌سازی، امکان ورود نخواهد داشت.",
+    "cartExpires": "انقضای سبد: {date}",
+    "stats": {
+      "total": "تعداد کل مشتریان",
+      "growthTitle": "روند جذب مشتری",
+      "newInPeriod": "جدید در این بازه",
+      "week": "هفته",
+      "month": "ماه"
+    },
+    "tabs": {
+      "info": "اطلاعات مشتری",
+      "orders": "سفارش‌ها",
+      "addresses": "آدرس‌ها",
+      "logins": "لاگین‌ها",
+      "wishlist": "علاقه‌مندی‌ها",
+      "cart": "سبد خرید"
+    },
+    "loginMethods": {
+      "otp": "کد یک‌بارمصرف",
+      "password": "رمز عبور",
+      "register": "ثبت‌نام",
+      "reset_password": "بازیابی رمز"
+    },
+    "emptyLogins": "هنوز لاگینی ثبت نشده",
+    "orderFilters": {
+      "all": "همه"
+    },
+    "filters": {
+      "anyStatus": "همه وضعیت‌ها",
+      "active": "فیلترهای فعال:"
+    },
+    "relative": {
+      "justNow": "لحظاتی پیش",
+      "minutes": "{n} دقیقه پیش",
+      "hours": "{n} ساعت پیش",
+      "yesterday": "دیروز",
+      "days": "{n} روز گذشته",
+      "week": "یک هفته گذشته",
+      "weeks": "{n} هفته گذشته",
+      "month": "یک ماه گذشته",
+      "months": "{n} ماه گذشته",
+      "longAgo": "بیش از یک سال"
+    },
+    "fields": {
+      "search": "جستجو",
+      "searchPlaceholder": "نام، ایمیل یا تلفن",
+      "fullName": "نام و نام خانوادگی",
+      "firstName": "نام",
+      "lastName": "نام خانوادگی",
+      "phone": "شماره موبایل",
+      "email": "ایمیل",
+      "emailPlaceholder": "اختیاری — خالی بگذارید اگر ندارد",
+      "isActive": "حساب فعال",
+      "status": "وضعیت",
+      "ordersCount": "تعداد سفارش‌ها",
+      "createdAt": "تاریخ عضویت",
+      "updatedAt": "آخرین به‌روزرسانی",
+      "accountStatus": "وضعیت حساب",
+      "accountStatusHint": "با تغییر وضعیت، فعال یا غیرفعال‌سازی پس از تأیید اعمال می‌شود."
+    },
+    "sections": {
+      "editable": "اطلاعات قابل ویرایش",
+      "editableHint": "نام، نام خانوادگی و ایمیل را می‌توانید ذخیره کنید.",
+      "info": "اطلاعات حساب",
+      "addresses": "آدرس‌ها",
+      "orders": "سفارش‌ها",
+      "wishlist": "علاقه‌مندی‌ها",
+      "cart": "سبد خرید"
+    },
+    "unnamed": "بدون نام",
+    "columns": {
+      "fullName": "نام و نام خانوادگی",
+      "name": "نام",
+      "email": "ایمیل",
+      "phone": "شماره موبایل",
+      "orders": "سفارش‌ها",
+      "status": "وضعیت",
+      "lastActivity": "آخرین رویداد",
+      "orderNumber": "شماره سفارش",
+      "orderDate": "تاریخ",
+      "total": "مبلغ",
+      "loginAt": "تاریخ ورود",
+      "loginMethod": "روش ورود",
+      "loginIp": "آی‌پی",
+      "loginUserAgent": "مرورگر / دستگاه",
+      "actions": "عملیات"
+    },
+    "status": {
+      "active": "فعال",
+      "inactive": "غیرفعال"
+    },
+    "actions": {
+      "view": "مشاهده",
+      "delete": "حذف",
+      "cancel": "انصراف",
+      "close": "بستن",
+      "save": "ذخیره",
+      "apply": "اعمال",
+      "advancedFilters": "فیلتر پیشرفته",
+      "resetFilters": "پاک کردن فیلترها",
+      "activate": "فعال‌سازی",
+      "deactivate": "غیرفعال‌سازی"
+    }
+  },
+  "coupons": {
+    "title": "کپن‌ها",
+    "subtitle": "ایجاد و مدیریت کدهای تخفیف.",
+    "createTitle": "کپن جدید",
+    "editTitle": "ویرایش کپن",
+    "error": "بارگذاری کپن‌ها با خطا مواجه شد",
+    "noAccess": "دسترسی مدیریت کپن‌ها را ندارید.",
+    "emptyTitle": "کپنی ثبت نشده",
+    "emptyDescription": "اولین کپن را ایجاد کنید.",
+    "confirmDelete": "آیا از حذف {code} مطمئن هستید؟",
+    "fields": {
+      "code": "کد",
+      "benefitType": "نوع تخفیف",
+      "value": "مقدار",
+      "minOrderAmount": "حداقل مبلغ سفارش",
+      "maxDiscount": "حداکثر تخفیف",
+      "maxUses": "حداکثر استفاده",
+      "maxUsesPerCustomer": "حداکثر استفاده هر مشتری",
+      "firstOrderOnly": "فقط اولین سفارش",
+      "isWelcome": "کوپن خوش‌آمدگویی ثبت‌نام",
+      "isActive": "فعال"
+    },
+    "benefitTypes": {
+      "percentage": "درصدی",
+      "fixed": "مبلغ ثابت",
+      "free_shipping": "ارسال رایگان"
+    },
+    "columns": {
+      "code": "کد",
+      "type": "نوع",
+      "value": "مقدار",
+      "used": "استفاده",
+      "status": "وضعیت",
+      "actions": "عملیات"
+    },
+    "status": {
+      "active": "فعال",
+      "inactive": "غیرفعال",
+      "welcome": "خوش‌آمدگویی"
+    },
+    "actions": {
+      "create": "کپن جدید",
+      "edit": "ویرایش",
+      "delete": "حذف",
+      "cancel": "انصراف",
+      "save": "ذخیره"
+    }
+  },
+  "promotions": {
+    "title": "پروموشن‌ها",
+    "subtitle": "تخفیف‌های خودکار روی دسته یا محصول.",
+    "createTitle": "پروموشن جدید",
+    "editTitle": "ویرایش پروموشن",
+    "error": "بارگذاری پروموشن‌ها با خطا مواجه شد",
+    "noAccess": "دسترسی مدیریت پروموشن‌ها را ندارید.",
+    "emptyTitle": "پروموشنی ثبت نشده",
+    "emptyDescription": "اولین پروموشن را ایجاد کنید.",
+    "confirmDelete": "آیا از حذف {name} مطمئن هستید؟",
+    "fields": {
+      "name": "نام",
+      "type": "نوع",
+      "value": "مقدار",
+      "isActive": "فعال"
+    },
+    "types": {
+      "percentage": "درصدی",
+      "fixed": "مبلغ ثابت"
+    },
+    "columns": {
+      "name": "نام",
+      "type": "نوع",
+      "value": "مقدار",
+      "targets": "اهداف",
+      "status": "وضعیت",
+      "actions": "عملیات"
+    },
+    "status": {
+      "active": "فعال",
+      "inactive": "غیرفعال"
+    },
+    "actions": {
+      "create": "پروموشن جدید",
+      "edit": "ویرایش",
+      "delete": "حذف",
+      "cancel": "انصراف",
+      "save": "ذخیره"
+    }
+  },
+  "blog": {
+    "title": "وبلاگ",
+    "description": "مدیریت مقالات، وضعیت انتشار و سئو",
+    "createTitle": "مقاله جدید",
+    "editTitle": "ویرایش مقاله",
+    "empty": "هنوز مقاله‌ای ثبت نشده است",
+    "noPermission": "دسترسی به وبلاگ ندارید",
+    "confirmDelete": "مقاله «{title}» حذف شود؟",
+    "columns": {
+      "title": "عنوان",
+      "slug": "اسلاگ",
+      "status": "وضعیت",
+      "updated": "به‌روزرسانی",
+      "actions": "عملیات"
+    },
+    "filters": {
+      "search": "جستجو",
+      "status": "وضعیت",
+      "category": "دسته",
+      "allStatuses": "همه وضعیت‌ها",
+      "allCategories": "همه دسته‌ها"
+    },
+    "status": {
+      "draft": "پیش‌نویس",
+      "pending": "در انتظار / زمان‌بندی",
+      "published": "منتشر شده"
+    },
+    "fields": {
+      "titleFa": "عنوان فارسی",
+      "titleEn": "عنوان انگلیسی (اختیاری)",
+      "slug": "اسلاگ انگلیسی URL",
+      "slugHint": "فقط حروف کوچک انگلیسی، عدد و خط تیره — کاربر باید خودش وارد کند",
+      "excerptFa": "خلاصه فارسی",
+      "content": "محتوا",
+      "status": "وضعیت",
+      "scheduledAt": "زمان‌بندی انتشار",
+      "cover": "تصویر کاور",
+      "coverHint": "فایل را بکشید و رها کنید یا انتخاب کنید؛ Alt Text اجباری است",
+      "altText": "متن جایگزین (Alt)",
+      "altRequired": "وارد کردن Alt Text الزامی است",
+      "categories": "دسته‌ها",
+      "tags": "برچسب‌ها",
+      "seo": "سئو",
+      "seoTitle": "Meta Title",
+      "seoDescription": "Meta Description",
+      "canonicalUrl": "Canonical URL",
+      "faq": "سوالات متداول (FAQ Schema)",
+      "faqQuestion": "سؤال",
+      "faqAnswer": "پاسخ"
+    },
+    "actions": {
+      "create": "مقاله جدید",
+      "save": "ذخیره",
+      "preview": "پیش‌نمایش واقعی",
+      "cancel": "انصراف",
+      "addFaq": "افزودن سؤال",
+      "removeFaq": "حذف",
+      "selectCover": "انتخاب تصویر",
+      "uploadCover": "آپلود",
+      "removeCover": "حذف کاور"
+    },
+    "autosave": {
+      "hint": "پس از اولین ذخیره، پیش‌نویس هر ۳۰ ثانیه ذخیره می‌شود",
+      "saving": "در حال ذخیره خودکار…",
+      "savedAt": "آخرین ذخیره: {time}"
+    },
+    "editor": {
+      "placeholder": "متن مقاله را بنویسید…",
+      "productEmbed": "کارت محصول",
+      "changeProduct": "تغییر",
+      "selectProductHint": "یک محصول انتخاب کنید",
+      "productNotFound": "محصول پیدا نشد",
+      "pickProduct": "انتخاب محصول",
+      "searchProducts": "جستجوی محصول",
+      "cancel": "انصراف",
+      "insertLink": "لینک داخلی",
+      "insertImage": "تصویر",
+      "searchInternal": "جستجوی مقاله یا محصول",
+      "manualUrl": "آدرس دستی",
+      "applyLink": "اعمال لینک",
+      "altTextRequired": "Alt Text تصویر را وارد کنید",
+      "altTextRequiredError": "بدون Alt Text نمی‌توان تصویر درج کرد"
+    }
+  },
+  "blogCategories": {
+    "title": "دسته‌های وبلاگ",
+    "description": "دسته‌بندی سلسله‌مراتبی مقالات",
+    "createTitle": "دسته جدید",
+    "editTitle": "ویرایش دسته",
+    "empty": "دسته‌ای وجود ندارد",
+    "confirmDelete": "این دسته حذف شود؟",
+    "columns": {
+      "nameFa": "نام فارسی",
+      "slug": "اسلاگ",
+      "parent": "والد",
+      "actions": "عملیات"
+    },
+    "fields": {
+      "nameFa": "نام فارسی",
+      "nameEn": "نام انگلیسی (اختیاری)",
+      "slug": "اسلاگ انگلیسی",
+      "slugHint": "فقط kebab-case انگلیسی",
+      "parent": "دسته والد",
+      "noParent": "بدون والد",
+      "description": "توضیحات"
+    },
+    "actions": {
+      "create": "دسته جدید",
+      "save": "ذخیره",
+      "cancel": "انصراف"
+    }
+  },
+  "blogTags": {
+    "title": "برچسب‌های وبلاگ",
+    "description": "برچسب‌های اختصاصی مقالات",
+    "createTitle": "برچسب جدید",
+    "editTitle": "ویرایش برچسب",
+    "empty": "برچسبی وجود ندارد",
+    "confirmDelete": "این برچسب حذف شود؟",
+    "columns": {
+      "nameFa": "نام فارسی",
+      "slug": "اسلاگ",
+      "actions": "عملیات"
+    },
+    "fields": {
+      "nameFa": "نام فارسی",
+      "nameEn": "نام انگلیسی (اختیاری)",
+      "slug": "اسلاگ انگلیسی",
+      "slugHint": "فقط kebab-case انگلیسی"
+    },
+    "actions": {
+      "create": "برچسب جدید",
+      "save": "ذخیره",
+      "cancel": "انصراف"
+    }
+  },
+  "paymentAccounts": {
+    "title": "حساب‌های کارت‌به‌کارت / شبا",
+    "subtitle": "پیکربندی حساب‌های واریز دستی. دقیقاً یک حساب فعال باید پیش‌فرض باشد.",
+    "mockBanner": "دیتای این صفحه فیک و فقط در حافظه مرورگر است؛ به بک‌اند وصل نیست.",
+    "createTitle": "حساب جدید",
+    "editTitle": "ویرایش حساب",
+    "emptyTitle": "حسابی ثبت نشده",
+    "emptyDescription": "اولین حساب کارت یا شبا را اضافه کنید.",
+    "default": "پیش‌فرض",
+    "fields": {
+      "holderName": "نام دارنده",
+      "cardNumber": "شماره کارت",
+      "iban": "شبا",
+      "bankName": "نام بانک",
+      "label": "برچسب / توضیح",
+      "isActive": "فعال",
+      "isDefault": "حساب پیش‌فرض",
+      "cardOrIbanHint": "حداقل یکی از کارت یا شبا لازم است."
+    },
+    "columns": {
+      "holder": "دارنده",
+      "card": "کارت",
+      "iban": "شبا",
+      "bank": "بانک",
+      "status": "وضعیت",
+      "actions": "عملیات"
+    },
+    "status": {
+      "active": "فعال",
+      "inactive": "غیرفعال"
+    },
+    "actions": {
+      "create": "حساب جدید",
+      "edit": "ویرایش",
+      "save": "ذخیره",
+      "cancel": "انصراف",
+      "setDefault": "پیش‌فرض کردن",
+      "deactivate": "غیرفعال"
+    },
+    "errors": {
+      "holder_required": "نام دارنده الزامی است.",
+      "card_or_iban_required": "کارت یا شبا الزامی است.",
+      "need_another_default": "قبل از غیرفعال‌کردن پیش‌فرض، حساب پیش‌فرض دیگری انتخاب کنید.",
+      "not_found": "حساب پیدا نشد.",
+      "inactive": "حساب غیرفعال را نمی‌توان پیش‌فرض کرد."
+    }
+  },
+  "deposits": {
+    "title": "واریزی‌ها (بررسی رسید)",
+    "subtitle": "صف بررسی رسیدهای کارت‌به‌کارت طبق قوانین مبلغ دقیق و رد با دلیل.",
+    "mockBanner": "دیتای فیک. تأیید/رد اعلان in-app فیک در بخش اعلان‌ها می‌سازد.",
+    "emptyTitle": "واریزی‌ای نیست",
+    "emptyDescription": "با فیلتر دیگر امتحان کنید یا seed را ریست کنید.",
+    "detailTitle": "جزئیات واریز {invoice}",
+    "rejectTitle": "رد رسید",
+    "filters": {
+      "status": "وضعیت",
+      "all": "همه"
+    },
+    "status": {
+      "AwaitingPayment": "در انتظار پرداخت",
+      "AwaitingReceiptReview": "در انتظار بررسی رسید",
+      "NeedsCorrection": "نیاز به اصلاح",
+      "Approved": "تأیید شده",
+      "Rejected": "رد نهایی",
+      "Expired": "منقضی",
+      "Cancelled": "لغو شده"
+    },
+    "attemptStatus": {
+      "Submitted": "ارسال‌شده",
+      "Approved": "تأیید",
+      "Rejected": "رد"
+    },
+    "columns": {
+      "invoice": "فاکتور",
+      "user": "کاربر",
+      "amount": "مبلغ فاکتور",
+      "paid": "مبلغ رسید",
+      "submitted": "زمان ارسال",
+      "status": "وضعیت",
+      "actions": "عملیات"
+    },
+    "detail": {
+      "user": "کاربر",
+      "status": "وضعیت",
+      "finalAmount": "مبلغ قابل پرداخت",
+      "snapshot": "حساب نمایش‌داده‌شده (اسنپ‌شات)",
+      "attempts": "تلاش‌های رسید",
+      "noAttempts": "هنوز رسیدی ثبت نشده.",
+      "paidAmount": "مبلغ واردشده",
+      "history": "تاریخچه بررسی"
+    },
+    "history": {
+      "created": "ایجاد پرداخت",
+      "approve": "تأیید",
+      "reject": "رد",
+      "resubmit": "ارسال مجدد رسید"
+    },
+    "fields": {
+      "rejectReason": "دلیل رد (اجباری)"
+    },
+    "actions": {
+      "view": "مشاهده",
+      "approve": "تأیید",
+      "reject": "رد",
+      "confirmReject": "ثبت رد",
+      "cancel": "انصراف",
+      "close": "بستن",
+      "fakeSubmit": "شبیه‌سازی آپلود رسید",
+      "fakeResubmit": "رسید جدید (فیک)"
+    },
+    "errors": {
+      "not_found": "واریز پیدا نشد.",
+      "invalid_status": "این عملیات در وضعیت فعلی مجاز نیست.",
+      "blocked": "پرداخت لغو یا منقضی شده.",
+      "no_attempt": "رسید فعالی برای بررسی نیست.",
+      "amount_mismatch": "مبلغ رسید با مبلغ فاکتور برابر نیست.",
+      "reason_required": "دلیل رد الزامی است."
+    }
+  },
+  "notifications": {
+    "title": "اعلان و پیامک",
+    "subtitle": "لاگ تحویل، ارسال تکی ادمین، و پروایدر sms.ir (فیک).",
+    "mockBanner": "بدون فراخوانی واقعی API. وضعیت تحویل با تایمر کوتاه شبیه‌سازی می‌شود.",
+    "emptyTitle": "پیامی نیست",
+    "emptyDescription": "فیلتر را عوض کنید یا از تب ارسال، پیام بفرستید.",
+    "manual": "دستی",
+    "tabs": {
+      "logs": "لاگ پیام‌ها",
+      "send": "ارسال تکی",
+      "smsir": "پروایدر sms.ir"
+    },
+    "filters": {
+      "source": "سرویس مبدأ",
+      "channel": "کانال",
+      "status": "وضعیت",
+      "recipient": "گیرنده",
+      "recipientPlaceholder": "نام یا شناسه SSO",
+      "manualOnly": "فقط ارسال دستی ادمین",
+      "all": "همه"
+    },
+    "channels": {
+      "in_app": "داخل‌برنامه",
+      "sms": "پیامک"
+    },
+    "status": {
+      "Accepted": "پذیرفته",
+      "Scheduled": "زمان‌بندی‌شده",
+      "Queued": "صف",
+      "InProgress": "در حال ارسال",
+      "Delivered": "تحویل‌شده",
+      "Failed": "ناموفق",
+      "Rejected": "رد اعتبارسنجی"
+    },
+    "columns": {
+      "id": "شناسه",
+      "source": "مبدأ",
+      "channel": "کانال",
+      "recipient": "گیرنده",
+      "template": "قالب",
+      "status": "وضعیت",
+      "actions": "عملیات"
+    },
+    "actions": {
+      "view": "جزئیات"
+    },
+    "detail": {
+      "title": "جزئیات پیام",
+      "source": "سرویس مبدأ",
+      "correlation": "ارجاع همبستگی",
+      "params": "پارامترهای قالب",
+      "providerRef": "مرجع پروایدر",
+      "error": "خطا"
+    },
+    "send": {
+      "recipient": "گیرنده",
+      "channel": "کانال",
+      "template": "کلید قالب",
+      "title": "عنوان",
+      "body": "متن",
+      "code": "کد OTP",
+      "codeHint": "برای قالب‌های verify استفاده می‌شود.",
+      "submit": "صف‌کردن پیام",
+      "accepted": "پیام پذیرفته شد: {id}",
+      "noMobile": "بدون موبایل",
+      "disabled": "غیرفعال"
+    },
+    "smsir": {
+      "banner": "پروایدر ثابت MVP طبق sms.ir — فقط نمایش و شبیه‌سازی؛ API واقعی صدا زده نمی‌شود.",
+      "provider": "پروایدر فعال",
+      "apiKey": "کلید API",
+      "apiKeyMissing": "تنظیم نشده",
+      "lineNumber": "خط ارسال",
+      "verifyTemplateId": "شناسه قالب Verify",
+      "credit": "اعتبار (فیک)",
+      "refreshCredit": "شبیه‌سازی بروزرسانی اعتبار",
+      "lines": "خطوط حساب",
+      "capabilities": "قابلیت‌های پکیج",
+      "capabilitiesHint": "بر اساس قابلیت‌های شناخته‌شده sms.ir در پروژه (verify، bulk، credit، …).",
+      "unsupported": "پشتیبانی نشده"
+    },
+    "errors": {
+      "source_required": "سرویس مبدأ الزامی است.",
+      "template_required": "کلید قالب الزامی است.",
+      "channel_unsupported": "کانال پشتیبانی نمی‌شود.",
+      "user_not_found": "کاربر پیدا نشد.",
+      "channel_template_mismatch": "این قالب برای کانال انتخابی تعریف نشده."
+    }
+  },
+  "productJourney": {
+    "title": "جرنی ثبت محصول (فیک)",
+    "subtitle": "اطلاعات پایه → نوع و تنوع → قیمت. جدا از لیست محصول live.",
+    "mockBanner": "همه تغییرات فقط در حافظه مرورگر است.",
+    "status": {
+      "draft": "ثبت اولیه"
+    },
+    "tabs": {
+      "basic": "اطلاعات پایه",
+      "variants": "نوع و تنوع",
+      "pricing": "قیمت",
+      "more": "بیشتر"
+    },
+    "fields": {
+      "selectProduct": "محصول فعلی",
+      "newProduct": "محصول جدید (ثبت نشده)",
+      "title": "نام کامل محصول",
+      "category": "دسته‌بندی",
+      "categoryOptional": "بدون دسته (اختیاری)",
+      "gallery": "عکس و گالری",
+      "galleryHint": "حداقل یک عکس برای ثبت اولیه لازم است. از نمونه یا آپلود فیک.",
+      "upload": "آپلود تصویر (پیش‌نمایش محلی)",
+      "featured": "اصلی"
+    },
+    "variants": {
+      "none": "بدون محور",
+      "one": "یک محور",
+      "two": "دو محور",
+      "noneHint": "محصول تک‌SKU؛ ماتریس خالی می‌ماند.",
+      "optionName": "نام محور",
+      "values": "مقادیر",
+      "valuesHint": "با ویرگول جدا کنید؛ ماتریس خودکار ساخته می‌شود.",
+      "axisLabel": "محور {n}",
+      "combination": "ترکیب",
+      "enabled": "فعال برای فروش",
+      "on": "فعال",
+      "off": "غیرفعال",
+      "emptyMatrix": "ماتریسی نیست",
+      "emptyMatrixHint": "برای هر محور حداقل یک مقدار وارد کنید."
+    },
+    "pricing": {
+      "basePrice": "قیمت پایه",
+      "history": "تاریخچه قیمت",
+      "at": "زمان",
+      "old": "قبلی",
+      "new": "جدید",
+      "note": "توضیح",
+      "noHistory": "هنوز تغییری ثبت نشده.",
+      "groups": "گروه‌های قیمت ورینت",
+      "noVariants": "ورینت فعالی نیست؛ فقط قیمت پایه ذخیره می‌شود.",
+      "uplift": "افزایش نسبت به پایه",
+      "sameAsBase": "هم‌قیمت با پایه",
+      "basePlus": "پایه + {uplift}"
+    },
+    "more": {
+      "stub": "SEO، برند، تگ و … در فاز بک‌اند به تب بیشتر منتقل می‌شوند. فعلاً stub."
+    },
+    "actions": {
+      "new": "شروع محصول جدید",
+      "register": "ثبت اولیه",
+      "saveBasic": "ذخیره اطلاعات پایه",
+      "saveVariants": "ذخیره تنوع",
+      "savePricing": "ذخیره قیمت"
+    },
+    "notices": {
+      "registered": "محصول با وضعیت ثبت اولیه ذخیره شد. می‌توانید تنوع و قیمت را کامل کنید.",
+      "basicSaved": "اطلاعات پایه به‌روز شد.",
+      "variantsSaved": "ماتریس تنوع ذخیره شد.",
+      "pricingSaved": "قیمت پایه و upliftها ذخیره شدند."
+    },
+    "errors": {
+      "title_required": "نام محصول الزامی است.",
+      "gallery_required": "حداقل یک عکس لازم است.",
+      "max_two_axes": "حداکثر دو محور مجاز است.",
+      "invalid_price": "قیمت پایه نامعتبر است."
+    }
+  }
+}
+

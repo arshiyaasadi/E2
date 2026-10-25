@@ -1,0 +1,10 @@
+# Other application namespaces that must call Keycloak should set:
+#   platform.e2/access-identity: "true"
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: platform-identity
+  labels:
+    app.kubernetes.io/part-of: platform
+    app.kubernetes.io/component: identity
+    platform.e2/zone: identity

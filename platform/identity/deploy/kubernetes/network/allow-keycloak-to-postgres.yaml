@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-keycloak-to-postgres
+  namespace: platform-identity
+  labels:
+    app.kubernetes.io/name: keycloak-postgres
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: keycloak-postgres
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: keycloak
+      ports:
+        - protocol: TCP
+          port: 5432
+    # Optional: backup / operator agents in the same namespace.
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: identity-database
+      ports:
+        - protocol: TCP
+          port: 5432

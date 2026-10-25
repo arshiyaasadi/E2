@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: platform-observability
+resources:
+  - ../../../../platform/observability/deploy/kubernetes/namespace.yaml
+  - ../../../../platform/observability/deploy/kubernetes/ingress.yaml
+  - otel-daemonset.yaml
+patches:
+  - target:
+      kind: Ingress
+      name: signoz
+    patch: |-
+      - op: replace
+        path: /spec/ingressClassName
+        value: traefik
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: noz.abysso.ir
+      - op: replace
+        path: /spec/rules/0/host
+        value: noz.abysso.ir
+# SigNoz core is installed with Helm (see platform/observability/docs/deploy.md)
+# before or after this overlay; Ingress requires Service `signoz` in this namespace.

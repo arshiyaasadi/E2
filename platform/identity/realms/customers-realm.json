@@ -1,0 +1,31 @@
+{
+  "realm": "customers",
+  "enabled": true,
+  "displayName": "Customers",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "sslRequired": "external",
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "internationalizationEnabled": true,
+  "supportedLocales": ["en"],
+  "defaultLocale": "en",
+  "roles": {
+    "realm": [
+      {
+        "name": "customer",
+        "description": "Buyer / shopper. No per-store SSO segregation in this phase."
+      }
+    ]
+  },
+  "groups": [],
+  "clients": [],
+  "_comment": "Buyers are not segregated by store in Keycloak yet. Storefront may pass store context in the app only.",
+  "_comment_secrets": "No client secrets or user passwords in Git.",
+  "_comment_permissions": "Role customer only. Any finer buyer permissions live in application services if needed."
+}

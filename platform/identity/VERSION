@@ -1,0 +1,5 @@
+# Pinned Keycloak release (git submodule platform/identity/upstream)
+KEYCLOAK_VERSION=26.8.1
+KEYCLOAK_GIT_REF=26.8.1
+KEYCLOAK_GIT_SHA=24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b
+UPSTREAM_URL=https://github.com/keycloak/keycloak.git

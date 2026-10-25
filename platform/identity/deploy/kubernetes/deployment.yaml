@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: platform-identity
+  labels:
+    app.kubernetes.io/name: keycloak
+    app.kubernetes.io/component: identity
+    app.kubernetes.io/part-of: abysso-platform
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: keycloak
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: keycloak
+        app.kubernetes.io/component: identity
+        app.kubernetes.io/part-of: abysso-platform
+        app.kubernetes.io/version: "26.8.1"
+    spec:
+      containers:
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:26.8.1
+          command: ["/bin/bash", "-c"]
+          args:
+            - /opt/keycloak/bin/kc.sh build && /opt/keycloak/bin/kc.sh start --optimized
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: management
+              containerPort: 9000
+          env:
+            - name: OTEL_SERVICE_NAME
+              value: keycloak
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.name=keycloak,service.version=26.8.1,deployment.environment=production
+          envFrom:
+            - configMapRef:
+                name: keycloak-config
+            - secretRef:
+                name: keycloak-secrets
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: management
+              scheme: HTTP
+            initialDelaySeconds: 120
+            periodSeconds: 15
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: management
+              scheme: HTTP
+            initialDelaySeconds: 240
+            periodSeconds: 30
+            failureThreshold: 10
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "768Mi"
+            limits:
+              cpu: "1"
+              memory: "1536Mi"

@@ -1,0 +1,27 @@
+# Placeholder CloudNativePG (or equivalent) cluster for Keycloak.
+# Do not apply until storage classes, backup ObjectStore, and credentials are bound.
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: keycloak-pg
+  namespace: platform-identity
+  labels:
+    app.kubernetes.io/name: keycloak-postgres
+    app.kubernetes.io/component: identity-database
+spec:
+  instances: 3
+  storage:
+    size: 20Gi
+    storageClass: REPLACE_STORAGE_CLASS
+  bootstrap:
+    initdb:
+      database: keycloak
+      owner: keycloak
+      secret:
+        name: keycloak-pg-owner
+  postgresql:
+    parameters:
+      max_connections: "100"
+  # Enable WAL archiving and scheduled backups via your chosen backup plugin
+  # (for example Barman Cloud ObjectStore) when object storage is available.
+  # See platform/identity/docs/backup-restore.md

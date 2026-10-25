@@ -1,0 +1,81 @@
+{
+  "realm": "operators",
+  "enabled": true,
+  "displayName": "Operators",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "sslRequired": "external",
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 900,
+  "ssoSessionMaxLifespan": 28800,
+  "internationalizationEnabled": true,
+  "supportedLocales": ["en"],
+  "defaultLocale": "en",
+  "roles": {
+    "realm": [
+      {
+        "name": "platform-super-admin",
+        "description": "Platform owner. Only role allowed to use Keycloak Admin Console."
+      },
+      {
+        "name": "store-owner",
+        "description": "Owner of a store. Permissions enforced in the ecommerce admin application."
+      },
+      {
+        "name": "store-admin",
+        "description": "Store administrator. Permissions enforced in the application."
+      },
+      {
+        "name": "store-editor",
+        "description": "Store editor. Fine-grained permissions defined in the application, not in Keycloak."
+      }
+    ]
+  },
+  "groups": [
+    {
+      "name": "store-demo",
+      "path": "/store-demo",
+      "attributes": {
+        "store_id": ["store-demo"]
+      }
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "minio-console",
+      "name": "MinIO Console",
+      "description": "OIDC for MinIO Console. Replace redirect host and set secret at apply time.",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "REPLACE_AT_APPLY_TIME",
+      "redirectUris": ["https://REPLACE_MINIO_CONSOLE_HOSTNAME/oauth_callback"],
+      "webOrigins": ["https://REPLACE_MINIO_CONSOLE_HOSTNAME"],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "protocol": "openid-connect"
+    },
+    {
+      "clientId": "file-service",
+      "name": "File Service",
+      "description": "Bearer-only audience for file-service APIs.",
+      "enabled": true,
+      "publicClient": false,
+      "bearerOnly": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "protocol": "openid-connect"
+    }
+  ],
+  "_comment_mfa": "Require MFA for platform-super-admin and preferably all staff via authentication flows after bootstrap.",
+  "_comment_tenancy": "Staff isolation uses group store-demo (and future store-* groups). Map group attribute store_id into tokens via protocol mapper at client setup.",
+  "_comment_secrets": "No users, passwords, or client secrets in Git. Create bootstrap users at deploy time from the secret manager.",
+  "_comment_permissions": "Keycloak stores roles only. Application services own permission maps. See docs/operations/identity-rbac-and-tenancy.md.",
+  "_comment_storage_clients": "minio-console and file-service: see platform/identity/seeds/clients/ and platform/storage/docs/console-oidc.md."
+}

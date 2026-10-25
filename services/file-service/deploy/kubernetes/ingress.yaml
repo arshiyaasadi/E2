@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: file-service
+  namespace: services-file
+  labels:
+    app.kubernetes.io/name: file-service
+    app.kubernetes.io/part-of: abysso-platform
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: REPLACE_INGRESS_CLASS
+  tls:
+    - hosts:
+        - REPLACE_FILE_HOSTNAME
+      secretName: file-service-tls
+  rules:
+    - host: REPLACE_FILE_HOSTNAME
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: file-service
+                port:
+                  name: http

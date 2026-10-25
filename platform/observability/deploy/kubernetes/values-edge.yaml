@@ -1,0 +1,50 @@
+# SigNoz Helm values for the single-node edge (conservative memory).
+# Install: see docs/deploy.md
+global:
+  storageClass: local-path
+  imageRegistry: ""
+
+clickhouse:
+  installCustomStorageClass: false
+  persistence:
+    size: 15Gi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1280Mi
+  # Nested Bitnami ZK (chart default heapSize=1024 blows a 4Gi node).
+  zookeeper:
+    replicaCount: 1
+    persistence:
+      size: 5Gi
+    heapSize: 256
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 250m
+        memory: 384Mi
+
+signoz:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+otelCollector:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 384Mi

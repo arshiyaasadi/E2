@@ -1,0 +1,35 @@
+# One-shot realm import Job. Apply only on first install of an empty environment.
+# Resolve placeholders and mount realm JSON via ConfigMap before use.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: keycloak-realm-seed
+  namespace: platform-identity
+  labels:
+    app.kubernetes.io/name: keycloak-seed
+spec:
+  ttlSecondsAfterFinished: 86400
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: keycloak-seed
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: seed
+          image: REPLACE_IMAGE_REGISTRY/keycloak:26.8.1
+          # Replace with the documented import invocation for the pinned Keycloak version.
+          # Example shape only — verify against upstream docs for 26.8.1 before use.
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Mount realm JSON and run kc.sh import for customers and operators."
+              echo "Do not run this Job against a database that already has production data."
+              exit 1
+          envFrom:
+            - configMapRef:
+                name: keycloak-config
+            - secretRef:
+                name: keycloak-secrets

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cd-channels
+  namespace: platform-cd
+  labels:
+    app.kubernetes.io/name: channel-reconciler
+data:
+  # In-cluster registry default for first bind; change when external registry is bound.
+  REGISTRY: "registry.platform-cd.svc:5000"
+  # Lines: namespace|deployment|container|image-name
+  CHANNELS: |
+    services-file|file-service|file-service|file-service
