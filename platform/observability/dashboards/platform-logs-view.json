@@ -1,0 +1,61 @@
+{
+  "name": "Platform services and Traefik",
+  "category": "platform",
+  "sourcePage": "logs",
+  "tags": ["platform"],
+  "compositeQuery": {
+    "queryType": "builder",
+    "panelType": "list",
+    "builderQueries": {
+      "A": {
+        "queryName": "A",
+        "dataSource": "logs",
+        "aggregateOperator": "noop",
+        "filters": {
+          "op": "OR",
+          "items": [
+            {
+              "id": "ns-platform",
+              "key": {
+                "key": "k8s.namespace.name",
+                "type": "resource",
+                "dataType": "string"
+              },
+              "op": "in",
+              "value": [
+                "platform-identity",
+                "platform-storage",
+                "services-file",
+                "platform-observability"
+              ]
+            },
+            {
+              "id": "traefik",
+              "key": {
+                "key": "k8s.pod.name",
+                "type": "resource",
+                "dataType": "string"
+              },
+              "op": "contains",
+              "value": "traefik"
+            },
+            {
+              "id": "k8s-events",
+              "key": {
+                "key": "service.name",
+                "type": "resource",
+                "dataType": "string"
+              },
+              "op": "=",
+              "value": "k8s-events"
+            }
+          ]
+        },
+        "expression": "A",
+        "disabled": false,
+        "having": [],
+        "orderBy": [{ "columnName": "timestamp", "order": "desc" }]
+      }
+    }
+  }
+}

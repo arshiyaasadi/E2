@@ -1,0 +1,207 @@
+# One replica. Pod CPU/memory from the local kubelet, pod phase from the API,
+# and Keycloak login counters from the management port. Host CPU/RAM stay on
+# otel-node-agent so a scraper failure does not drop node metrics.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: otel-platform-scraper
+  namespace: platform-observability
+  labels:
+    app.kubernetes.io/name: otel-platform-scraper
+    app.kubernetes.io/part-of: abysso-platform
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: otel-platform-scraper
+  labels:
+    app.kubernetes.io/name: otel-platform-scraper
+    app.kubernetes.io/part-of: abysso-platform
+rules:
+  - apiGroups: [""]
+    resources: ["nodes/stats", "nodes/proxy", "nodes/metrics"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources:
+      - namespaces
+      - nodes
+      - pods
+      - services
+      - replicationcontrollers
+      - resourcequotas
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["daemonsets", "deployments", "replicasets", "statefulsets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["batch"]
+    resources: ["jobs", "cronjobs"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["autoscaling"]
+    resources: ["horizontalpodautoscalers"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["events.k8s.io"]
+    resources: ["events"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: otel-platform-scraper
+  labels:
+    app.kubernetes.io/name: otel-platform-scraper
+    app.kubernetes.io/part-of: abysso-platform
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: otel-platform-scraper
+subjects:
+  - kind: ServiceAccount
+    name: otel-platform-scraper
+    namespace: platform-observability
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-platform-scraper-config
+  namespace: platform-observability
+  labels:
+    app.kubernetes.io/name: otel-platform-scraper
+    app.kubernetes.io/part-of: abysso-platform
+data:
+  config.yaml: |
+    receivers:
+      kubeletstats:
+        collection_interval: 30s
+        auth_type: serviceAccount
+        endpoint: ${env:K8S_NODE_IP}:10250
+        insecure_skip_verify: true
+        metric_groups:
+          - pod
+      k8s_cluster:
+        auth_type: serviceAccount
+        collection_interval: 30s
+        node_conditions_to_report: [Ready, MemoryPressure, DiskPressure]
+        allocatable_types_to_report: [cpu, memory]
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: keycloak
+              scrape_interval: 30s
+              metrics_path: /metrics
+              static_configs:
+                - targets: ["keycloak.platform-identity.svc:9000"]
+              metric_relabel_configs:
+                - source_labels: [__name__]
+                  regex: keycloak_user_events_total
+                  action: keep
+      k8sobjects:
+        auth_type: serviceAccount
+        objects:
+          - name: events
+            mode: pull
+            interval: 30s
+            group: ""
+    processors:
+      resource:
+        attributes:
+          - key: deployment.environment
+            value: production
+            action: upsert
+      resource/events:
+        attributes:
+          - key: deployment.environment
+            value: production
+            action: upsert
+          - key: service.name
+            value: k8s-events
+            action: upsert
+          - key: signoz.component
+            value: k8s-events
+            action: upsert
+      transform/events:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            statements:
+              - set(cache["event"], body) where IsMap(body)
+              - set(cache["event"], ParseJSON(body)) where IsString(body)
+              - set(log.attributes["k8s.event.reason"], cache["event"]["reason"]) where cache["event"]["reason"] != nil
+              - set(log.attributes["k8s.event.type"], cache["event"]["type"]) where cache["event"]["type"] != nil
+              - set(log.attributes["k8s.namespace.name"], cache["event"]["involvedObject"]["namespace"]) where cache["event"]["involvedObject"]["namespace"] != nil
+              - set(log.attributes["k8s.pod.name"], cache["event"]["involvedObject"]["name"]) where cache["event"]["involvedObject"]["kind"] == "Pod"
+              - set(log.attributes["k8s.object.kind"], cache["event"]["involvedObject"]["kind"]) where cache["event"]["involvedObject"]["kind"] != nil
+              - set(log.attributes["k8s.event.name"], cache["event"]["metadata"]["name"]) where cache["event"]["metadata"]["name"] != nil
+              - set(log.body, cache["event"]["message"]) where cache["event"]["message"] != nil
+      # Keep Warning image-pull events and also Normal Pulling/Pulled so operators
+      # can see both failure and progress for container starts.
+      filter/events:
+        error_mode: ignore
+        logs:
+          log_record:
+            - 'attributes["k8s.event.type"] != "Warning" and attributes["k8s.event.reason"] != "Pulling" and attributes["k8s.event.reason"] != "Pulled" and attributes["k8s.event.reason"] != "Failed" and attributes["k8s.event.reason"] != "BackOff" and attributes["k8s.event.reason"] != "ErrImagePull"'
+      batch:
+        timeout: 5s
+    exporters:
+      otlp:
+        endpoint: signoz-otel-collector.platform-observability.svc:4317
+        tls:
+          insecure: true
+    service:
+      pipelines:
+        metrics:
+          receivers: [kubeletstats, k8s_cluster, prometheus]
+          processors: [resource, batch]
+          exporters: [otlp]
+        logs:
+          receivers: [k8sobjects]
+          processors: [transform/events, filter/events, resource/events, batch]
+          exporters: [otlp]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-platform-scraper
+  namespace: platform-observability
+  labels:
+    app.kubernetes.io/name: otel-platform-scraper
+    app.kubernetes.io/part-of: abysso-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: otel-platform-scraper
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: otel-platform-scraper
+        app.kubernetes.io/part-of: abysso-platform
+        app.kubernetes.io/version: "0.127.0"
+    spec:
+      serviceAccountName: otel-platform-scraper
+      containers:
+        - name: otelcol
+          image: otel/opentelemetry-collector-contrib:0.127.0
+          args: ["--config=/conf/config.yaml"]
+          env:
+            - name: K8S_NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: conf
+              mountPath: /conf
+              readOnly: true
+          resources:
+            requests:
+              cpu: 20m
+              memory: 96Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+      volumes:
+        - name: conf
+          configMap:
+            name: otel-platform-scraper-config

@@ -23,8 +23,9 @@ Environment overlays / references: `infrastructure/environments/<env>/`
 - Namespace: `platform-storage`
 - MinIO: StatefulSet, 1 replica in staging placeholders; production intent 4+ for distributed mode (document when nodes exist)
 - Services: ClusterIP for S3 API (`9000`) and Console (`9001`)
-- Ingress / TLS: placeholders until gateway and certificates are wired
+- Ingress / TLS: Console on `file.abysso.ir` (production overlay); S3 API never public
 - Readiness / liveness: HTTP health on the MinIO API port
+- Console OIDC: Keycloak client `minio-console` (same SSO idea as `noz.abysso.ir`)
 
 ## Order
 

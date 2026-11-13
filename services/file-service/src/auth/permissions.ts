@@ -1,20 +1,21 @@
 export type Permission =
   | "file.product_image.upload"
   | "file.product_image.read"
-  | "file.product_image.delete";
+  | "file.product_image.delete"
+  | "file.product_image.replace";
 
-const STORE_FILE_PERMS: Permission[] = [
+const CALLER_FILE_PERMS: Permission[] = [
   "file.product_image.upload",
   "file.product_image.read",
   "file.product_image.delete",
+  "file.product_image.replace",
 ];
 
 /** Application-owned map (ADR 0004). Not stored in Keycloak. */
 export const ROLE_PERMISSIONS: Record<string, Permission[] | "*"> = {
   "platform-super-admin": "*",
-  "store-owner": STORE_FILE_PERMS,
-  "store-admin": STORE_FILE_PERMS,
-  "store-editor": STORE_FILE_PERMS,
+  "file-service-admin": "*",
+  "file-service-caller": CALLER_FILE_PERMS,
 };
 
 export function permissionsForRoles(roles: string[]): Set<Permission | "*"> {
@@ -39,11 +40,23 @@ export function hasPermission(
   return perms.has("*") || perms.has(permission);
 }
 
-export function canAccessStore(
+/** Privileged callers may omit / override user scope checks. */
+export function isPrivilegedCaller(roles: string[]): boolean {
+  return (
+    roles.includes("platform-super-admin") ||
+    roles.includes("file-service-admin")
+  );
+}
+
+/**
+ * On existing resources, request userId must match the file owner
+ * unless the caller is privileged.
+ */
+export function canAccessUser(
   roles: string[],
-  tokenStoreId: string | undefined,
-  resourceStoreId: string,
+  requestUserId: string | undefined,
+  resourceUserId: string,
 ): boolean {
-  if (roles.includes("platform-super-admin")) return true;
-  return Boolean(tokenStoreId) && tokenStoreId === resourceStoreId;
+  if (isPrivilegedCaller(roles)) return true;
+  return Boolean(requestUserId) && requestUserId === resourceUserId;
 }

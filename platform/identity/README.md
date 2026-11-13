@@ -28,6 +28,7 @@ platform/identity/
 |---|---|
 | `operators` | `platform-super-admin`, `store-owner`, `store-admin`, `store-editor` |
 | `customers` | `customer` (buyers not store-segregated in SSO yet) |
+| `pishe` | `shop-owner`, `manager` (Pishe app; pre-registration via BFF) |
 
 Staff tenancy seed: group `store-demo` with attribute `store_id=store-demo`.
 

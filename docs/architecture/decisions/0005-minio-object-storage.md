@@ -15,7 +15,7 @@ The platform needs durable object storage for product images and later other fil
 - Place business file APIs and metadata ownership in `services/file-service/` (PostgreSQL per service).
 - MinIO Console authenticates staff via **Keycloak OIDC** (`operators` realm). Do not create a parallel MinIO user store for operators.
 - Application permissions for upload/read/delete live in `file-service` ([ADR 0004](0004-keycloak-roles-app-permissions.md)); Keycloak supplies roles and store group membership only.
-- Object keys follow `stores/{store_id}/products/{owner_ref}/{file_id}.{ext}`. Buckets are private by default; access uses short-lived signed URLs.
+- Object keys follow `users/{user_id}/products/{owner_ref}/{file_id}.{ext}` (see ADR 0010). Buckets are private by default; access uses short-lived signed URLs.
 - Initial use case: **product images** only (jpeg, png, webp).
 
 ## Consequences

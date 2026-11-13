@@ -1,6 +1,7 @@
 # Optional strategic merge / documented patch: point the SigNoz app workload
 # at the first-party channel image. Apply after CI has pushed :main.
 # Container name must stay `signoz` for channel-reconciler CHANNELS.
+# Requires imagePullSecret `ghcr-pull` (or public GHCR package) on this namespace.
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -9,9 +10,12 @@ metadata:
 spec:
   template:
     spec:
+      imagePullSecrets:
+        - name: ghcr-pull
       containers:
         - name: signoz
           image: ghcr.io/arshiyaasadi/signoz:main
+          imagePullPolicy: Always
           envFrom:
             - secretRef:
                 name: signoz-oidc

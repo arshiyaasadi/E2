@@ -13,19 +13,6 @@ replicas:
     count: 1
 patches:
   - target:
-      kind: Ingress
-      name: file-service
-    patch: |-
-      - op: replace
-        path: /spec/ingressClassName
-        value: traefik
-      - op: replace
-        path: /spec/tls/0/hosts/0
-        value: file.abysso.ir
-      - op: replace
-        path: /spec/rules/0/host
-        value: file.abysso.ir
-  - target:
       kind: ConfigMap
       name: file-service-config
     patch: |-

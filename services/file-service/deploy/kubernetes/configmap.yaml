@@ -9,9 +9,12 @@ metadata:
 data:
   PORT: "8080"
   KEYCLOAK_ISSUER: "https://REPLACE_KEYCLOAK_HOSTNAME/realms/operators"
-  KEYCLOAK_AUDIENCE: ""
+  KEYCLOAK_AUDIENCE: "file-service"
+  FILE_SERVICE_ALLOWED_CLIENTS: "svc-store-backend"
   MINIO_ENDPOINT: "http://minio.platform-storage.svc:9000"
   MINIO_REGION: "us-east-1"
   MINIO_BUCKET: "product-images"
   MINIO_FORCE_PATH_STYLE: "true"
   PRODUCT_IMAGE_MAX_BYTES: "5242880"
+  DEPLOYMENT_ENVIRONMENT: "production"
+  SERVICE_VERSION: "0.1.0"

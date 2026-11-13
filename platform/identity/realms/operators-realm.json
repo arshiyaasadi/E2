@@ -52,8 +52,12 @@
       "enabled": true,
       "publicClient": false,
       "secret": "REPLACE_AT_APPLY_TIME",
-      "redirectUris": ["https://REPLACE_MINIO_CONSOLE_HOSTNAME/oauth_callback"],
-      "webOrigins": ["https://REPLACE_MINIO_CONSOLE_HOSTNAME"],
+      "redirectUris": [
+        "https://file.abysso.ir/oauth2/callback",
+        "https://file.abysso.ir/*"
+      ],
+      "webOrigins": ["https://file.abysso.ir"],
+      "rootUrl": "https://file.abysso.ir",
       "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": false,

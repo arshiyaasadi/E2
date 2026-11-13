@@ -24,8 +24,9 @@ Seed: [../../identity/seeds/clients/signoz.md](../../identity/seeds/clients/sign
 ## Implementation stages
 
 1. **Image channel** — first-party `signoz` image with [../sso/entrypoint-abysso.sh](../sso/entrypoint-abysso.sh) exporting the env contract (done in CI).
-2. **Submodule commits** — on org fork branch `abysso/sso`, add routes that complete OIDC and map roles (ADMIN/EDITOR/VIEWER). Keep the diff limited to auth/login packages.
-3. **Cutover** — Helm/CD uses `REGISTRY/signoz:main`; Secret mounts OIDC env; public signup gated.
+2. **Auth bridge (live)** — [../sso/auth-bridge/auth_bridge.py](../sso/auth-bridge/auth_bridge.py) in front of SigNoz. Ingress targets `signoz-auth-bridge`. Authorization Code + PKCE against Keycloak; mints SigNoz JWTs; `/signup` and `/login` redirect to SSO; public register returns 403 when signup is disabled.
+3. **Optional submodule commits** — deeper in-tree OIDC on `abysso/sso` can replace the bridge later.
+4. **Cutover** — Helm/CD uses `REGISTRY/signoz:main`; Secret mounts OIDC env; Ingress → auth-bridge.
 
 ## Verification
 

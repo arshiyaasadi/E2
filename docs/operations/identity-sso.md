@@ -30,6 +30,7 @@ One identity provider for the whole platform. No service manages its own usernam
 |---|---|---|
 | `customers` | Buyers (not segregated by store in SSO yet) | Storefront |
 | `operators` | Platform super-admin and store staff | Admin panel; Keycloak Admin Console for super-admin only |
+| `pishe` | Pishe shop owners / managers | Pishe app (`apps/pishe`) against `sso.abysso.ir` |
 
 Operator accounts require multi-factor authentication (especially `platform-super-admin`).
 

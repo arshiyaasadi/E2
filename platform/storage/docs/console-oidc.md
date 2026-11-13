@@ -1,35 +1,39 @@
-# MinIO Console OIDC (Keycloak)
+# Object-store Console SSO (Keycloak)
 
 ## Goal
 
-Operators open MinIO Console with the same Keycloak user as other platform tools. No duplicate staff accounts in MinIO.
+Operators open `https://file.abysso.ir` and authenticate with Keycloak (`operators` realm), same SSO idea as SigNoz on `noz.abysso.ir`.
+
+## Architecture (edge)
+
+| Layer | Component |
+|---|---|
+| Public host | `file.abysso.ir` (Traefik Ingress) |
+| Auth gate | `file-console-auth` (oauth2-proxy, Keycloak OIDC) |
+| Console UI | SeaweedFS master UI on `minio:9333` |
+| S3 API | SeaweedFS on `minio:9000` (ClusterIP only) |
+
+Official MinIO Console is deferred until a pullable MinIO image is mirrored privately.
 
 ## Keycloak
 
 - Realm: `operators`
-- Client id: `minio-console` (confidential; secret in secret manager)
-- Valid redirect URI: `https://REPLACE_MINIO_CONSOLE_HOSTNAME/oauth_callback`
-- Scopes: `openid`, `profile`, `email`
-- Roles: map `platform-super-admin` (and optional console policy groups) via MinIO claim policies
+- Client id: `minio-console` (confidential)
+- Redirect URI: `https://file.abysso.ir/oauth2/callback`
+- Web origin: `https://file.abysso.ir`
+- Role required by proxy: `platform-super-admin`
 
-Seed notes: `platform/identity/seeds/` and client fragment docs under identity.
+Secret: `/opt/e2/secrets/file-console-oidc.env` → K8s Secret `file-console-oidc`.
 
-## MinIO
+## oauth2-proxy notes
 
-Configure OpenID (example env / config — values from secret manager):
-
-| Setting | Placeholder |
-|---|---|
-| Config URL | `REPLACE_KEYCLOAK_OPERATORS_ISSUER/.well-known/openid-configuration` |
-| Client ID | `minio-console` |
-| Client Secret | from secret manager |
-| Claim name | `preferred_username` or `sub` |
-| Redirect URI | Console `/oauth_callback` |
-| Display name | `Keycloak` |
+Keycloak access tokens often have `aud: account`. Set `--oidc-extra-audience=account` so callback does not 500 with “audience … does not match”.
 
 ## Verification
 
-1. Open Console URL → redirected to Keycloak login.
-2. Log in as a `platform-super-admin` test user.
-3. Land in Console without a local MinIO user prompt.
-4. Confirm store staff without Console policy cannot administer buckets (application uploads still go through `file-service`).
+1. Open `https://file.abysso.ir` (fresh tab) → 302 to `sso.abysso.ir`.
+2. Log in as a user with `platform-super-admin` (and an email on the account).
+3. Land on the storage console UI.
+4. Confirm `file-service` still reaches S3 on ClusterIP (health ready).
+
+Do not reuse an old `/oauth2/callback?code=…` URL after a proxy restart; start again from `/`.

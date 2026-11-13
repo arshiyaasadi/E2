@@ -2,38 +2,44 @@
 
 ## Audience / API resource
 
-Staff tokens from the admin panel (client `admin-panel` when created) call `file-service` with the same access token. Configure `file-service` to accept the `operators` issuer and validate JWKS.
-
-Optional dedicated client for clearer audience:
-
 | Field | Value |
 |---|---|
 | Client id | `file-service` |
 | Access type | bearer-only **or** confidential with audience mapper |
 | Standard flow | disabled if bearer-only |
-| Full scope | false; include realm roles |
+| Purpose | Token audience for M2M callers |
 
-## Machine client (optional)
+End users and browsers do **not** call `file-service` directly. Store backends obtain tokens via **client_credentials** (see [`svc-store-backend.md`](svc-store-backend.md)).
 
-| Field | Value |
+## Machine callers
+
+| Client id | Purpose |
 |---|---|
-| Client id | `file-service-api` |
-| Access type | confidential |
-| Service accounts | enabled |
-| Grant | client_credentials |
-| Secret | secret manager only |
+| `svc-store-backend` | Primary store/catalog backend M2M caller |
+| `file-service-api` | Optional extra job / batch caller (same pattern) |
 
-Use for batch jobs or a future product service calling file-service without a user session.
+Both must:
 
-## Protocol mappers (required for store isolation)
+1. Be confidential with service accounts enabled
+2. Hold realm role `file-service-caller` (or `file-service-admin`)
+3. Appear in `FILE_SERVICE_ALLOWED_CLIENTS` on the file-service deployment
+4. Keep secrets only in the secret manager
 
-On the **calling** client (admin panel / store backend):
+## Application permissions (enforced in file-service)
 
-- Group membership → token
-- Group attribute `store_id` → claim `store_id` (string) or `store_ids` (list)
+| Permission | Used for |
+|---|---|
+| `file.product_image.upload` | upload-url, confirm, proxy upload |
+| `file.product_image.read` | metadata, download-url |
+| `file.product_image.replace` | replace-url, PUT content, PATCH metadata |
+| `file.product_image.delete` | soft-delete |
 
-`file-service` reads roles + `store_id` and applies the local permission map (`file.product_image.*`).
+Role map (ADR 0004): `file-service-caller` → all four; `file-service-admin` / `platform-super-admin` → `*`.
+
+## Ownership claim
+
+Callers pass **`userId`** (the person whose file space is targeted). Store isolation remains in the calling backend. See [ADR 0010](../../../../docs/architecture/decisions/0010-file-service-m2m-user-ownership.md).
 
 ## No duplicate users
 
-Operators who open MinIO Console use Keycloak (`minio-console`). Operators and editors who upload product images use the same Keycloak users via JWT to `file-service`. MinIO S3 credentials exist only as a machine secret for `file-service`.
+Operators who open MinIO Console use Keycloak (`minio-console`). MinIO S3 credentials exist only as a machine secret for `file-service`.

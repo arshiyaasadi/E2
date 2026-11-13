@@ -12,7 +12,7 @@ The platform needs a single public entry point for TLS termination and host-base
 - Use **k3s** as the first production Kubernetes distribution (still Kubernetes per ADR 0002).
 - Use **Traefik** (bundled with k3s) as the platform gateway: TLS termination, Ingress routing, and the only process listening on public 80/443 for platform hosts.
 - Manage certificates with **cert-manager** and Let's Encrypt HTTP-01 (`ClusterIssuer` named `letsencrypt-prod`).
-- Public hosts for the first bind: `sso.abysso.ir`, `file.abysso.ir`, `noz.abysso.ir`. Databases and MinIO API stay ClusterIP only.
+- Public hosts for the first bind: `sso.abysso.ir`, `file.abysso.ir` (MinIO Console), `noz.abysso.ir`. Databases and MinIO S3 API stay ClusterIP only; `file-service` is ClusterIP M2M.
 
 ## Consequences
 

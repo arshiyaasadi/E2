@@ -1,0 +1,23 @@
+# OTLP/HTTP for the non-k8s host agent. Listens on the edge WireGuard address
+# only (kube-proxy externalIPs). Do not expose 4317/4318 on a public interface.
+apiVersion: v1
+kind: Service
+metadata:
+  name: signoz-otlp-wireguard
+  namespace: platform-observability
+  labels:
+    app.kubernetes.io/name: signoz-otlp-wireguard
+    app.kubernetes.io/part-of: abysso-platform
+spec:
+  type: ClusterIP
+  externalIPs:
+    - 10.66.0.2
+  selector:
+    app.kubernetes.io/instance: signoz
+    app.kubernetes.io/name: signoz
+    app.kubernetes.io/component: otel-collector
+  ports:
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+      protocol: TCP

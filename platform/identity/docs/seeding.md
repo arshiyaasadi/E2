@@ -8,7 +8,8 @@ Seeds create the baseline realm configuration (`customers`, `operators`) on a **
 
 - `platform/identity/realms/customers-realm.json` — role `customer` only; no store groups
 - `platform/identity/realms/operators-realm.json` — staff roles + group `store-demo` + clients `minio-console` and `file-service` (secrets replaced at apply time)
-- `platform/identity/seeds/clients/` — documentation for storage-related clients
+- `platform/identity/realms/pishe-realm.json` — roles `shop-owner`, `manager` + clients `pishe-app`, `pishe-bff` (secrets replaced at apply time)
+- `platform/identity/seeds/clients/` — documentation for storage and Pishe clients
 
 No client secrets, admin passwords, users, or real hostnames are stored in these files. Create bootstrap users at apply time from the secret manager.
 

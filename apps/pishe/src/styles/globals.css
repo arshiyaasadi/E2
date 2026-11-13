@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "IRANSans";
+  src:
+    url("/fonts/iransans/IRANSansWebFaNum.woff2") format("woff2"),
+    url("/fonts/iransans/IRANSansWebFaNum.woff") format("woff"),
+    url("/fonts/iransans/IRANSansWebFaNum.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "IRANSans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-primary: #0f766e;
+  --color-primary-hover: #115e59;
+  --color-primary-50: #f0fdfa;
+  --color-primary-100: #ccfbf1;
+
+  --color-accent: #f97316;
+  --color-accent-hover: #ea580c;
+  --color-secondary: #6366f1;
+
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #0ea5e9;
+
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-foreground: #0f172a;
+  --color-muted: #64748b;
+
+  --spacing-atom: 0.25rem;
+  --spacing-atom-md: 0.5rem;
+  --spacing-pad-atom: 0.375rem;
+  --spacing-pad-atom-md: 0.75rem;
+  --spacing-mol: 1rem;
+  --spacing-mol-md: 1.5rem;
+  --spacing-pad-mol: 1rem;
+  --spacing-pad-mol-md: 1.5rem;
+  --spacing-org: 2rem;
+  --spacing-pad-org: 2rem;
+  --spacing-stack-org: 3rem;
+
+  --spacing-control-h-sm: 2.5rem;
+  --spacing-control-h: 3rem;
+  --spacing-control-h-lg: 3.25rem;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+  --color-primary: #2dd4bf;
+  --color-primary-hover: #5eead4;
+  --color-primary-50: #042f2e;
+  --color-primary-100: #0f766e;
+  --color-accent: #fb923c;
+  --color-accent-hover: #fdba74;
+  --color-background: #070b14;
+  --color-surface: #111827;
+  --color-surface-2: #1a2332;
+  --color-border: #2a3648;
+  --color-foreground: #f1f5f9;
+  --color-muted: #94a3b8;
+  --color-danger: #f87171;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+@keyframes dock-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .gap-atom {
+    gap: var(--spacing-atom);
+  }
+  .gap-atom-md {
+    gap: var(--spacing-atom-md);
+  }
+  .gap-mol {
+    gap: var(--spacing-mol);
+  }
+  .gap-mol-md {
+    gap: var(--spacing-mol-md);
+  }
+  .gap-org {
+    gap: var(--spacing-org);
+  }
+  .p-pad-atom {
+    padding: var(--spacing-pad-atom);
+  }
+  .p-pad-atom-md {
+    padding: var(--spacing-pad-atom-md);
+  }
+  .p-pad-mol {
+    padding: var(--spacing-pad-mol);
+  }
+  .p-pad-mol-md {
+    padding: var(--spacing-pad-mol-md);
+  }
+  .p-pad-org {
+    padding: var(--spacing-pad-org);
+  }
+  .px-pad-atom-md {
+    padding-inline: var(--spacing-pad-atom-md);
+  }
+  .px-pad-mol {
+    padding-inline: var(--spacing-pad-mol);
+  }
+  .px-pad-mol-md {
+    padding-inline: var(--spacing-pad-mol-md);
+  }
+  .py-pad-atom-md {
+    padding-block: var(--spacing-pad-atom-md);
+  }
+  .py-pad-mol {
+    padding-block: var(--spacing-pad-mol);
+  }
+  .h-control-sm {
+    height: var(--spacing-control-h-sm);
+  }
+  .h-control {
+    height: var(--spacing-control-h);
+  }
+  .h-control-lg {
+    height: var(--spacing-control-h-lg);
+  }
+
+  .animate-dock-in {
+    animation: dock-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-fade-rise {
+    animation: fade-rise 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .motion-expand {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .motion-expand[data-open="true"] {
+    grid-template-rows: 1fr;
+  }
+
+  .motion-expand > .motion-expand-inner {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-dock-in,
+    .animate-fade-rise {
+      animation: none;
+    }
+
+    .motion-expand {
+      transition: none;
+    }
+  }
+}
+

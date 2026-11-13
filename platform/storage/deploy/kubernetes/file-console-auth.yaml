@@ -1,0 +1,78 @@
+# Keycloak SSO gate for the object-store console (same pattern as noz.abysso.ir).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-console-auth
+  namespace: platform-storage
+  labels:
+    app.kubernetes.io/name: file-console-auth
+    app.kubernetes.io/part-of: abysso-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: file-console-auth
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: file-console-auth
+        app.kubernetes.io/part-of: abysso-platform
+    spec:
+      containers:
+        - name: oauth2-proxy
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.7.1
+          args:
+            - --http-address=0.0.0.0:4180
+            - --provider=keycloak-oidc
+            - --oidc-issuer-url=https://REPLACE_KEYCLOAK_HOSTNAME/realms/operators
+            - --redirect-url=https://REPLACE_MINIO_CONSOLE_HOSTNAME/oauth2/callback
+            - --upstream=http://minio.platform-storage.svc:9333
+            - --email-domain=*
+            - --cookie-secure=true
+            - --cookie-samesite=lax
+            - --cookie-name=_abysso_file_auth
+            - --cookie-expire=8h
+            - --cookie-refresh=15m
+            - --skip-provider-button=true
+            - --set-xauthrequest=true
+            - --pass-access-token=false
+            - --pass-user-headers=true
+            - --reverse-proxy=true
+            - --scope=openid email profile
+            - --code-challenge-method=S256
+            - --oidc-extra-audience=account
+            - --allowed-role=platform-super-admin
+          envFrom:
+            - secretRef:
+                name: file-console-oidc
+          ports:
+            - name: http
+              containerPort: 4180
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "20m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: file-console-auth
+  namespace: platform-storage
+  labels:
+    app.kubernetes.io/name: file-console-auth
+spec:
+  selector:
+    app.kubernetes.io/name: file-console-auth
+  ports:
+    - name: http
+      port: 4180
+      targetPort: http

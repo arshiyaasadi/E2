@@ -17,10 +17,10 @@ Product: **Traefik** on **k3s** ([ADR 0007](../../docs/architecture/decisions/00
 | Host | Backend Service | Namespace |
 |---|---|---|
 | `sso.abysso.ir` | `keycloak` | `platform-identity` |
-| `file.abysso.ir` | `file-service` | `services-file` |
+| `file.abysso.ir` | `file-console-auth` (oauth2-proxy → storage console) | `platform-storage` |
 | `noz.abysso.ir` | `signoz` (UI) | `platform-observability` |
 
-Not routed publicly: Postgres, MinIO API/console, SigNoz OTLP.
+Not routed publicly: Postgres, MinIO S3 API (`:9000`), `file-service` (M2M ClusterIP), SigNoz OTLP.
 
 ## Layout
 

@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "lint": "echo \"No root lint yet; add workspace scripts as packages grow.\"",
-    "dev:ui": "yarn workspace ecommerce-admin dev:ui"
+    "dev:ui": "yarn workspace ecommerce-admin dev:ui",
+    "dev:pishe": "yarn workspace pishe dev"
   },
   "engines": {
     "node": ">=18"

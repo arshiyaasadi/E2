@@ -22,6 +22,7 @@
   - [0007 Traefik gateway on k3s](architecture/decisions/0007-traefik-gateway-on-k3s.md)
   - [0008 SigNoz observability](architecture/decisions/0008-signoz-observability.md)
   - [0009 CI push / CD on cluster](architecture/decisions/0009-ci-push-cd-on-cluster.md)
+  - [0010 file-service M2M + user_id ownership](architecture/decisions/0010-file-service-m2m-user-ownership.md)
 
 ## Engineering
 

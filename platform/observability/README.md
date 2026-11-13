@@ -15,6 +15,10 @@ Public UI: `https://noz.abysso.ir` (Traefik Ingress only).
 - Alert rules linked to runbooks
 - Access control for production telemetry
 
+## Alerts
+
+- Pishe pre-registration (log-based): [docs/alerts-pishe-pre-registration.md](docs/alerts-pishe-pre-registration.md), payload [alerts/pishe-pre-registration.rule.json](alerts/pishe-pre-registration.rule.json).
+
 ## Layout
 
 ```

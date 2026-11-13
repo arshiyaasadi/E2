@@ -6,16 +6,40 @@ function required(name: string, fallback?: string): string {
   return value;
 }
 
+function parseCsv(value: string | undefined): string[] {
+  if (!value || value.trim() === "" || value.trim() === "*") {
+    return [];
+  }
+  return value
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 export const config = {
   port: Number(process.env.PORT ?? 8080),
-  databaseUrl: required("DATABASE_URL", "postgres://file_service:REPLACE@localhost:5432/file_service"),
+  serviceName: process.env.OTEL_SERVICE_NAME ?? "file-service",
+  environment:
+    process.env.DEPLOYMENT_ENVIRONMENT ??
+    process.env.NODE_ENV ??
+    "development",
+  version: process.env.SERVICE_VERSION ?? "0.1.0",
+  databaseUrl: required(
+    "DATABASE_URL",
+    "postgres://file_service:REPLACE@localhost:5432/file_service",
+  ),
   keycloak: {
     issuer: required(
       "KEYCLOAK_ISSUER",
       "https://REPLACE_KEYCLOAK_HOSTNAME/realms/operators",
     ),
-    // Empty or "*" skips audience check (tokens often use client "account" until gateway/client setup).
+    // Empty or "*" skips audience check until an audience mapper is bound.
     audience: process.env.KEYCLOAK_AUDIENCE ?? "",
+    /** Comma-separated azp / client_id allowlist. Empty = allow any client with required roles. */
+    allowedClients: parseCsv(process.env.FILE_SERVICE_ALLOWED_CLIENTS),
+  },
+  otel: {
+    endpoint: process.env.OTEL_EXPORTER_OTLP_ENDPOINT ?? "",
   },
   minio: {
     endpoint: required("MINIO_ENDPOINT", "http://minio.platform-storage.svc:9000"),

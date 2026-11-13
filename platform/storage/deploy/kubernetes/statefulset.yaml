@@ -1,6 +1,7 @@
-# S3-compatible object store for the first bind.
-# Official MinIO images are currently unpullable from this edge network;
-# SeaweedFS provides an S3 API that file-service already speaks (path-style).
+# S3-compatible object store for the edge bind.
+# Official MinIO images are not pullable from this network; SeaweedFS provides
+# the S3 API that file-service uses (path-style). Operator UI is the SeaweedFS
+# master console on :9333, fronted by oauth2-proxy (Keycloak) on file.abysso.ir.
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:

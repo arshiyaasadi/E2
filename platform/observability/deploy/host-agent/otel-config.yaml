@@ -1,0 +1,43 @@
+# Host metrics agent for a machine that is not a k3s node.
+# Installed on that host as a container; OTLP stays on the edge WireGuard address.
+receivers:
+  hostmetrics:
+    collection_interval: 15s
+    scrapers:
+      cpu: {}
+      memory: {}
+      load: {}
+      disk: {}
+      network: {}
+
+processors:
+  resource:
+    attributes:
+      - key: host.name
+        value: vps-data-1
+        action: upsert
+      - key: host.id
+        value: vps-data-1
+        action: upsert
+      - key: deployment.environment
+        value: production
+        action: upsert
+      - key: signoz.component
+        value: de-agent
+        action: upsert
+  batch:
+    send_batch_size: 64
+    timeout: 2s
+
+exporters:
+  otlphttp:
+    endpoint: http://10.66.0.2:4318
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    metrics:
+      receivers: [hostmetrics]
+      processors: [resource, batch]
+      exporters: [otlphttp]

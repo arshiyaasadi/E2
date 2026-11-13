@@ -6,6 +6,7 @@ resources:
   - configmap.yaml
   - statefulset.yaml
   - service.yaml
-# network/*.yaml: re-enable after Traefik/file-service selectors are verified.
-# ingress.yaml (MinIO console) is not in the base; keep console ClusterIP-only.
+  - file-console-auth.yaml
+  - ingress.yaml
+# network/*.yaml: re-enable after Traefik selectors are verified.
 # secret.example.yaml is not applied; materialize from the secret manager.

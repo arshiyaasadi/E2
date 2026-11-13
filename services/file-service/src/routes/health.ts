@@ -2,6 +2,7 @@ import { Router } from "express";
 import type { S3Client } from "@aws-sdk/client-s3";
 import { ListBucketsCommand } from "@aws-sdk/client-s3";
 import { checkDb } from "../db/pool.js";
+import { renderPrometheus } from "../obs/metrics.js";
 
 export function healthRouter(s3: S3Client): Router {
   const router = Router();
@@ -25,16 +26,7 @@ export function healthRouter(s3: S3Client): Router {
   });
 
   router.get("/metrics", (_req, res) => {
-    res
-      .type("text/plain")
-      .send(
-        [
-          "# HELP file_service_up 1 if process is up",
-          "# TYPE file_service_up gauge",
-          "file_service_up 1",
-          "",
-        ].join("\n"),
-      );
+    res.type("text/plain").send(renderPrometheus());
   });
 
   return router;

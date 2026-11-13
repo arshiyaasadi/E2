@@ -32,13 +32,14 @@ Public A records point at the edge node. Only these hosts are published through 
 | Host | Public | Target |
 |---|---|---|
 | `sso.abysso.ir` | Yes | Keycloak (`platform-identity`) |
-| `file.abysso.ir` | Yes | `file-service` (`services-file`) |
+| `file.abysso.ir` | Yes | MinIO Console (`platform-storage`) — Keycloak OIDC |
 | `noz.abysso.ir` | Yes | SigNoz UI (`platform-observability`) |
 | `pg.abysso.ir` | No | Logical name only; use in-cluster Service DNS. No public A and no Ingress in this phase. Future pgAdmin may get an Ingress behind SSO later. |
 
 Rules:
 
-- Databases and MinIO S3/API stay **ClusterIP**. Never expose Postgres or MinIO admin on the public internet.
+- Databases and **MinIO S3 API** stay **ClusterIP**. Console is public on `file.abysso.ir` with Keycloak login (like `noz`). Never expose Postgres or the S3 API on the public internet.
+- `file-service` is M2M ClusterIP only (`file-service.services-file.svc`).
 - OTLP for SigNoz stays in-cluster (ClusterIP). Do not publish OTLP publicly.
 - VPN and unrelated host services are out of scope for this platform gateway.
 

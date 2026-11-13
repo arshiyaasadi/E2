@@ -1,0 +1,15 @@
+---
+description: Atomic Design and feature-folder rules for Pishe
+globs: apps/pishe/src/**/*.{ts,tsx}
+---
+
+# Pishe frontend rules
+
+- Atoms: presentational only — no `features`, `store`, or `next/navigation`
+- Molecules: presentational; no `organisms` or `features` (ThemeToggle may use UI store)
+- Organisms / features: may use Query, store, and domain UI
+- Server data via TanStack Query in `features/*/queries.ts`
+- Client never imports Prisma; only `/api/v1/*`
+- UI copy via next-intl (`resources/messages/fa`), not hardcoded Persian in JSX
+- Follow `apps/pishe/docs/product-copy.md` — never expose Keycloak, logs, operators, realms, or infra to end users
+- Spacing: semantic tokens (`gap-mol`, `p-pad-mol-md`, `h-control`) — avoid raw `p-4` / `gap-6` in new code

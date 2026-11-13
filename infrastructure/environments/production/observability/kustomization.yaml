@@ -5,6 +5,8 @@ resources:
   - ../../../../platform/observability/deploy/kubernetes/namespace.yaml
   - ../../../../platform/observability/deploy/kubernetes/ingress.yaml
   - otel-daemonset.yaml
+  - otel-platform-scraper.yaml
+  - otlp-wireguard.yaml
 patches:
   - target:
       kind: Ingress

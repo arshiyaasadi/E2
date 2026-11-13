@@ -6,3 +6,8 @@ ABYSSO_OIDC_CLIENT_ID=signoz
 ABYSSO_OIDC_CLIENT_SECRET=REPLACE_FROM_SECRET_MANAGER
 ABYSSO_OIDC_REDIRECT_URI=https://noz.abysso.ir/api/v1/complete/oidc
 ABYSSO_DISABLE_SIGNUP=true
+# Shared with SigNoz process (empty matches default CE when unset).
+SIGNOZ_JWT_SECRET=
+# Used by auth-bridge only — lookup / invite operators after Keycloak login.
+SIGNOZ_BOOTSTRAP_EMAIL=platform-admin@abysso.ir
+SIGNOZ_BOOTSTRAP_PASSWORD=REPLACE_ADMIN_PASSWORD

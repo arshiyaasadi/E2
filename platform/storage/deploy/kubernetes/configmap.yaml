@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/part-of: abysso-platform
 data:
   MINIO_REGION_NAME: "us-east-1"
-  # Internal ClusterIP URLs for the first bind (console not public).
+  # S3 API stays ClusterIP (file-service only).
   MINIO_SERVER_URL: "http://minio.platform-storage.svc:9000"
-  MINIO_BROWSER_REDIRECT_URL: "http://minio.platform-storage.svc:9001"
+  # Public operator UI (oauth2-proxy + Keycloak) — see file-console-auth.
+  MINIO_BROWSER_REDIRECT_URL: "https://REPLACE_MINIO_CONSOLE_HOSTNAME"

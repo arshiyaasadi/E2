@@ -18,7 +18,7 @@
 1. Announce maintenance; block uploads at the gateway or scale `file-service` write paths down.
 2. Scale MinIO to a safe restore state (quiesce writers; follow [`platform/storage/docs/backup-restore.md`](../../platform/storage/docs/backup-restore.md)).
 3. Restore bucket data from the replica or `mc mirror` source into the target cluster.
-4. Confirm versioning and a sample of product-image keys under `stores/{store_id}/products/...`.
+4. Confirm versioning and a sample of product-image keys under `users/{user_id}/products/...`.
 5. Restore or reconcile `file-service` PostgreSQL if metadata is out of sync (prefer point-in-time that matches the object cut).
 6. Scale MinIO and `file-service` back up; run health checks and a signed upload/download smoke test.
 

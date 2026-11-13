@@ -10,10 +10,10 @@ export function extensionForContentType(contentType: string): string | undefined
 
 /**
  * Canonical object key for product images.
- * stores/{store_id}/products/{owner_ref}/{file_id}.{ext}
+ * users/{user_id}/products/{owner_ref}/{file_id}.{ext}
  */
 export function buildProductImageObjectKey(params: {
-  storeId: string;
+  userId: string;
   ownerRef: string;
   fileId: string;
   contentType: string;
@@ -22,10 +22,10 @@ export function buildProductImageObjectKey(params: {
   if (!ext) {
     throw new Error(`Unsupported content type: ${params.contentType}`);
   }
-  const storeId = sanitizeSegment(params.storeId);
+  const userId = sanitizeSegment(params.userId);
   const ownerRef = sanitizeSegment(params.ownerRef);
   const fileId = sanitizeSegment(params.fileId);
-  return `stores/${storeId}/products/${ownerRef}/${fileId}.${ext}`;
+  return `users/${userId}/products/${ownerRef}/${fileId}.${ext}`;
 }
 
 function sanitizeSegment(value: string): string {

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "v2alpha1",
+  "version": "v5",
+  "alert": "Pishe pre-registration request",
+  "alertType": "LOGS_BASED_ALERT",
+  "ruleType": "threshold_rule",
+  "labels": {
+    "severity": "info",
+    "service": "pishe",
+    "event": "pre_registration"
+  },
+  "annotations": {
+    "summary": "New Pishe pre-registration request",
+    "description": "One or more pishe.pre_registration log events in the evaluation window. Open Logs Explorer for username / userId, then approve in Keycloak realm pishe."
+  },
+  "condition": {
+    "compositeQuery": {
+      "panelType": "graph",
+      "queryType": "builder",
+      "queries": [
+        {
+          "spec": {
+            "name": "A",
+            "signal": "logs",
+            "type": "builder_query",
+            "stepInterval": 60,
+            "aggregations": [{ "expression": "count()" }],
+            "filter": {
+              "expression": "body CONTAINS 'pishe.pre_registration'"
+            }
+          }
+        }
+      ]
+    },
+    "selectedQueryName": "A",
+    "thresholds": {
+      "kind": "basic",
+      "spec": [
+        {
+          "name": "critical",
+          "op": "above",
+          "matchType": "at_least_once",
+          "target": 0,
+          "channels": []
+        }
+      ]
+    }
+  },
+  "evaluation": {
+    "kind": "rolling",
+    "spec": {
+      "evalWindow": "5m",
+      "frequency": "1m"
+    }
+  },
+  "notificationSettings": {
+    "renotify": {
+      "enabled": false,
+      "interval": "15m",
+      "alertStates": ["firing"]
+    }
+  }
+}

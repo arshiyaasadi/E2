@@ -1,0 +1,46 @@
+{
+  "name": "Container image pull failures",
+  "category": "platform",
+  "sourcePage": "logs",
+  "tags": ["platform", "images"],
+  "compositeQuery": {
+    "queryType": "builder",
+    "panelType": "list",
+    "builderQueries": {
+      "A": {
+        "queryName": "A",
+        "dataSource": "logs",
+        "aggregateOperator": "noop",
+        "filters": {
+          "op": "AND",
+          "items": [
+            {
+              "id": "svc",
+              "key": {
+                "key": "service.name",
+                "type": "resource",
+                "dataType": "string"
+              },
+              "op": "=",
+              "value": "k8s-events"
+            },
+            {
+              "id": "reason",
+              "key": {
+                "key": "k8s.event.reason",
+                "type": "tag",
+                "dataType": "string"
+              },
+              "op": "in",
+              "value": ["Failed", "BackOff", "ErrImagePull", "FreeDiskSpaceFailed"]
+            }
+          ]
+        },
+        "expression": "A",
+        "disabled": false,
+        "having": [],
+        "orderBy": [{ "columnName": "timestamp", "order": "desc" }]
+      }
+    }
+  }
+}

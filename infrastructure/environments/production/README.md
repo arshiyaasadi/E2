@@ -12,7 +12,7 @@ Serves real users.
 | Host | Public | Notes |
 |---|---|---|
 | `sso.abysso.ir` | Yes | Keycloak |
-| `file.abysso.ir` | Yes | file-service |
+| `file.abysso.ir` | Yes | MinIO Console (OIDC) |
 | `noz.abysso.ir` | Yes | SigNoz UI |
 | `pg.abysso.ir` | No | In-cluster only; no Ingress |
 
@@ -23,8 +23,8 @@ Operator creates public A records for the three public hosts to the edge node ad
 | Path | Component |
 |---|---|
 | `identity/` | Keycloak + Postgres |
-| `storage/` | MinIO (ClusterIP) |
-| `file-service/` | file-service + Ingress |
+| `storage/` | MinIO (S3 ClusterIP + Console Ingress) |
+| `file-service/` | file-service (ClusterIP M2M) |
 | `observability/` | SigNoz + Ingress |
 
 Apply order: cluster prerequisites (cert-manager, ClusterIssuer) → identity → storage → file-service → observability.

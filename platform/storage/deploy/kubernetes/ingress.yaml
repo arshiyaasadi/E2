@@ -1,4 +1,4 @@
-# Placeholders until TLS and DNS are wired. Prefer Console-only public exposure.
+# Public object-store console via oauth2-proxy (Keycloak). S3 API stays ClusterIP.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -6,9 +6,11 @@ metadata:
   namespace: platform-storage
   labels:
     app.kubernetes.io/name: minio
+    app.kubernetes.io/part-of: abysso-platform
   annotations:
-    kubernetes.io/ingress.class: REPLACE_INGRESS_CLASS
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
+  ingressClassName: REPLACE_INGRESS_CLASS
   tls:
     - hosts:
         - REPLACE_MINIO_CONSOLE_HOSTNAME
@@ -21,6 +23,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: minio
+                name: file-console-auth
                 port:
-                  name: console
+                  number: 4180

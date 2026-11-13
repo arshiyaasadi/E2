@@ -1,0 +1,917 @@
+{
+  "title": "Platform servers and services",
+  "description": "Edge and data host CPU, memory, load, network, and disk, plus platform pod CPU and memory and Keycloak login results.",
+  "tags": [
+    "platform",
+    "hosts",
+    "sso"
+  ],
+  "uploadedGrafana": false,
+  "version": "v5",
+  "variables": {},
+  "panelMap": {},
+  "widgets": [
+    {
+      "id": "04e05602-2910-4291-a4e9-4ed2f33b4405",
+      "title": "CPU used",
+      "description": "Non-idle CPU time divided by total CPU time, per host.",
+      "panelTypes": "graph",
+      "yAxisUnit": "percentunit",
+      "bucketCount": 30,
+      "bucketWidth": 0,
+      "columnUnits": {},
+      "fillSpans": false,
+      "isStacked": false,
+      "mergeAllActiveQueries": false,
+      "nullZeroValues": "zero",
+      "opacity": "1",
+      "query": {
+        "queryType": "builder",
+        "builder": {
+          "queryData": [
+            {
+              "aggregations": [
+                {
+                  "metricName": "system.cpu.time",
+                  "reduceTo": "avg",
+                  "spaceAggregation": "sum",
+                  "temporality": null,
+                  "timeAggregation": "rate"
+                }
+              ],
+              "dataSource": "metrics",
+              "disabled": true,
+              "expression": "A",
+              "filter": {
+                "expression": "state != 'idle'"
+              },
+              "filters": {
+                "items": [],
+                "op": "AND"
+              },
+              "functions": [],
+              "groupBy": [
+                {
+                  "dataType": "string",
+                  "id": "host.name--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "host.name",
+                  "type": "tag"
+                }
+              ],
+              "having": [],
+              "legend": "",
+              "limit": null,
+              "orderBy": [],
+              "queryName": "A",
+              "stepInterval": 60
+            },
+            {
+              "aggregations": [
+                {
+                  "metricName": "system.cpu.time",
+                  "reduceTo": "avg",
+                  "spaceAggregation": "sum",
+                  "temporality": null,
+                  "timeAggregation": "rate"
+                }
+              ],
+              "dataSource": "metrics",
+              "disabled": true,
+              "expression": "B",
+              "filter": {
+                "expression": ""
+              },
+              "filters": {
+                "items": [],
+                "op": "AND"
+              },
+              "functions": [],
+              "groupBy": [
+                {
+                  "dataType": "string",
+                  "id": "host.name--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "host.name",
+                  "type": "tag"
+                }
+              ],
+              "having": [],
+              "legend": "",
+              "limit": null,
+              "orderBy": [],
+              "queryName": "B",
+              "stepInterval": 60
+            }
+          ],
+          "queryFormulas": [
+            {
+              "disabled": false,
+              "expression": "A/B",
+              "legend": "{{host.name}}",
+              "queryName": "F1"
+            }
+          ]
+        }
+      },
+      "selectedLogFields": [],
+      "selectedTracesFields": [],
+      "softMax": null,
+      "softMin": null,
+      "stackedBarChart": false,
+      "thresholds": [],
+      "timePreferance": "GLOBAL_TIME"
+    },
+    {
+      "id": "bb33b686-4a06-4fd5-8300-df9f247d56ab",
+      "title": "Memory used",
+      "description": "Memory in the used state divided by all memory states, per host.",
+      "panelTypes": "graph",
+      "yAxisUnit": "percentunit",
+      "bucketCount": 30,
+      "bucketWidth": 0,
+      "columnUnits": {},
+      "fillSpans": false,
+      "isStacked": false,
+      "mergeAllActiveQueries": false,
+      "nullZeroValues": "zero",
+      "opacity": "1",
+      "query": {
+        "queryType": "builder",
+        "builder": {
+          "queryData": [
+            {
+              "aggregations": [
+                {
+                  "metricName": "system.memory.usage",
+                  "reduceTo": "avg",
+                  "spaceAggregation": "sum",
+                  "temporality": null,
+                  "timeAggregation": "avg"
+                }
+              ],
+              "dataSource": "metrics",
+              "disabled": true,
+              "expression": "A",
+              "filter": {
+                "expression": "state = 'used'"
+              },
+              "filters": {
+                "items": [],
+                "op": "AND"
+              },
+              "functions": [],
+              "groupBy": [
+                {
+                  "dataType": "string",
+                  "id": "host.name--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "host.name",
+                  "type": "tag"
+                }
+              ],
+              "having": [],
+              "legend": "",
+              "limit": null,
+              "orderBy": [],
+              "queryName": "A",
+              "stepInterval": 60
+            },
+            {
+              "aggregations": [
+                {
+                  "metricName": "system.memory.usage",
+                  "reduceTo": "avg",
+                  "spaceAggregation": "sum",
+                  "temporality": null,
+                  "timeAggregation": "avg"
+                }
+              ],
+              "dataSource": "metrics",
+              "disabled": true,
+              "expression": "B",
+              "filter": {
+                "expression": ""
+              },
+              "filters": {
+                "items": [],
+                "op": "AND"
+              },
+              "functions": [],
+              "groupBy": [
+                {
+                  "dataType": "string",
+                  "id": "host.name--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "host.name",
+                  "type": "tag"
+                }
+              ],
+              "having": [],
+              "legend": "",
+              "limit": null,
+              "orderBy": [],
+              "queryName": "B",
+              "stepInterval": 60
+            }
+          ],
+          "queryFormulas": [
+            {
+              "disabled": false,
+              "expression": "A/B",
+              "legend": "{{host.name}}",
+              "queryName": "F1"
+            }
+          ]
+        }
+      },
+      "selectedLogFields": [],
+      "selectedTracesFields": [],
+      "softMax": null,
+      "softMin": null,
+      "stackedBarChart": false,
+      "thresholds": [],
+      "timePreferance": "GLOBAL_TIME"
+    },
+    {
+      "id": "776cc848-6d4d-4b55-8280-f5967226e891",
+      "title": "Memory used (bytes)",
+      "description": "Bytes in state=used.",
+      "panelTypes": "graph",
+      "yAxisUnit": "bytes",
+      "bucketCount": 30,
+      "bucketWidth": 0,
+      "columnUnits": {},
+      "fillSpans": false,
+      "isStacked": false,
+      "mergeAllActiveQueries": false,
+      "nullZeroValues": "zero",
+      "opacity": "1",
+      "query": {
+        "queryType": "builder",
+        "builder": {
+          "queryData": [
+            {
+              "aggregations": [
+                {
+                  "metricName": "system.memory.usage",
+                  "reduceTo": "avg",
+                  "spaceAggregation": "sum",
+                  "temporality": null,
+                  "timeAggregation": "avg"
+                }
+              ],
+              "dataSource": "metrics",
+              "disabled": false,
+              "expression": "A",
+              "filter": {
+                "expression": "state = 'used'"
+              },
+              "filters": {
+                "items": [],
+                "op": "AND"
+              },
+              "functions": [],
+              "groupBy": [
+                {
+                  "dataType": "string",
+                  "id": "host.name--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "host.name",
+                  "type": "tag"
+                }
+              ],
+              "having": [],
+              "legend": "{{host.name}}",
+              "limit": null,
+              "orderBy": [],
+              "queryName": "A",
+              "stepInterval": 60
+            }
+          ],
+          "queryFormulas": []
+        }
+      },
+      "selectedLogFields": [],
+      "selectedTracesFields": [],
+      "softMax": null,
+      "softMin": null,
+      "stackedBarChart": false,
+      "thresholds": [],
+      "timePreferance": "GLOBAL_TIME"
+    },
+    {
+      "id": "a7d59ffa-a035-4512-b487-95b10d9c23cf",
+      "title": "Load average (1m)",
+      "description": "Host 1-minute load average.",
+      "panelTypes": "graph",
+      "yAxisUnit": "short",
+      "bucketCount": 30,
+      "bucketWidth": 0,
+      "columnUnits": {},
+      "fillSpans": false,
+      "isStacked": false,
+      "mergeAllActiveQueries": false,
+      "nullZeroValues": "zero",
+      "opacity": "1",
+      "query": {
+        "queryType": "builder",
+        "builder": {
+          "queryData": [
+            {
+              "aggregations": [
+                {
+                  "metricName": "system.cpu.load_average.1m",
+                  "reduceTo": "avg",
+                  "spaceAggregation": "avg",
+                  "temporality": null,
+                  "timeAggregation": "avg"
+                }
+              ],
+              "dataSource": "metrics",
+              "disabled": false,
+              "expression": "A",
+              "filter": {
+                "expression": ""
+              },
+              "filters": {
+                "items": [],
+                "op": "AND"
+              },
+              "functions": [],
+              "groupBy": [
+                {
+                  "dataType": "string",
+                  "id": "host.name--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "host.name",
+                  "type": "tag"
+                }
+              ],
+              "having": [],
+              "legend": "{{host.name}}",
+              "limit": null,
+              "orderBy": [],
+              "queryName": "A",
+              "stepInterval": 60
+            }
+          ],
+          "queryFormulas": []
+        }
+      },
+      "selectedLogFields": [],
+      "selectedTracesFields": [],
+      "softMax": null,
+      "softMin": null,
+      "stackedBarChart": false,
+      "thresholds": [],
+      "timePreferance": "GLOBAL_TIME"
+    },
+    {
+      "id": "86afb0a6-a3dc-4899-ac15-9882999615ac",
+      "title": "Network throughput",
+      "description": "Bytes per second by host and direction.",
+      "panelTypes": "graph",
+      "yAxisUnit": "binBps",
+      "bucketCount": 30,
+      "bucketWidth": 0,
+      "columnUnits": {},
+      "fillSpans": false,
+      "isStacked": false,
+      "mergeAllActiveQueries": false,
+      "nullZeroValues": "zero",
+      "opacity": "1",
+      "query": {
+        "queryType": "builder",
+        "builder": {
+          "queryData": [
+            {
+              "aggregations": [
+                {
+                  "metricName": "system.network.io",
+                  "reduceTo": "avg",
+                  "spaceAggregation": "sum",
+                  "temporality": null,
+                  "timeAggregation": "rate"
+                }
+              ],
+              "dataSource": "metrics",
+              "disabled": false,
+              "expression": "A",
+              "filter": {
+                "expression": ""
+              },
+              "filters": {
+                "items": [],
+                "op": "AND"
+              },
+              "functions": [],
+              "groupBy": [
+                {
+                  "dataType": "string",
+                  "id": "host.name--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "host.name",
+                  "type": "tag"
+                },
+                {
+                  "dataType": "string",
+                  "id": "direction--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "direction",
+                  "type": "tag"
+                }
+              ],
+              "having": [],
+              "legend": "{{host.name}} {{direction}}",
+              "limit": null,
+              "orderBy": [],
+              "queryName": "A",
+              "stepInterval": 60
+            }
+          ],
+          "queryFormulas": []
+        }
+      },
+      "selectedLogFields": [],
+      "selectedTracesFields": [],
+      "softMax": null,
+      "softMin": null,
+      "stackedBarChart": false,
+      "thresholds": [],
+      "timePreferance": "GLOBAL_TIME"
+    },
+    {
+      "id": "250f9058-6f6f-49d7-8f7f-ae62038d418d",
+      "title": "Disk throughput",
+      "description": "Disk bytes per second by host and direction.",
+      "panelTypes": "graph",
+      "yAxisUnit": "binBps",
+      "bucketCount": 30,
+      "bucketWidth": 0,
+      "columnUnits": {},
+      "fillSpans": false,
+      "isStacked": false,
+      "mergeAllActiveQueries": false,
+      "nullZeroValues": "zero",
+      "opacity": "1",
+      "query": {
+        "queryType": "builder",
+        "builder": {
+          "queryData": [
+            {
+              "aggregations": [
+                {
+                  "metricName": "system.disk.io",
+                  "reduceTo": "avg",
+                  "spaceAggregation": "sum",
+                  "temporality": null,
+                  "timeAggregation": "rate"
+                }
+              ],
+              "dataSource": "metrics",
+              "disabled": false,
+              "expression": "A",
+              "filter": {
+                "expression": ""
+              },
+              "filters": {
+                "items": [],
+                "op": "AND"
+              },
+              "functions": [],
+              "groupBy": [
+                {
+                  "dataType": "string",
+                  "id": "host.name--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "host.name",
+                  "type": "tag"
+                },
+                {
+                  "dataType": "string",
+                  "id": "direction--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "direction",
+                  "type": "tag"
+                }
+              ],
+              "having": [],
+              "legend": "{{host.name}} {{direction}}",
+              "limit": null,
+              "orderBy": [],
+              "queryName": "A",
+              "stepInterval": 60
+            }
+          ],
+          "queryFormulas": []
+        }
+      },
+      "selectedLogFields": [],
+      "selectedTracesFields": [],
+      "softMax": null,
+      "softMin": null,
+      "stackedBarChart": false,
+      "thresholds": [],
+      "timePreferance": "GLOBAL_TIME"
+    },
+    {
+      "id": "c481ac8a-6c7b-4085-bffa-0813d2031128",
+      "title": "Service memory",
+      "description": "Working set of platform pods, including Traefik.",
+      "panelTypes": "graph",
+      "yAxisUnit": "bytes",
+      "bucketCount": 30,
+      "bucketWidth": 0,
+      "columnUnits": {},
+      "fillSpans": false,
+      "isStacked": false,
+      "mergeAllActiveQueries": false,
+      "nullZeroValues": "zero",
+      "opacity": "1",
+      "query": {
+        "queryType": "builder",
+        "builder": {
+          "queryData": [
+            {
+              "aggregations": [
+                {
+                  "metricName": "k8s.pod.memory.working_set",
+                  "reduceTo": "avg",
+                  "spaceAggregation": "avg",
+                  "temporality": null,
+                  "timeAggregation": "avg"
+                }
+              ],
+              "dataSource": "metrics",
+              "disabled": false,
+              "expression": "A",
+              "filter": {
+                "expression": "k8s.namespace.name IN ('platform-identity', 'platform-storage', 'platform-observability', 'services-file') OR (k8s.namespace.name = 'kube-system' AND k8s.pod.name LIKE '%traefik%')"
+              },
+              "filters": {
+                "items": [],
+                "op": "AND"
+              },
+              "functions": [],
+              "groupBy": [
+                {
+                  "dataType": "string",
+                  "id": "k8s.namespace.name--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "k8s.namespace.name",
+                  "type": "tag"
+                },
+                {
+                  "dataType": "string",
+                  "id": "k8s.pod.name--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "k8s.pod.name",
+                  "type": "tag"
+                }
+              ],
+              "having": [],
+              "legend": "{{k8s.namespace.name}}/{{k8s.pod.name}}",
+              "limit": null,
+              "orderBy": [],
+              "queryName": "A",
+              "stepInterval": 60
+            }
+          ],
+          "queryFormulas": []
+        }
+      },
+      "selectedLogFields": [],
+      "selectedTracesFields": [],
+      "softMax": null,
+      "softMin": null,
+      "stackedBarChart": false,
+      "thresholds": [],
+      "timePreferance": "GLOBAL_TIME"
+    },
+    {
+      "id": "c41b322a-9595-462b-863a-c23a8363731f",
+      "title": "Service CPU",
+      "description": "CPU cores in use per platform pod.",
+      "panelTypes": "graph",
+      "yAxisUnit": "short",
+      "bucketCount": 30,
+      "bucketWidth": 0,
+      "columnUnits": {},
+      "fillSpans": false,
+      "isStacked": false,
+      "mergeAllActiveQueries": false,
+      "nullZeroValues": "zero",
+      "opacity": "1",
+      "query": {
+        "queryType": "builder",
+        "builder": {
+          "queryData": [
+            {
+              "aggregations": [
+                {
+                  "metricName": "k8s.pod.cpu.usage",
+                  "reduceTo": "avg",
+                  "spaceAggregation": "avg",
+                  "temporality": null,
+                  "timeAggregation": "avg"
+                }
+              ],
+              "dataSource": "metrics",
+              "disabled": false,
+              "expression": "A",
+              "filter": {
+                "expression": "k8s.namespace.name IN ('platform-identity', 'platform-storage', 'platform-observability', 'services-file') OR (k8s.namespace.name = 'kube-system' AND k8s.pod.name LIKE '%traefik%')"
+              },
+              "filters": {
+                "items": [],
+                "op": "AND"
+              },
+              "functions": [],
+              "groupBy": [
+                {
+                  "dataType": "string",
+                  "id": "k8s.namespace.name--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "k8s.namespace.name",
+                  "type": "tag"
+                },
+                {
+                  "dataType": "string",
+                  "id": "k8s.pod.name--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "k8s.pod.name",
+                  "type": "tag"
+                }
+              ],
+              "having": [],
+              "legend": "{{k8s.namespace.name}}/{{k8s.pod.name}}",
+              "limit": null,
+              "orderBy": [],
+              "queryName": "A",
+              "stepInterval": 60
+            }
+          ],
+          "queryFormulas": []
+        }
+      },
+      "selectedLogFields": [],
+      "selectedTracesFields": [],
+      "softMax": null,
+      "softMin": null,
+      "stackedBarChart": false,
+      "thresholds": [],
+      "timePreferance": "GLOBAL_TIME"
+    },
+    {
+      "id": "34ae7f25-7799-4ce9-9d3d-f0c14d8fec3e",
+      "title": "SSO logins succeeded",
+      "description": "Keycloak user events with event=login and an empty error. Requires the Keycloak pod to start with event metrics enabled.",
+      "panelTypes": "graph",
+      "yAxisUnit": "short",
+      "bucketCount": 30,
+      "bucketWidth": 0,
+      "columnUnits": {},
+      "fillSpans": false,
+      "isStacked": false,
+      "mergeAllActiveQueries": false,
+      "nullZeroValues": "zero",
+      "opacity": "1",
+      "query": {
+        "queryType": "builder",
+        "builder": {
+          "queryData": [
+            {
+              "aggregations": [
+                {
+                  "metricName": "keycloak_user_events_total",
+                  "reduceTo": "avg",
+                  "spaceAggregation": "sum",
+                  "temporality": null,
+                  "timeAggregation": "increase"
+                }
+              ],
+              "dataSource": "metrics",
+              "disabled": false,
+              "expression": "A",
+              "filter": {
+                "expression": "event = 'login' AND error = ''"
+              },
+              "filters": {
+                "items": [],
+                "op": "AND"
+              },
+              "functions": [],
+              "groupBy": [
+                {
+                  "dataType": "string",
+                  "id": "realm--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "realm",
+                  "type": "tag"
+                }
+              ],
+              "having": [],
+              "legend": "{{realm}}",
+              "limit": null,
+              "orderBy": [],
+              "queryName": "A",
+              "stepInterval": 60
+            }
+          ],
+          "queryFormulas": []
+        }
+      },
+      "selectedLogFields": [],
+      "selectedTracesFields": [],
+      "softMax": null,
+      "softMin": null,
+      "stackedBarChart": false,
+      "thresholds": [],
+      "timePreferance": "GLOBAL_TIME"
+    },
+    {
+      "id": "ae982b63-101b-4a7e-8a0d-b4817505c862",
+      "title": "SSO logins failed",
+      "description": "Keycloak user events with event=login and a non-empty error.",
+      "panelTypes": "graph",
+      "yAxisUnit": "short",
+      "bucketCount": 30,
+      "bucketWidth": 0,
+      "columnUnits": {},
+      "fillSpans": false,
+      "isStacked": false,
+      "mergeAllActiveQueries": false,
+      "nullZeroValues": "zero",
+      "opacity": "1",
+      "query": {
+        "queryType": "builder",
+        "builder": {
+          "queryData": [
+            {
+              "aggregations": [
+                {
+                  "metricName": "keycloak_user_events_total",
+                  "reduceTo": "avg",
+                  "spaceAggregation": "sum",
+                  "temporality": null,
+                  "timeAggregation": "increase"
+                }
+              ],
+              "dataSource": "metrics",
+              "disabled": false,
+              "expression": "A",
+              "filter": {
+                "expression": "event = 'login' AND error != ''"
+              },
+              "filters": {
+                "items": [],
+                "op": "AND"
+              },
+              "functions": [],
+              "groupBy": [
+                {
+                  "dataType": "string",
+                  "id": "realm--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "realm",
+                  "type": "tag"
+                },
+                {
+                  "dataType": "string",
+                  "id": "error--string--tag--false",
+                  "isColumn": false,
+                  "isJSON": false,
+                  "key": "error",
+                  "type": "tag"
+                }
+              ],
+              "having": [],
+              "legend": "{{realm}} {{error}}",
+              "limit": null,
+              "orderBy": [],
+              "queryName": "A",
+              "stepInterval": 60
+            }
+          ],
+          "queryFormulas": []
+        }
+      },
+      "selectedLogFields": [],
+      "selectedTracesFields": [],
+      "softMax": null,
+      "softMin": null,
+      "stackedBarChart": false,
+      "thresholds": [],
+      "timePreferance": "GLOBAL_TIME"
+    }
+  ],
+  "layout": [
+    {
+      "h": 7,
+      "i": "04e05602-2910-4291-a4e9-4ed2f33b4405",
+      "moved": false,
+      "static": false,
+      "w": 6,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "h": 7,
+      "i": "bb33b686-4a06-4fd5-8300-df9f247d56ab",
+      "moved": false,
+      "static": false,
+      "w": 6,
+      "x": 6,
+      "y": 0
+    },
+    {
+      "h": 7,
+      "i": "776cc848-6d4d-4b55-8280-f5967226e891",
+      "moved": false,
+      "static": false,
+      "w": 6,
+      "x": 0,
+      "y": 7
+    },
+    {
+      "h": 7,
+      "i": "a7d59ffa-a035-4512-b487-95b10d9c23cf",
+      "moved": false,
+      "static": false,
+      "w": 6,
+      "x": 6,
+      "y": 7
+    },
+    {
+      "h": 7,
+      "i": "86afb0a6-a3dc-4899-ac15-9882999615ac",
+      "moved": false,
+      "static": false,
+      "w": 6,
+      "x": 0,
+      "y": 14
+    },
+    {
+      "h": 7,
+      "i": "250f9058-6f6f-49d7-8f7f-ae62038d418d",
+      "moved": false,
+      "static": false,
+      "w": 6,
+      "x": 6,
+      "y": 14
+    },
+    {
+      "h": 7,
+      "i": "c481ac8a-6c7b-4085-bffa-0813d2031128",
+      "moved": false,
+      "static": false,
+      "w": 6,
+      "x": 0,
+      "y": 21
+    },
+    {
+      "h": 7,
+      "i": "c41b322a-9595-462b-863a-c23a8363731f",
+      "moved": false,
+      "static": false,
+      "w": 6,
+      "x": 6,
+      "y": 21
+    },
+    {
+      "h": 7,
+      "i": "34ae7f25-7799-4ce9-9d3d-f0c14d8fec3e",
+      "moved": false,
+      "static": false,
+      "w": 6,
+      "x": 0,
+      "y": 28
+    },
+    {
+      "h": 7,
+      "i": "ae982b63-101b-4a7e-8a0d-b4817505c862",
+      "moved": false,
+      "static": false,
+      "w": 6,
+      "x": 6,
+      "y": 28
+    }
+  ]
+}

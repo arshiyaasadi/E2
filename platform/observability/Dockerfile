@@ -18,8 +18,10 @@ RUN chmod +x /usr/local/bin/entrypoint-abysso.sh \
  && chown -R 65532:65532 /etc/signoz /usr/local/bin/entrypoint-abysso.sh || true
 # Upstream image USER varies by tag; leave final USER to the base image default after COPY.
 
-# Preserve upstream CMD; wrap via entrypoint when set in the Deployment.
-# Helm/CD should set command/args to use entrypoint-abysso.sh if OIDC env is present.
+# Wrap upstream binary (/root/signoz on v0.88+) so OIDC env is exported.
+ENTRYPOINT ["/usr/local/bin/entrypoint-abysso.sh"]
+CMD []
+
 LABEL org.opencontainers.image.title="Abysso SigNoz" \
       org.opencontainers.image.source="https://github.com/arshiyaasadi/E2" \
       org.opencontainers.image.description="Controlled SigNoz app image with Abysso SSO overlay hooks"

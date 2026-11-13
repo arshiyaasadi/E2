@@ -19,7 +19,7 @@ services/<service-name>/
 | Service | Owner | Purpose | Status |
 |---|---|---|---|
 | `reference-service` | TBD | Minimal service that proves the platform template | Planned |
-| [`file-service`](file-service/) | TBD | Product-image metadata, signed/proxy MinIO access, Keycloak JWT auth | In development |
+| [`file-service`](file-service/) | TBD | Product-image metadata, signed/proxy MinIO access, Keycloak M2M (`user_id` scope) | In development |
 
 Status values: `Planned`, `In development`, `Staging`, `Live`. A service is `Live` only after completing the [go-live checklist](../docs/go-live-checklist.md).
 

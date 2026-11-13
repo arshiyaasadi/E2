@@ -11,12 +11,13 @@ Related: [identity-sso](identity-sso.md), [ADR 0004](../architecture/decisions/0
 | Platform super-admin | `operators` | Platform owner | Keycloak Admin Console + optional platform tools |
 | Store staff | `operators` | Store owner / admin / future editor | Ecommerce admin panel only |
 | Customer (buyer) | `customers` | Shopper | Storefront |
+| Pishe shop owners | `pishe` | Online-shop owners using Pishe | Pishe app (`shop-owner`; managers use `manager`) |
 
 ## Roles vs permissions
 
 | Concern | Owned by | Examples |
 |---|---|---|
-| Roles | Keycloak (realm roles) | `platform-super-admin`, `store-owner`, `store-admin`, `store-editor`, `customer` |
+| Roles | Keycloak (realm roles) | `platform-super-admin`, `store-owner`, `store-admin`, `store-editor`, `customer`, `shop-owner`, `manager` (pishe) |
 | Permissions | Each application / service | `product.write`, `order.refund`, `cms.publish` |
 
 ### Rules
@@ -48,7 +49,11 @@ Related: [identity-sso](identity-sso.md), [ADR 0004](../architecture/decisions/0
 |---|---|---|
 | `admin-panel` | `operators` | Ecommerce admin SPA/BFF |
 | `storefront` | `customers` | Storefront |
+| `pishe-app` | `pishe` | Pishe BFF password grant (login) |
+| `pishe-bff` | `pishe` | Pishe BFF Admin API (pre-registration; SA + client scope-mappings — see `platform/identity/seeds/clients/pishe-bff.md`) |
 | `svc-<service-name>` | as needed | Service-to-service (client credentials) |
+| `svc-store-backend` | `operators` | Store/catalog backend → `file-service` (M2M) |
+| `file-service` | `operators` | API audience for file-service tokens |
 
 Client secrets never go in Git. Register clients at deploy time from the secret manager.
 
@@ -64,6 +69,10 @@ Every protected API must:
 4. Resolve permissions via the service-local role→permission map.
 5. For staff APIs: enforce `store_id` / group membership on every resource access.
 6. Propagate `trace_id`; never log raw tokens.
+
+### file-service exception (M2M + user_id)
+
+`file-service` is called only by machine clients (`client_credentials`). It scopes objects by **`user_id`** (the person whose file space is targeted), not by `store_id`. Calling backends remain responsible for store isolation before choosing `userId`. See [ADR 0010](../architecture/decisions/0010-file-service-m2m-user-ownership.md) and [file-storage](file-storage.md).
 
 ## Keycloak Admin Console
 

@@ -6,6 +6,7 @@ resources:
   - configmap.yaml
   - deployment.yaml
   - service.yaml
-  - ingress.yaml
   - postgres/simple.yaml
+# ingress.yaml kept as optional template; production exposes MinIO Console on file.abysso.ir.
+# file-service is M2M ClusterIP only (http://file-service.services-file.svc).
 # secret.example.yaml is not applied; materialize from the secret manager.

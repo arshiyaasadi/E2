@@ -5,7 +5,7 @@ First production bind: single server node. Add agents later for scale.
 ## Prerequisites
 
 - Ubuntu 24.04 (or compatible) Linux
-- Public A records for `sso.abysso.ir`, `file.abysso.ir`, `noz.abysso.ir`
+- Public A records for `sso.abysso.ir`, `file.abysso.ir` (MinIO Console), `noz.abysso.ir`
 - Ports 80 and 443 free for Traefik (stop host nginx / docker publish on those ports)
 - Do not change unrelated VPN host services
 

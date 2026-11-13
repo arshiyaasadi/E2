@@ -20,9 +20,10 @@ SigNoz Community Edition does not ship the same OIDC+Keycloak path documented fo
 ## Deploy
 
 1. Create Keycloak client `signoz` from the seed (secret in secret manager). Live edge: client + `signoz-oidc` Secret already materialised under `/opt/e2/secrets/signoz-oidc.env`.
-2. Ensure CD serves `ghcr.io/arshiyaasadi/signoz:main` (or your `IMAGE_REGISTRY`) and Helm values point the workload at that image.
-3. Patch envFrom onto the workload (see `signoz-image-patch.yaml`) so OIDC env is available once the first-party image is live.
-4. Keep `ABYSSO_DISABLE_SIGNUP=true` so operators do not use local `/signup`.
+2. Ensure CD serves `ghcr.io/arshiyaasadi/signoz:main` (or your `IMAGE_REGISTRY`) and Helm values point the workload at that image. Channel reconciler must be allowed to patch **StatefulSets** (see `pipelines/cd/channel-reconciler/rbac.yaml`).
+3. Patch envFrom onto the workload (see `signoz-image-patch.yaml`) so OIDC env is available once the first-party image is live. Namespace needs `ghcr-pull` for private GHCR packages.
+4. Deploy the **auth-bridge** (`deploy/kubernetes/auth-bridge.yaml` + ConfigMap from `sso/auth-bridge/auth_bridge.py`) and point Ingress at `signoz-auth-bridge:8080`.
+5. Keep `ABYSSO_DISABLE_SIGNUP=true` so `/signup` and `/login` redirect to Keycloak; public register API returns 403.
 
 ## Super-admin access
 

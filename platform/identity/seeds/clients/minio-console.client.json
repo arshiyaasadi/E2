@@ -1,12 +1,18 @@
 {
   "clientId": "minio-console",
-  "name": "MinIO Console",
-  "description": "OIDC login for MinIO Console. Secret not stored in Git.",
+  "name": "Object store console (file.abysso.ir)",
+  "description": "OIDC for oauth2-proxy in front of the storage console. Secret not stored in Git.",
   "enabled": true,
   "publicClient": false,
   "secret": "REPLACE_AT_APPLY_TIME",
-  "redirectUris": ["https://REPLACE_MINIO_CONSOLE_HOSTNAME/oauth_callback"],
-  "webOrigins": ["https://REPLACE_MINIO_CONSOLE_HOSTNAME"],
+  "rootUrl": "https://file.abysso.ir",
+  "redirectUris": [
+    "https://file.abysso.ir/oauth2/callback",
+    "https://file.abysso.ir/*"
+  ],
+  "webOrigins": [
+    "https://file.abysso.ir"
+  ],
   "standardFlowEnabled": true,
   "implicitFlowEnabled": false,
   "directAccessGrantsEnabled": false,

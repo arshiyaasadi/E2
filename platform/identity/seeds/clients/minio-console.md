@@ -1,22 +1,19 @@
 # Client: `minio-console`
 
-- **Realm:** `operators`
-- **Protocol:** openid-connect
-- **Access type:** confidential
-- **Standard flow:** enabled
-- **Direct access grants:** disabled
-- **Service accounts:** disabled
-- **Valid redirect URIs:** `https://REPLACE_MINIO_CONSOLE_HOSTNAME/oauth_callback`
-- **Web origins:** `https://REPLACE_MINIO_CONSOLE_HOSTNAME`
-- **Client secret:** secret manager only
+OIDC browser login for the object-store console at `https://file.abysso.ir` (oauth2-proxy), same SSO pattern as SigNoz (`noz.abysso.ir`).
 
-## Protocol mappers (recommended)
-
-- Realm roles → token claim `realm_access.roles` (default)
-- Group attribute `store_id` is **not** required for Console; Console is for platform operators
+| Field | Value |
+|---|---|
+| Realm | `operators` |
+| Client id | `minio-console` |
+| Access type | confidential |
+| Standard flow | enabled |
+| Valid redirect URIs | `https://file.abysso.ir/oauth2/callback`, `https://file.abysso.ir/*` |
+| Web origins | `https://file.abysso.ir` |
+| Client secret | secret manager → `file-console-oidc` / oauth2-proxy |
 
 ## Who may use Console
 
-Prefer users with realm role `platform-super-admin`. Map MinIO policy via OIDC claim after login (see `platform/storage/docs/console-oidc.md`).
+Users with realm role `platform-super-admin` (enforced by oauth2-proxy `--allowed-role`).
 
-Store staff (`store-editor`, etc.) use the ecommerce admin and `file-service` APIs — not MinIO Console.
+Store staff use ecommerce admin + `file-service` (M2M) — not this console.

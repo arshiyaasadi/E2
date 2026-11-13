@@ -1,21 +1,37 @@
 import { createApp } from "./app.js";
 import { config } from "./config.js";
+import { log } from "./obs/log.js";
+import { startOtel } from "./obs/otel.js";
 import { createS3Client } from "./storage/minio.js";
 
-const s3 = createS3Client();
-const app = createApp(s3);
+async function main() {
+  const shutdownOtel = await startOtel();
+  const s3 = createS3Client();
+  const app = createApp(s3);
 
-const server = app.listen(config.port, () => {
-  // eslint-disable-next-line no-console
-  console.log(JSON.stringify({ msg: "file-service listening", port: config.port }));
-});
+  const server = app.listen(config.port, () => {
+    log.info("listening", { port: config.port });
+  });
 
-function shutdown(signal: string) {
-  // eslint-disable-next-line no-console
-  console.log(JSON.stringify({ msg: "shutdown", signal }));
-  server.close(() => process.exit(0));
-  setTimeout(() => process.exit(1), 10_000).unref();
+  function shutdown(signal: string) {
+    log.info("shutdown", { signal });
+    server.close(async () => {
+      try {
+        await shutdownOtel();
+      } finally {
+        process.exit(0);
+      }
+    });
+    setTimeout(() => process.exit(1), 10_000).unref();
+  }
+
+  process.on("SIGTERM", () => shutdown("SIGTERM"));
+  process.on("SIGINT", () => shutdown("SIGINT"));
 }
 
-process.on("SIGTERM", () => shutdown("SIGTERM"));
-process.on("SIGINT", () => shutdown("SIGINT"));
+main().catch((err) => {
+  log.error("startup_failed", {
+    error: err instanceof Error ? err.message : String(err),
+  });
+  process.exit(1);
+});

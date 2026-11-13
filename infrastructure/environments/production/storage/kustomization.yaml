@@ -3,4 +3,34 @@ kind: Kustomization
 namespace: platform-storage
 resources:
   - ../../../../platform/storage/deploy/kubernetes
-# MinIO stays ClusterIP; no public Ingress in production first bind.
+patches:
+  - target:
+      kind: Ingress
+      name: minio-console
+    patch: |-
+      - op: replace
+        path: /spec/ingressClassName
+        value: traefik
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: file.abysso.ir
+      - op: replace
+        path: /spec/rules/0/host
+        value: file.abysso.ir
+  - target:
+      kind: ConfigMap
+      name: minio-config
+    patch: |-
+      - op: replace
+        path: /data/MINIO_BROWSER_REDIRECT_URL
+        value: https://file.abysso.ir
+  - target:
+      kind: Deployment
+      name: file-console-auth
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/args/2
+        value: --oidc-issuer-url=https://sso.abysso.ir/realms/operators
+      - op: replace
+        path: /spec/template/spec/containers/0/args/3
+        value: --redirect-url=https://file.abysso.ir/oauth2/callback

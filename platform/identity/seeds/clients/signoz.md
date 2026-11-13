@@ -6,10 +6,12 @@ Confidential OIDC client in the **`operators`** realm. Operators open SigNoz wit
 |---|---|
 | Client id | `signoz` |
 | Access type | confidential |
-| Standard flow | enabled (Authorization Code + PKCE) |
+| Standard flow | enabled (Authorization Code + **PKCE S256** required) |
 | Valid redirect URIs | `https://noz.abysso.ir/api/v1/complete/oidc`, `https://noz.abysso.ir/*` |
 | Web origins | `https://noz.abysso.ir` |
 | Issuer | `https://sso.abysso.ir/realms/operators` |
+
+The Abysso auth-bridge sends `code_challenge` / `code_verifier` (S256). Do not disable PKCE on this client.
 
 ## Secret
 

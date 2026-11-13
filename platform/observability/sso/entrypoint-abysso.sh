@@ -15,18 +15,15 @@ if [ "${ABYSSO_OIDC_ENABLED:-false}" = "true" ]; then
   export SIGNOZ_ABYSSO_DISABLE_SIGNUP="${ABYSSO_DISABLE_SIGNUP:-true}"
 fi
 
-# Prefer upstream docker entrypoint / binary if present.
-if [ -x /bin/signoz ]; then
-  exec /bin/signoz "$@"
-fi
-if [ -x /go/bin/query-service ] || [ -x /usr/local/bin/signoz ]; then
-  if [ -x /usr/local/bin/signoz ]; then
-    exec /usr/local/bin/signoz "$@"
+# Upstream signoz/signoz image (v0.88+) ships the binary at /root/signoz.
+for candidate in /root/signoz /bin/signoz /usr/local/bin/signoz /go/bin/query-service; do
+  if [ -x "$candidate" ]; then
+    exec "$candidate" "$@"
   fi
-fi
+done
 
-# Fall through to image default CMD
 if [ "$#" -gt 0 ]; then
   exec "$@"
 fi
-exec /bin/sh -c "echo 'abysso-sso: no signoz binary found; check upstream image layout' >&2; exit 1"
+echo "abysso-sso: no signoz binary found; check upstream image layout" >&2
+exit 1

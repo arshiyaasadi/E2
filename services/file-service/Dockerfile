@@ -15,6 +15,7 @@ COPY --from=build /app/package.json /app/yarn.lock* ./
 COPY --from=build /app/packages/tsconfig ./packages/tsconfig
 COPY --from=build /app/services/file-service/package.json ./services/file-service/
 COPY --from=build /app/services/file-service/dist ./services/file-service/dist
+COPY --from=build /app/services/file-service/migrations ./services/file-service/migrations
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/services/file-service/node_modules ./services/file-service/node_modules
 WORKDIR /app/services/file-service

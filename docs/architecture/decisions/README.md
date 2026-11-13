@@ -43,6 +43,7 @@ What becomes easier, what becomes harder, and what follow-up work is needed.
 | [0007](0007-traefik-gateway-on-k3s.md) | Traefik as API gateway on k3s |
 | [0008](0008-signoz-observability.md) | SigNoz as observability stack |
 | [0009](0009-ci-push-cd-on-cluster.md) | CI pushes images; CD runs on the cluster |
+| [0010](0010-file-service-m2m-user-ownership.md) | file-service M2M auth and user_id ownership |
 
 ## Pending decisions
 

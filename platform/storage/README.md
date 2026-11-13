@@ -6,7 +6,7 @@ S3-compatible object storage for the platform.
 - **Product:** MinIO ([ADR 0005](../../docs/architecture/decisions/0005-minio-object-storage.md))
 - **Pinned version:** see [VERSION](VERSION)
 - **Business API:** [`services/file-service/`](../../services/file-service/) owns metadata and signed access
-- **Console login:** Keycloak OIDC (`operators` realm) — no duplicate staff users
+- **Console:** `https://file.abysso.ir` via oauth2-proxy + Keycloak (`operators`) — same SSO pattern as SigNoz (`noz.abysso.ir`). Edge engine is SeaweedFS S3 until a private MinIO image mirror exists.
 
 ## Layout
 

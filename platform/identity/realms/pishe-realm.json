@@ -1,0 +1,64 @@
+{
+  "realm": "pishe",
+  "enabled": true,
+  "displayName": "Pishe",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": false,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "sslRequired": "external",
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "internationalizationEnabled": true,
+  "supportedLocales": ["fa", "en"],
+  "defaultLocale": "fa",
+  "roles": {
+    "realm": [
+      {
+        "name": "shop-owner",
+        "description": "Pishe shop owner. Pre-registered users start with this role."
+      },
+      {
+        "name": "manager",
+        "description": "Pishe manager / operations user (e.g. flamingo-manager)."
+      }
+    ]
+  },
+  "groups": [],
+  "clients": [
+    {
+      "clientId": "pishe-app",
+      "name": "Pishe App",
+      "description": "Confidential client for Pishe BFF password grant (Direct Access Grants). Secret replaced at apply time.",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "REPLACE_AT_APPLY_TIME",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "protocol": "openid-connect",
+      "fullScopeAllowed": true
+    },
+    {
+      "clientId": "pishe-bff",
+      "name": "Pishe BFF (M2M)",
+      "description": "Confidential service-account client for Admin API user create (pre-registration). Assign realm-management roles to the service account at apply time. Secret replaced at apply time.",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "REPLACE_AT_APPLY_TIME",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "protocol": "openid-connect",
+      "fullScopeAllowed": false
+    }
+  ],
+  "_comment_pre_registration": "App sets user attribute pre_registration=[\"true\"] via Admin API when creating shop owners from the register form.",
+  "_comment_secrets": "No users, passwords, or real client secrets in Git. Create flamingo-manager via apps/pishe seed script.",
+  "_comment_permissions": "Keycloak stores roles only. Pishe app owns finer permissions later."
+}

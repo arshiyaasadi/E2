@@ -54,6 +54,7 @@ Written for sensitive actions: logins, permission changes, admin actions, data e
 | Backup failure | Any backup job failed or did not run |
 | Certificate expiry | TLS certificate expires within 14 days |
 | Queue lag | Consumer lag above threshold |
+| Pishe pre-registration | Log body contains `pishe.pre_registration` (count above 0) — see [alerts-pishe-pre-registration](../../platform/observability/docs/alerts-pishe-pre-registration.md) |
 
 - Alerts go to an on-call channel.
 - Each alert links to a runbook in `docs/runbooks/`.
