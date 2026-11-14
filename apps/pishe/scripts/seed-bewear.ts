@@ -1,5 +1,6 @@
 /**
  * Seed BeWear business + thin Profiles + Keycloak users (realm pishe when reachable).
+ * Usernames (proper casing): Arshiya, Amirhossein, Mahsa, Armin.
  *
  * Usage: yarn workspace pishe seed:bewear
  * Requires DATABASE_URL and KEYCLOAK_* in apps/pishe/.env.local
@@ -197,35 +198,40 @@ async function main() {
   const memberPassword =
     process.env.PISHE_MEMBER_PASSWORD || genPassword("Member");
 
-  const users: SeedUser[] = [
+  /** Proper-cased login names (Keycloak username + seed placeholder). */
+  const users: Array<SeedUser & { legacySeedSubs?: string[] }> = [
     {
-      username: "ArshiyA",
+      username: "Arshiya",
       firstName: "Arshiya",
       lastName: "Asadi",
       password: arshiyaPassword,
       isSuperAdmin: true,
       role: "MANAGER",
+      legacySeedSubs: ["seed:ArshiyA", "seed:Arshiya"],
     },
     {
-      username: "amirhossein",
+      username: "Amirhossein",
       firstName: "Amirhossein",
       lastName: "Member",
       password: memberPassword,
       role: "ASSISTANT",
+      legacySeedSubs: ["seed:amirhossein", "seed:Amirhossein", "seed:AmirHossein"],
     },
     {
-      username: "mahsa",
+      username: "Mahsa",
       firstName: "Mahsa",
       lastName: "Member",
       password: memberPassword,
       role: "ASSISTANT",
+      legacySeedSubs: ["seed:mahsa", "seed:Mahsa"],
     },
     {
-      username: "armin",
+      username: "Armin",
       firstName: "Armin",
       lastName: "Member",
       password: memberPassword,
       role: "ASSISTANT",
+      legacySeedSubs: ["seed:armin", "seed:Armin"],
     },
   ];
 
@@ -245,8 +251,28 @@ async function main() {
 
     const keycloakSub = kc.synced ? kc.userId : `seed:${u.username}`;
     let profile = await prisma.profile.findUnique({ where: { keycloakSub } });
+
+    // Migrate legacy seed placeholders / old casing onto the canonical sub.
     if (!profile) {
-      // Also try by displayName username collision via invite only create
+      for (const legacy of u.legacySeedSubs ?? []) {
+        const old = await prisma.profile.findUnique({
+          where: { keycloakSub: legacy },
+        });
+        if (old) {
+          profile = await prisma.profile.update({
+            where: { id: old.id },
+            data: {
+              keycloakSub,
+              displayName: `${u.firstName} ${u.lastName}`.trim(),
+              isSuperAdmin: Boolean(u.isSuperAdmin) || old.isSuperAdmin,
+            },
+          });
+          break;
+        }
+      }
+    }
+
+    if (!profile) {
       profile = await prisma.profile.create({
         data: {
           keycloakSub,
@@ -255,17 +281,21 @@ async function main() {
           isSuperAdmin: Boolean(u.isSuperAdmin),
         },
       });
-    } else if (u.isSuperAdmin && !profile.isSuperAdmin) {
+    } else {
       profile = await prisma.profile.update({
         where: { id: profile.id },
-        data: { isSuperAdmin: true, displayName: `${u.firstName} ${u.lastName}` },
+        data: {
+          keycloakSub,
+          displayName: `${u.firstName} ${u.lastName}`.trim(),
+          isSuperAdmin: Boolean(u.isSuperAdmin) || profile.isSuperAdmin,
+        },
       });
     }
 
     profileByUsername.set(u.username, {
       id: profile.id,
       inviteCode: profile.inviteCode,
-      keycloakSub,
+      keycloakSub: profile.keycloakSub,
     });
 
     credentialRows.push({
@@ -273,7 +303,7 @@ async function main() {
       password: u.password,
       inviteCode: profile.inviteCode,
       isSuperAdmin: Boolean(u.isSuperAdmin),
-      keycloakSub,
+      keycloakSub: profile.keycloakSub,
       keycloakSynced: kc.synced,
       keycloakCreated: kc.created,
       keycloakError: kc.error ?? null,
