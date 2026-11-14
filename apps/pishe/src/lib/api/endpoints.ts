@@ -9,6 +9,17 @@ export const ENDPOINTS = {
     sessions: "/auth/sessions",
     profile: "/auth/profile",
   },
+  profiles: {
+    searchByInvite: "/profiles/search",
+  },
+  businesses: {
+    list: "/businesses",
+    adminList: "/admin/businesses",
+    byId: (id: string) => `/businesses/${id}`,
+    members: (id: string) => `/businesses/${id}/members`,
+    member: (id: string, membershipId: string) =>
+      `/businesses/${id}/members/${membershipId}`,
+  },
   products: {
     list: "/products",
     byId: (id: string) => `/products/${id}`,

@@ -24,6 +24,39 @@ export type AuthUserResponse = {
   avatarUrl: string | null;
   mustChangePassword: boolean;
   currency: "rial";
+  /** Thin Prisma Profile fields (SSO identity remains Keycloak). */
+  inviteCode: string | null;
+  isSuperAdmin: boolean;
+  profileId: string | null;
+};
+
+export type BusinessLinkResponse = {
+  id: string;
+  title: string;
+  url: string;
+  sortOrder: number;
+};
+
+export type BusinessResponse = {
+  id: string;
+  code: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  logoUrl: string | null;
+  color: string | null;
+  assignedAt: string;
+  createdAt: string;
+  updatedAt: string;
+  links: BusinessLinkResponse[];
+};
+
+export type BusinessMemberResponse = {
+  membershipId: string;
+  role: "MANAGER" | "ASSISTANT";
+  inviteCode: string;
+  displayName: string | null;
+  profileId: string;
 };
 
 export type LoginSessionResponse = {

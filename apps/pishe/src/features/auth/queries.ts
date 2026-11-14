@@ -27,6 +27,9 @@ function toAuthUser(data: AuthUserResponse): AuthUser {
     avatarUrl: data.avatarUrl,
     mustChangePassword: data.mustChangePassword,
     currency: data.currency ?? "rial",
+    inviteCode: data.inviteCode ?? null,
+    isSuperAdmin: Boolean(data.isSuperAdmin),
+    profileId: data.profileId ?? null,
   };
 }
 

@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Drawer } from "vaul";
 import {
+  Copy,
   LogOut,
   Monitor,
   Moon,
@@ -13,6 +14,7 @@ import {
   Sun,
   UserRound,
 } from "lucide-react";
+import Link from "next/link";
 import { Alert } from "@/components/atoms/Alert";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
@@ -193,6 +195,7 @@ export function ProfileOverlays() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [editError, setEditError] = useState<string | null>(null);
+  const [inviteCopied, setInviteCopied] = useState(false);
 
   useEffect(() => {
     const tick = () => setNowLabel(formatNowJalaliDateTime());
@@ -277,6 +280,44 @@ export function ProfileOverlays() {
                       <Pencil className="size-4" aria-hidden />
                     </button>
                   </div>
+
+                  {user?.inviteCode ? (
+                    <section className="flex flex-col gap-atom-md">
+                      <h3 className="text-sm font-semibold text-foreground">
+                        {t("inviteCode")}
+                      </h3>
+                      <div className="flex items-center gap-atom-md rounded-xl border border-border bg-surface-2/60 p-pad-mol">
+                        <p className="flex-1 font-mono text-lg font-semibold tracking-widest text-foreground" dir="ltr">
+                          {user.inviteCode}
+                        </p>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={async () => {
+                            try {
+                              await navigator.clipboard.writeText(user.inviteCode!);
+                              setInviteCopied(true);
+                              window.setTimeout(() => setInviteCopied(false), 2000);
+                            } catch {
+                              /* ignore */
+                            }
+                          }}
+                        >
+                          <Copy className="me-1 size-4" aria-hidden />
+                          {inviteCopied ? t("inviteCopied") : t("copyInvite")}
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted">{t("inviteCodeHint")}</p>
+                    </section>
+                  ) : null}
+
+                  {user?.isSuperAdmin ? (
+                    <Link href={ROUTES.adminBusinesses} onClick={closeProfile}>
+                      <Button variant="outline" fullWidth>
+                        {t("adminPanel")}
+                      </Button>
+                    </Link>
+                  ) : null}
 
                   <section className="flex flex-col gap-atom-md">
                     <h3 className="text-sm font-semibold text-foreground">

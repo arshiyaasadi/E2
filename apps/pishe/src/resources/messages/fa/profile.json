@@ -29,5 +29,10 @@
   "logoutConfirmBody": "مطمئنی می‌خوای از حساب خارج بشی؟",
   "logoutConfirm": "بله، خروج",
   "cancel": "انصراف",
-  "noName": "—"
+  "noName": "—",
+  "inviteCode": "کد دعوت",
+  "inviteCodeHint": "این کد ۸ رقمی برای دعوت شما به پروژه استفاده می‌شود",
+  "copyInvite": "کپی کد دعوت",
+  "inviteCopied": "کد دعوت کپی شد",
+  "adminPanel": "پنل مدیریت پلتفرم"
 }

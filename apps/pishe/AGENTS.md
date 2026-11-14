@@ -7,8 +7,14 @@
 - Client talks only to `/api/v1/*` (Next BFF). Never call Keycloak Admin API from the browser.
 - Auth is Keycloak realm `pishe` on the platform server (`KEYCLOAK_BASE_URL`, typically `https://sso.abysso.ir`).
 - Do not run Keycloak or Docker locally for this app — frontend only (`yarn dev`).
-- No Prisma/Postgres. Product mock data lives in gitignored `data/products.json`.
+- **Prisma + Postgres** for the Business domain (thin `Profile`, `Business`, memberships). DB runs on the Abysso Server host (`pg.abysso.ir` / `services/pishe-db` in the Server control-plane repo). Set `DATABASE_URL` in `.env.local`. Product mock data still lives in gitignored `data/products.json`.
 - Product photos go through the BFF to `file-service` (machine client `svc-store-backend`). Local access needs kubectl/SSH port-forwards; see README.
+
+## Domain (Prisma)
+
+- **Profile** (thin): `keycloakSub`, unique 8-digit `inviteCode`, `displayName`, `isSuperAdmin`. No full User table — SSO identity stays in Keycloak.
+- **Business** (UI may say پروژه): `code` (unique 6-digit, generated on create), `name`, `slug`, `description`, `logoUrl`, `color`, `assignedAt` (تاریخ تخصیص), `BusinessLink[]` (title + url).
+- **BusinessMembership**: `MANAGER` | `ASSISTANT` (same UI for now).
 
 ## Atomic dependency rules
 
@@ -26,10 +32,22 @@
 
 - Server data: TanStack Query (`features/*/queries.ts`)
 - Theme: Zustand `ui.slice` (persist key `pishe-ui`)
-- Session facade: Zustand `auth.slice` hydrated from `/auth/me` (cookie is source of truth)
+- Session facade: Zustand `auth.slice` hydrated from `/auth/me` (cookie is source of truth); BFF upserts Prisma Profile by `keycloakSub`
 
 ## Language
 
 - Code, comments, commits, README: English
 - UI copy: Persian **only** via `src/resources/messages/fa/` (never hardcode in JSX)
 - Product voice / what must not leak to users: [docs/product-copy.md](docs/product-copy.md)
+
+## DB ops
+
+```bash
+# migrate (uses DATABASE_URL)
+yarn db:migrate
+# or during schema work:
+npx prisma migrate dev
+
+# seed BeWear + members
+yarn seed:bewear
+```

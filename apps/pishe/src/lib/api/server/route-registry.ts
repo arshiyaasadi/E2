@@ -28,6 +28,18 @@ import {
   mediaUsageHandler,
   patchProductHandler,
 } from "@/lib/api/server/handlers/products.handler";
+import {
+  addMemberHandler,
+  createBusinessHandler,
+  deleteBusinessHandler,
+  getBusinessHandler,
+  listAllBusinessesHandler,
+  listMembersHandler,
+  listMyBusinessesHandler,
+  patchBusinessHandler,
+  removeMemberHandler,
+  searchProfileByInviteHandler,
+} from "@/lib/api/server/handlers/businesses.handler";
 import type { ApiResponse } from "@/types/api";
 
 type RouteContext = {
@@ -62,6 +74,10 @@ const exactRoutes: Record<string, RouteHandler> = {
   "GET:categories": () => listCategoriesHandler(),
   "POST:categories": (ctx) => createCategoryHandler(ctx.body),
   "GET:media/library": () => listMediaLibraryHandler(),
+  "GET:businesses": () => listMyBusinessesHandler(),
+  "GET:admin/businesses": () => listAllBusinessesHandler(),
+  "POST:admin/businesses": (ctx) => createBusinessHandler(ctx.body),
+  "GET:profiles/search": (ctx) => searchProfileByInviteHandler(ctx.searchParams),
 };
 
 function matchProductId(path: string): Record<string, string> | null {
@@ -82,6 +98,26 @@ function matchCategoryId(path: string): Record<string, string> | null {
 function matchMediaUsage(path: string): Record<string, string> | null {
   const m = /^media\/([^/]+)\/usage$/.exec(path);
   return m ? { fileId: m[1] } : null;
+}
+
+function matchBusinessId(path: string): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchAdminBusinessId(path: string): Record<string, string> | null {
+  const m = /^admin\/businesses\/([^/]+)$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessMembers(path: string): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/members$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessMemberId(path: string): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/members\/([^/]+)$/.exec(path);
+  return m ? { businessId: m[1], membershipId: m[2] } : null;
 }
 
 const patternRoutes: RouteEntry[] = [
@@ -144,6 +180,43 @@ const patternRoutes: RouteEntry[] = [
     method: "GET",
     match: matchMediaUsage,
     handler: (ctx) => mediaUsageHandler(ctx.params!.fileId),
+  },
+  {
+    kind: "pattern",
+    method: "GET",
+    match: matchBusinessId,
+    handler: (ctx) => getBusinessHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "PATCH",
+    match: matchAdminBusinessId,
+    handler: (ctx) => patchBusinessHandler(ctx.params!.businessId, ctx.body),
+  },
+  {
+    kind: "pattern",
+    method: "DELETE",
+    match: matchAdminBusinessId,
+    handler: (ctx) => deleteBusinessHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "GET",
+    match: matchBusinessMembers,
+    handler: (ctx) => listMembersHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "POST",
+    match: matchBusinessMembers,
+    handler: (ctx) => addMemberHandler(ctx.params!.businessId, ctx.body),
+  },
+  {
+    kind: "pattern",
+    method: "DELETE",
+    match: matchBusinessMemberId,
+    handler: (ctx) =>
+      removeMemberHandler(ctx.params!.businessId, ctx.params!.membershipId),
   },
 ];
 

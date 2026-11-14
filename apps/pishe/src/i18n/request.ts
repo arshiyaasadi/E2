@@ -1,7 +1,7 @@
 import { getRequestConfig } from "next-intl/server";
 
 export default getRequestConfig(async () => {
-  const [common, auth, home, products, profile, notifications] =
+  const [common, auth, home, products, profile, notifications, businesses] =
     await Promise.all([
       import("@/resources/messages/fa/common.json"),
       import("@/resources/messages/fa/auth.json"),
@@ -9,6 +9,7 @@ export default getRequestConfig(async () => {
       import("@/resources/messages/fa/products.json"),
       import("@/resources/messages/fa/profile.json"),
       import("@/resources/messages/fa/notifications.json"),
+      import("@/resources/messages/fa/businesses.json"),
     ]);
 
   return {
@@ -20,6 +21,7 @@ export default getRequestConfig(async () => {
       products: products.default,
       profile: profile.default,
       notifications: notifications.default,
+      businesses: businesses.default,
     },
   };
 });

@@ -21,6 +21,9 @@ export const ROUTES = {
   categoryNew: "/products/categories/new",
   categoryEdit: (id: string) => `/products/categories/${id}/edit`,
   notifications: "/notifications",
+  businesses: "/businesses",
+  businessMembers: (id: string) => `/businesses/${id}/members`,
+  adminBusinesses: "/admin/businesses",
 } as const;
 
 export const AUTH_COOKIES = {

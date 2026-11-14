@@ -19,7 +19,7 @@ yarn dev
 
 Or from repo root: `yarn dev:pishe`
 
-No local Keycloak, Postgres, or Docker is required.
+No local Keycloak or Docker is required. App Postgres runs on the Abysso Server (`pg.abysso.ir`); set `DATABASE_URL` in `.env.local` (see `.env.example`).
 
 ## Bootstrap realm `pishe`
 
@@ -47,7 +47,16 @@ Creates realm `pishe`, clients, **service-account roles + client scope-mappings*
 | `/products/[id]/edit` | Edit stage 1 |
 | `/products/[id]/details` | Stage 2 variants |
 
-API: `/api/v1/auth/*`, `/api/v1/products/*`, `/api/v1/media/*`, `/api/v1/health`
+API: `/api/v1/auth/*`, `/api/v1/businesses/*`, `/api/v1/admin/businesses/*`, `/api/v1/profiles/search`, `/api/v1/products/*`, `/api/v1/media/*`, `/api/v1/health`
+
+## Business / Prisma
+
+```bash
+yarn db:migrate
+yarn seed:bewear
+```
+
+Thin `Profile` (invite code + super-admin) + `Business` (6-digit `code`, logo, description, links, color, `assignedAt`) + memberships. UI: `/businesses`, `/admin/businesses`, profile invite copy.
 
 ## Products mock + file-service
 

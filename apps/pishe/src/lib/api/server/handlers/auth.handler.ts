@@ -22,6 +22,7 @@ import {
   listLoginSessionsForUser,
   recordLoginSession,
 } from "@/lib/auth/sessions-store";
+import { upsertProfileFromSession } from "@/lib/db/profile";
 import type {
   ApiResponse,
   AuthUserResponse,
@@ -53,6 +54,22 @@ async function toAuthResponse(user: {
   const lastName = override?.lastName ?? user.lastName ?? "";
   const displayName =
     `${firstName} ${lastName}`.trim() || user.displayName || user.username;
+
+  let inviteCode: string | null = null;
+  let isSuperAdmin = false;
+  let profileId: string | null = null;
+  try {
+    const profile = await upsertProfileFromSession({
+      keycloakSub: user.sub,
+      displayName,
+    });
+    inviteCode = profile.inviteCode;
+    isSuperAdmin = profile.isSuperAdmin;
+    profileId = profile.id;
+  } catch (err) {
+    console.error("[pishe-auth] profile upsert failed", err);
+  }
+
   return {
     userId: user.sub,
     username: user.username,
@@ -64,6 +81,9 @@ async function toAuthResponse(user: {
     avatarUrl: null,
     mustChangePassword: false,
     currency: "rial",
+    inviteCode,
+    isSuperAdmin,
+    profileId,
   };
 }
 

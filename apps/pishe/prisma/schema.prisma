@@ -1,0 +1,74 @@
+// Pishe app DB — thin Profile (SSO link) + Business membership.
+// Postgres lives on Server host pg.abysso.ir (see Abysso Server services/pishe-db).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Thin app profile linked to Keycloak `sub`. Identity stays in SSO.
+model Profile {
+  id           String   @id @default(cuid())
+  keycloakSub  String   @unique
+  /// Unique 8-digit invite code (searchable).
+  inviteCode   String   @unique
+  displayName  String?
+  isSuperAdmin Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  memberships BusinessMembership[]
+}
+
+model Business {
+  id          String   @id @default(cuid())
+  /// Unique 6-digit project code (generated on create; reserved for future use).
+  code        String   @unique
+  name        String
+  slug        String   @unique
+  description String?
+  logoUrl     String?
+  color       String?
+  /// Assignment date (تاریخ تخصیص).
+  assignedAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  links       BusinessLink[]
+  memberships BusinessMembership[]
+}
+
+model BusinessLink {
+  id         String @id @default(cuid())
+  businessId String
+  title      String
+  url        String
+  sortOrder  Int    @default(0)
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+}
+
+enum MembershipRole {
+  MANAGER
+  ASSISTANT
+}
+
+model BusinessMembership {
+  id         String         @id @default(cuid())
+  profileId  String
+  businessId String
+  role       MembershipRole
+  createdAt  DateTime       @default(now())
+
+  profile  Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, businessId])
+  @@index([businessId])
+}
