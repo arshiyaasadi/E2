@@ -26,7 +26,7 @@ function slugify(name: string): string {
 }
 
 export async function ensureUniqueSlug(name: string, excludeId?: string) {
-  let slug = slugify(name);
+  const slug = slugify(name);
   for (let i = 0; i < 20; i++) {
     const candidate = i === 0 ? slug : `${slug}-${i + 1}`;
     const existing = await prisma.business.findUnique({

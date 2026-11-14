@@ -1,0 +1,4 @@
+# Template mirror — active workflow: ../../.github/workflows/pishe.yml
+# See apps/pishe/Dockerfile and Server services/pishe for runtime.
+name: pishe-cd (template)
+# Kept in sync with .github/workflows/pishe.yml

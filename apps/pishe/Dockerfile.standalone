@@ -1,0 +1,12 @@
+# Runner-only image: expects prebuilt Next standalone tree as build context.
+FROM node:22-alpine
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3010
+ENV HOSTNAME=0.0.0.0
+RUN addgroup -S nodejs && adduser -S nextjs -G nodejs
+COPY --chown=nextjs:nodejs . .
+USER nextjs
+EXPOSE 3010
+CMD ["node", "apps/pishe/server.js"]

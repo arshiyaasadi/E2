@@ -2,7 +2,8 @@
 // Postgres lives on Server host pg.abysso.ir (see Abysso Server services/pishe-db).
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
