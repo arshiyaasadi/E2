@@ -35,12 +35,12 @@ What becomes easier, what becomes harder, and what follow-up work is needed.
 | ADR | Title |
 |---|---|
 | [0001](0001-keycloak-as-identity-provider.md) | Keycloak as identity provider |
-| [0002](0002-kubernetes-orchestration.md) | Kubernetes orchestration |
+| [0002](0002-kubernetes-orchestration.md) | Kubernetes orchestration (SSO Compose supersession note) |
 | [0003](0003-yarn-workspaces-for-js.md) | Yarn workspaces for shared JavaScript packages |
 | [0004](0004-keycloak-roles-app-permissions.md) | Keycloak roles; application permissions |
 | [0005](0005-minio-object-storage.md) | MinIO as S3-compatible object storage |
 | [0006](0006-admin-ui-first-sqlite-lab.md) | Admin UI-first feature lab with Prisma SQLite |
-| [0007](0007-traefik-gateway-on-k3s.md) | Traefik as API gateway on k3s |
+| [0007](0007-traefik-gateway-on-k3s.md) | Traefik as API gateway on k3s (SSO Compose supersession note) |
 | [0008](0008-signoz-observability.md) | SigNoz as observability stack |
 | [0009](0009-ci-push-cd-on-cluster.md) | CI pushes images; CD runs on the cluster |
 | [0010](0010-file-service-m2m-user-ownership.md) | file-service M2M auth and user_id ownership |
@@ -52,4 +52,4 @@ What becomes easier, what becomes harder, and what follow-up work is needed.
 | Relational database engine (platform default) | PostgreSQL chosen for identity; confirm as default for all services |
 | Message broker | Async messaging and events |
 | Secret manager | Secret storage and rotation |
-| Multi-node inventory | First bind is single-node k3s on edge; add agents later |
+| Multi-node inventory | Host inventory lives in Abysso Server repo; k3s edge path paused for SSO |

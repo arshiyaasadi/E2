@@ -8,7 +8,7 @@ The platform is brought up in this order. Each step depends on the previous ones
 | 2 | Kubernetes scaffolding | Cluster and workload manifests for Linux; placeholders until server bind | [ADR 0002](architecture/decisions/0002-kubernetes-orchestration.md), [environments-and-servers](operations/environments-and-servers.md) |
 | 3 | Configuration and secrets | Secrets live in a secret manager, never in Git | [security](operations/security.md) |
 | 4 | Identity (Keycloak) | Pinned Keycloak submodule, realms, seeds, Postgres, backup; first K8s workload | [ADR 0001](architecture/decisions/0001-keycloak-as-identity-provider.md), [identity-sso](operations/identity-sso.md) |
-| 5 | Server bind | Real node inventory, registry, kubeconfig, TLS for staging then production | Deferred until server details are provided |
+| 5 | Server bind | Host inventory + SSO Compose live in Abysso Server repo; E2 keeps product identity docs only | SSO on Server inventory host (2026-11-14); broader cluster bind still optional |
 | 6 | Gateway and TLS | Single public entry point with routing, rate limiting, token checks | [overview](architecture/overview.md) |
 | 7 | Reference service | One minimal service that proves the template: health, logs, metrics, migrations, backup | [microservices](architecture/microservices.md) |
 | 8 | File storage | MinIO pinned under `platform/storage/`; `file-service` with JWT, signed/proxy upload, metadata DB; backup runbook | [file-storage](operations/file-storage.md), [ADR 0005](architecture/decisions/0005-minio-object-storage.md) |

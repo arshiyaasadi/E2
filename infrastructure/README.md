@@ -1,24 +1,18 @@
 # Infrastructure
 
-Infrastructure as code for all environments. No manual changes on servers.
+Product infrastructure definitions (manifests / overlays). **No host IPs, SSH, or kubeconfig here.**
 
-Orchestrator: **Kubernetes** on Linux ([ADR 0002](../docs/architecture/decisions/0002-kubernetes-orchestration.md)).
+Live server inventory and SSO Compose bind: Abysso Server control-plane repo.
 
 ## Layout
 
 ```
 infrastructure/
-├── modules/          Reusable building blocks (network, cluster, data nodes, storage, ...)
+├── modules/          Building blocks (cluster module archived for future k3s)
 └── environments/
-    ├── local/        Developer setup
-    ├── staging/      Integration, QA, restore rehearsals (+ identity overlay)
-    └── production/   Real users (+ identity overlay)
+    ├── local/
+    ├── staging/
+    └── production/   Overlays; SSO live path is Server Compose (see production/README)
 ```
-
-Each environment composes modules with its own values. Secret values are never stored here.
-
-First workload overlays: `environments/<env>/identity/` → `platform/identity/deploy/kubernetes/`.
-
-Server bind (node inventory, kubeconfig, registry) is deferred until concrete server details are provided.
 
 Design reference: [environments and servers](../docs/operations/environments-and-servers.md).

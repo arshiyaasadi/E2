@@ -1,7 +1,8 @@
 # 0007. Traefik as API gateway on k3s
 
-- Status: accepted
+- Status: accepted (partially superseded for production SSO)
 - Date: 2026-10-21
+- Supersession (2026-11-14): Production `sso.abysso.ir` is terminated by **host nginx** in front of Docker Compose Keycloak (Server `services/keycloak/`). Do not install k3s Traefik on the shared Server inventory host for SSO. This ADR remains valid if a dedicated edge cluster returns.
 
 ## Context
 

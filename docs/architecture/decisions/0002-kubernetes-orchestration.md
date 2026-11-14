@@ -1,7 +1,8 @@
 # 0002. Kubernetes orchestration
 
-- Status: accepted
+- Status: accepted (partially superseded for production SSO)
 - Date: 2026-10-21
+- Supersession (2026-11-14): Production Kicklok/SSO runs as **Docker Compose** via the Abysso Server control-plane repo (`services/keycloak/`). Host inventory lives only there. This ADR remains the intent for a future dedicated cluster; it is not the live SSO bind.
 
 ## Context
 

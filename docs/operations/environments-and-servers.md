@@ -1,4 +1,4 @@
-# Environments and Servers
+# Environments and servers
 
 ## Environments
 
@@ -6,67 +6,45 @@
 |---|---|---|---|
 | `local` | Developer machine | Fake data | Manual |
 | `staging` | Integration, QA, restore rehearsals | Synthetic or anonymized | Merge to `main` |
-| `production` | Real users | Real data | Approved release tag |
+| `production` | Real users | Real data | Approved release / ops pack |
 
 Rules:
 
 - Environments do not share databases, secrets, storage buckets, or networks.
 - Production data never goes to `staging` or `local` unless anonymized.
-- `staging` mirrors `production` topology at smaller scale.
+- `staging` mirrors `production` topology at smaller scale where applicable.
 
-## Server roles
+## Host / IP source of truth
 
-| Role | Responsibility |
-|---|---|
-| Edge | Traefik gateway, public Ingress, first k3s server node |
-| Application nodes | Service pods (k3s agents when scaled) |
-| Data nodes | Databases and message broker (or managed services) |
-| Storage | Object storage (or managed service) |
-| Management | CI runners, observability stack, bastion |
-| Backup target | Off-site storage for backups, separate from data nodes |
+**Do not document server IPs, SSH, or host inventory in this repository.**
 
-## Production DNS (first bind)
+All live host inventory, DNS click-ops, nginx, and reboot patterns live in the **Abysso Server** control-plane repo (`~/Documents/Abysso/Server`):
 
-Public A records point at the edge node. Only these hosts are published through Traefik.
+- `inventory/servers.json`
+- `inventory/services.json`
+- `docs/dns-sso.md` (SSO DNS / Arvan)
+- `services/keycloak/` (production Keycloak Compose bind)
 
-| Host | Public | Target |
+## Production SSO (current)
+
+| Hostname | Role | Runtime |
 |---|---|---|
-| `sso.abysso.ir` | Yes | Keycloak (`platform-identity`) |
-| `file.abysso.ir` | Yes | MinIO Console (`platform-storage`) — Keycloak OIDC |
-| `noz.abysso.ir` | Yes | SigNoz UI (`platform-observability`) |
-| `pg.abysso.ir` | No | Logical name only; use in-cluster Service DNS. No public A and no Ingress in this phase. Future pgAdmin may get an Ingress behind SSO later. |
+| `sso.abysso.ir` | Keycloak (OIDC) | Docker Compose on the Server-inventory host (`services/keycloak`) |
 
-Rules:
+Product identity docs (realms, roles, seeds, VERSION) stay under `platform/identity/` in this repo. Host bind and secrets paths are Server-only.
 
-- Databases and **MinIO S3 API** stay **ClusterIP**. Console is public on `file.abysso.ir` with Keycloak login (like `noz`). Never expose Postgres or the S3 API on the public internet.
-- `file-service` is M2M ClusterIP only (`file-service.services-file.svc`).
-- OTLP for SigNoz stays in-cluster (ClusterIP). Do not publish OTLP publicly.
-- VPN and unrelated host services are out of scope for this platform gateway.
+## Other platform hostnames (product intent)
 
-## Orchestration
+| Host | Public | Notes |
+|---|---|---|
+| `file.abysso.ir` | Yes | Object console (OIDC) — host bind not owned here |
+| `noz.abysso.ir` | Yes | Observability UI — host bind not owned here |
+| `pg.abysso.ir` | No | Logical DB name only; never publish |
 
-- Orchestrator: **Kubernetes** on Linux ([ADR 0002](../architecture/decisions/0002-kubernetes-orchestration.md)).
-- First production distribution: **k3s** single-node on the edge ([ADR 0007](../architecture/decisions/0007-traefik-gateway-on-k3s.md)).
-- Gateway: **Traefik** (k3s default IngressClass).
-- TLS: **cert-manager** + Let's Encrypt HTTP-01 (`letsencrypt-prod`).
-- Observability: **SigNoz** on `noz.abysso.ir` ([ADR 0008](../architecture/decisions/0008-signoz-observability.md)).
-- All services run as containers under Kubernetes.
-- Each service declares resource requests and limits.
-- Production intent: at least two replicas per service across nodes; the first single-node bind patches replicas to **1** until agents exist.
-- Rolling updates by default. See [deployment scenarios](../deployment/scenarios.md).
-- Image and version convention: [versioning and images](versioning-and-images.md).
+## Orchestration note
 
-## Infrastructure as code
-
-- All infrastructure is defined in `infrastructure/`.
-- Component manifests live under `platform/*/deploy/kubernetes/` and `services/*/deploy/kubernetes/`.
-- Environment overlays under `infrastructure/environments/<env>/` bind hostnames, replica counts, and image tags.
-- Manual changes on servers are not allowed. If an emergency change is made, it is reflected in code the same day.
-- An environment can be recreated from `infrastructure/` plus backups.
-- Never commit secrets, kubeconfig, or production passwords. Use `secret.example.yaml` templates only.
+Historical ADRs (`0002`, `0007`, `0009`) describe a k3s + Traefik path. **Production Kicklok/SSO is Docker Compose** on the Server inventory host until those ADRs are explicitly revived for a dedicated cluster. Kubernetes manifests under `platform/*/deploy/kubernetes/` remain design references / future path — not the live SSO bind.
 
 ## Access
 
-- Servers are not reachable from the internet except the edge gateway ports (80/443 for platform hosts).
-- Operator access goes through VPN or a bastion with named accounts.
-- All operator sessions on `production` are logged.
+Operator access and SSH details: Server inventory only. Never commit kubeconfig, host passwords, or live `.env` values here.
