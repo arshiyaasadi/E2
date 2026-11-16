@@ -55,3 +55,17 @@ export async function unlinkBusinessTelegramRequest(businessId: string) {
     {},
   );
 }
+
+export async function pauseBusinessTelegramRequest(businessId: string) {
+  return apiClient.post<{ binding: TelegramBindingResponse }>(
+    ENDPOINTS.businesses.telegramPause(businessId),
+    {},
+  );
+}
+
+export async function resumeBusinessTelegramRequest(businessId: string) {
+  return apiClient.post<{ binding: TelegramBindingResponse }>(
+    ENDPOINTS.businesses.telegramResume(businessId),
+    {},
+  );
+}

@@ -41,10 +41,12 @@ import {
   searchProfileByInviteHandler,
 } from "@/lib/api/server/handlers/businesses.handler";
 import {
+  botAdvanceCursorHandler,
   botBindChatHandler,
   botGetBindingHandler,
   botIngestHandler,
   botReserveHandler,
+  botShouldIngestHandler,
   botVerifyCodeHandler,
 } from "@/lib/api/server/handlers/bot.handler";
 import {
@@ -52,7 +54,9 @@ import {
   getBusinessUsageHandler,
   getMyUsageHandler,
   patchBusinessTelegramConfigHandler,
+  pauseBusinessTelegramHandler,
   prepareBusinessTelegramHandler,
+  resumeBusinessTelegramHandler,
   unlinkBusinessTelegramHandler,
 } from "@/lib/api/server/handlers/spaces.handler";
 import type { ApiResponse } from "@/types/api";
@@ -101,6 +105,10 @@ const exactRoutes: Record<string, RouteHandler> = {
     botBindChatHandler(ctx.body, ctx.headers?.get("authorization")),
   "GET:bot/telegram/binding": (ctx) =>
     botGetBindingHandler(ctx.searchParams, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/should-ingest": (ctx) =>
+    botShouldIngestHandler(ctx.body, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/advance-cursor": (ctx) =>
+    botAdvanceCursorHandler(ctx.body, ctx.headers?.get("authorization")),
   "POST:bot/telegram/reserve": (ctx) =>
     botReserveHandler(ctx.body, ctx.headers?.get("authorization")),
   "POST:bot/telegram/ingest": (ctx) =>
@@ -175,6 +183,20 @@ function matchBusinessTelegramUnlink(
   path: string,
 ): Record<string, string> | null {
   const m = /^businesses\/([^/]+)\/telegram\/unlink$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessTelegramPause(
+  path: string,
+): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/telegram\/pause$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessTelegramResume(
+  path: string,
+): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/telegram\/resume$/.exec(path);
   return m ? { businessId: m[1] } : null;
 }
 
@@ -306,6 +328,18 @@ const patternRoutes: RouteEntry[] = [
     method: "POST",
     match: matchBusinessTelegramUnlink,
     handler: (ctx) => unlinkBusinessTelegramHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "POST",
+    match: matchBusinessTelegramPause,
+    handler: (ctx) => pauseBusinessTelegramHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "POST",
+    match: matchBusinessTelegramResume,
+    handler: (ctx) => resumeBusinessTelegramHandler(ctx.params!.businessId),
   },
 ];
 

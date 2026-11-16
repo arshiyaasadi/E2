@@ -124,6 +124,8 @@ model FileObject {
   source             FileObjectSource @default(UPLOAD)
   telegramMessageId  String?
   telegramChatId     String?
+  /// Distinguishes meta vs media rows for the same Telegram message ("meta" | "media").
+  telegramArtifact   String?
   createdByProfileId String?
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
@@ -132,6 +134,8 @@ model FileObject {
   createdBy Profile?  @relation("FileObjectCreatedBy", fields: [createdByProfileId], references: [id], onDelete: SetNull)
 
   @@unique([spaceId, path])
+  /// Dedupe Telegram ingest: one artifact kind per message per space.
+  @@unique([spaceId, telegramChatId, telegramMessageId, telegramArtifact])
   @@index([telegramChatId])
   @@index([source])
 }
@@ -145,6 +149,13 @@ model BusinessTelegramBinding {
   registeredByProfileId String
   status                TelegramBindingStatus @default(PENDING)
   title                 String?
+  /// Highest Telegram message_id successfully ingested for this binding's chat.
+  lastIngestedMessageId String?
+  lastIngestedAt        DateTime?
+  /// Last Bot API update_id observed for this binding (restart watermark).
+  lastTelegramUpdateId  BigInt?
+  /// When true, bot skips message ingest (binding stays ACTIVE).
+  ingestPaused          Boolean               @default(false)
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
 

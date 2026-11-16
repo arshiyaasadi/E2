@@ -5,7 +5,9 @@ import {
   getBusinessTelegramRequest,
   getMyUsageRequest,
   patchTelegramConfigRequest,
+  pauseBusinessTelegramRequest,
   prepareBusinessTelegramRequest,
+  resumeBusinessTelegramRequest,
   unlinkBusinessTelegramRequest,
 } from "@/features/spaces/service";
 
@@ -63,6 +65,26 @@ export function useUnlinkTelegramMutation(businessId: string) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: () => unlinkBusinessTelegramRequest(businessId),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: businessTelegramKey(businessId) });
+    },
+  });
+}
+
+export function usePauseTelegramMutation(businessId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => pauseBusinessTelegramRequest(businessId),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: businessTelegramKey(businessId) });
+    },
+  });
+}
+
+export function useResumeTelegramMutation(businessId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => resumeBusinessTelegramRequest(businessId),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: businessTelegramKey(businessId) });
     },

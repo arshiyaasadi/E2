@@ -9,6 +9,7 @@ import {
   prepareTelegramBinding,
   serializeBinding,
   serializeIngestConfig,
+  setTelegramIngestPaused,
   unlinkTelegramBinding,
   updateIngestConfig,
 } from "@/lib/db/spaces";
@@ -209,4 +210,38 @@ export async function unlinkBusinessTelegramHandler(
     success: true,
     data: { binding: updated ? serializeBinding(updated) : null },
   };
+}
+
+export async function pauseBusinessTelegramHandler(
+  businessId: string,
+): Promise<ApiResponse<{ binding: ReturnType<typeof serializeBinding> }>> {
+  const gate = await requireBusinessMember(businessId);
+  if ("error" in gate && gate.error) return gate.error;
+
+  const canManage =
+    gate.ctx!.profile.isSuperAdmin ||
+    gate.membership?.role === "MANAGER" ||
+    gate.membership?.role === "ASSISTANT";
+  if (!canManage) return forbidden("Members only");
+
+  const updated = await setTelegramIngestPaused(businessId, true);
+  if (!updated) return notFound("Telegram binding not found");
+  return { success: true, data: { binding: serializeBinding(updated) } };
+}
+
+export async function resumeBusinessTelegramHandler(
+  businessId: string,
+): Promise<ApiResponse<{ binding: ReturnType<typeof serializeBinding> }>> {
+  const gate = await requireBusinessMember(businessId);
+  if ("error" in gate && gate.error) return gate.error;
+
+  const canManage =
+    gate.ctx!.profile.isSuperAdmin ||
+    gate.membership?.role === "MANAGER" ||
+    gate.membership?.role === "ASSISTANT";
+  if (!canManage) return forbidden("Members only");
+
+  const updated = await setTelegramIngestPaused(businessId, false);
+  if (!updated) return notFound("Telegram binding not found");
+  return { success: true, data: { binding: serializeBinding(updated) } };
 }

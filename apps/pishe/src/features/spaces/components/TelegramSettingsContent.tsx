@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Copy, ExternalLink, Unlink } from "lucide-react";
+import { Copy, ExternalLink, Pause, Play, Unlink } from "lucide-react";
 import { Alert } from "@/components/atoms/Alert";
 import { Button } from "@/components/atoms/Button";
 import { Spinner } from "@/components/atoms/Spinner";
@@ -12,11 +12,14 @@ import { StorageMeter } from "@/features/spaces/components/StorageMeter";
 import {
   useBusinessTelegramQuery,
   usePatchTelegramConfigMutation,
+  usePauseTelegramMutation,
   usePrepareTelegramMutation,
+  useResumeTelegramMutation,
   useUnlinkTelegramMutation,
 } from "@/features/spaces/queries";
 import { useMyBusinessesQuery } from "@/features/businesses/queries";
 import { handleApiError } from "@/lib/api/client";
+import { formatJalaliDateTime } from "@/lib/datetime/jalali";
 import { ROUTES } from "@/config/routes";
 
 function ToggleRow({
@@ -52,6 +55,8 @@ export function TelegramSettingsContent({ businessId }: { businessId: string }) 
   const prepareMut = usePrepareTelegramMutation(businessId);
   const patchMut = usePatchTelegramConfigMutation(businessId);
   const unlinkMut = useUnlinkTelegramMutation(businessId);
+  const pauseMut = usePauseTelegramMutation(businessId);
+  const resumeMut = useResumeTelegramMutation(businessId);
 
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -62,6 +67,7 @@ export function TelegramSettingsContent({ businessId }: { businessId: string }) 
 
   const statusLabel = (() => {
     const s = data?.binding?.status;
+    if (s === "ACTIVE" && data?.binding?.ingestPaused) return t("statusPaused");
     if (s === "ACTIVE") return t("statusActive");
     if (s === "PENDING") return t("statusPending");
     if (s === "REVOKED") return t("statusRevoked");
@@ -198,6 +204,101 @@ export function TelegramSettingsContent({ businessId }: { businessId: string }) 
               ) : null}
             </div>
           </section>
+
+          {data?.binding?.status === "ACTIVE" ? (
+            <section className="flex flex-col gap-mol rounded-2xl border border-border bg-surface p-pad-mol">
+              <h2 className="font-semibold text-foreground">
+                {t("botManagement")}
+              </h2>
+              <div className="flex flex-col gap-atom-md text-sm">
+                <p className="text-muted">
+                  {t("lastIngested")}:{" "}
+                  {data.binding.lastIngestedAt ? (
+                    <span className="text-foreground">
+                      {formatJalaliDateTime(data.binding.lastIngestedAt)}
+                    </span>
+                  ) : (
+                    t("lastIngestedNone")
+                  )}
+                </p>
+                <p className="text-muted" dir="ltr">
+                  {t("cursorMessageId")}:{" "}
+                  <span className="font-mono text-foreground">
+                    {data.binding.lastIngestedMessageId ?? "—"}
+                  </span>
+                </p>
+                <p className="text-muted">
+                  {t("recentCount")}:{" "}
+                  <span className="text-foreground">
+                    {data.management?.recentIngestedCount ?? 0}
+                  </span>
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-atom-md sm:flex-row">
+                {data.binding.ingestPaused ? (
+                  <Button
+                    fullWidth
+                    loading={resumeMut.isPending}
+                    onClick={async () => {
+                      setError(null);
+                      try {
+                        await resumeMut.mutateAsync();
+                      } catch (err) {
+                        setError(handleApiError(err));
+                      }
+                    }}
+                  >
+                    <Play className="me-1 size-4" aria-hidden />
+                    {t("resumeIngest")}
+                  </Button>
+                ) : (
+                  <Button
+                    fullWidth
+                    variant="outline"
+                    loading={pauseMut.isPending}
+                    onClick={async () => {
+                      setError(null);
+                      try {
+                        await pauseMut.mutateAsync();
+                      } catch (err) {
+                        setError(handleApiError(err));
+                      }
+                    }}
+                  >
+                    <Pause className="me-1 size-4" aria-hidden />
+                    {t("pauseIngest")}
+                  </Button>
+                )}
+              </div>
+
+              {(data.management?.recentItems?.length ?? 0) > 0 ? (
+                <div className="flex flex-col gap-atom-md">
+                  <h3 className="text-sm font-medium text-foreground">
+                    {t("recentItems")}
+                  </h3>
+                  <ul className="flex flex-col gap-atom">
+                    {data.management!.recentItems.map((item) => (
+                      <li
+                        key={item.id}
+                        className="rounded-xl border border-border bg-surface-2/40 px-pad-mol py-pad-atom-md text-xs"
+                      >
+                        <p className="truncate font-mono text-foreground" dir="ltr">
+                          {item.path}
+                        </p>
+                        <p className="mt-atom text-muted">
+                          {item.telegramArtifact ?? "—"} · msg{" "}
+                          <span dir="ltr">{item.telegramMessageId ?? "—"}</span>
+                          {" · "}
+                          {formatJalaliDateTime(item.createdAt)}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </section>
+          ) : null}
 
           {data?.config ? (
             <section className="flex flex-col gap-atom-md rounded-2xl border border-border bg-surface p-pad-mol">

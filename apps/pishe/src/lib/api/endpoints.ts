@@ -24,6 +24,8 @@ export const ENDPOINTS = {
     telegramPrepare: (id: string) => `/businesses/${id}/telegram/prepare`,
     telegramConfig: (id: string) => `/businesses/${id}/telegram/config`,
     telegramUnlink: (id: string) => `/businesses/${id}/telegram/unlink`,
+    telegramPause: (id: string) => `/businesses/${id}/telegram/pause`,
+    telegramResume: (id: string) => `/businesses/${id}/telegram/resume`,
   },
   usage: {
     me: "/usage/me",
@@ -32,6 +34,8 @@ export const ENDPOINTS = {
     verifyCode: "/bot/telegram/verify-code",
     bindChat: "/bot/telegram/bind-chat",
     binding: "/bot/telegram/binding",
+    shouldIngest: "/bot/telegram/should-ingest",
+    advanceCursor: "/bot/telegram/advance-cursor",
     reserve: "/bot/telegram/reserve",
     ingest: "/bot/telegram/ingest",
   },

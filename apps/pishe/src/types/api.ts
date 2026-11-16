@@ -85,6 +85,10 @@ export type TelegramBindingResponse = {
   registeredByProfileId: string;
   status: "PENDING" | "ACTIVE" | "REVOKED";
   title: string | null;
+  lastIngestedMessageId: string | null;
+  lastIngestedAt: string | null;
+  lastTelegramUpdateId: string | null;
+  ingestPaused: boolean;
   createdAt: string;
   updatedAt: string;
 };
@@ -99,10 +103,24 @@ export type TelegramIngestConfigResponse = {
   updatedAt: string;
 };
 
+export type TelegramRecentItemResponse = {
+  id: string;
+  path: string;
+  mime: string | null;
+  sizeBytes: string;
+  telegramMessageId: string | null;
+  telegramArtifact: string | null;
+  createdAt: string;
+};
+
 export type BusinessTelegramStateResponse = {
   binding: TelegramBindingResponse | null;
   config: TelegramIngestConfigResponse;
   usage: FileSpaceUsageResponse;
+  management: {
+    recentIngestedCount: number;
+    recentItems: TelegramRecentItemResponse[];
+  };
   deepLink: string | null;
   botUsername: string;
   businessCode: string;

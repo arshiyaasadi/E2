@@ -1,9 +1,11 @@
 import { z } from "zod";
 import {
+  advanceTelegramCursor,
   bindTelegramChat,
   getActiveBindingByChat,
   recordTelegramIngest,
   reserveQuota,
+  shouldIngestTelegramMessage,
   verifyTelegramCode,
 } from "@/lib/db/spaces";
 import type { ApiResponse } from "@/types/api";
@@ -79,7 +81,22 @@ const ingestSchema = z.object({
   }),
   telegramMessageId: z.string().trim().max(64).nullable().optional(),
   telegramChatId: z.string().trim().max(64).nullable().optional(),
+  telegramArtifact: z.enum(["meta", "media"]).optional(),
+  updateId: z.union([z.string(), z.number()]).nullable().optional(),
   createdByProfileId: z.string().trim().max(64).nullable().optional(),
+});
+
+const shouldIngestSchema = z.object({
+  chatId: z.string().trim().min(1).max(64),
+  messageId: z.string().trim().min(1).max(64),
+  artifact: z.enum(["meta", "media"]).optional(),
+  updateId: z.union([z.string(), z.number()]).nullable().optional(),
+});
+
+const advanceSchema = z.object({
+  businessId: z.string().trim().min(1),
+  messageId: z.string().trim().min(1).max(64),
+  updateId: z.union([z.string(), z.number()]).nullable().optional(),
 });
 
 export async function botVerifyCodeHandler(
@@ -175,6 +192,64 @@ export async function botReserveHandler(
   return { success: true, data: { usage: result.usage } };
 }
 
+export async function botShouldIngestHandler(
+  body: unknown,
+  authHeader?: string | null,
+): Promise<ApiResponse<unknown>> {
+  if (!assertBotServiceToken(authHeader)) return unauthorized();
+
+  const parsed = shouldIngestSchema.safeParse(body);
+  if (!parsed.success) {
+    return validation(parsed.error.issues[0]?.message ?? "Invalid input");
+  }
+
+  const result = await shouldIngestTelegramMessage(parsed.data);
+  if (!result.ok) {
+    if (result.reason === "NO_BINDING") {
+      return notFound("No ACTIVE binding for chat");
+    }
+    return {
+      success: true,
+      data: {
+        ingest: false,
+        reason: result.reason,
+        binding: "binding" in result ? result.binding : null,
+        business: "business" in result ? result.business : null,
+        config: "config" in result ? result.config : null,
+        usage: "usage" in result ? result.usage : null,
+      },
+    };
+  }
+
+  return {
+    success: true,
+    data: {
+      ingest: true,
+      reason: "OK",
+      binding: result.binding,
+      business: result.business,
+      config: result.config,
+      usage: result.usage,
+    },
+  };
+}
+
+export async function botAdvanceCursorHandler(
+  body: unknown,
+  authHeader?: string | null,
+): Promise<ApiResponse<unknown>> {
+  if (!assertBotServiceToken(authHeader)) return unauthorized();
+
+  const parsed = advanceSchema.safeParse(body);
+  if (!parsed.success) {
+    return validation(parsed.error.issues[0]?.message ?? "Invalid input");
+  }
+
+  const binding = await advanceTelegramCursor(parsed.data);
+  if (!binding) return notFound("Binding not found");
+  return { success: true, data: { binding } };
+}
+
 export async function botIngestHandler(
   body: unknown,
   authHeader?: string | null,
@@ -191,14 +266,17 @@ export async function botIngestHandler(
     return {
       success: true,
       data: {
+        duplicate: result.duplicate,
         object: {
           id: result.object.id,
           path: result.object.path,
           sizeBytes: result.object.sizeBytes.toString(),
           mime: result.object.mime,
           source: result.object.source,
+          telegramArtifact: result.object.telegramArtifact,
         },
         usage: result.usage,
+        binding: result.binding,
       },
     };
   } catch (err) {
