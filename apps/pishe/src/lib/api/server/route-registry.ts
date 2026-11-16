@@ -40,12 +40,28 @@ import {
   removeMemberHandler,
   searchProfileByInviteHandler,
 } from "@/lib/api/server/handlers/businesses.handler";
+import {
+  botBindChatHandler,
+  botGetBindingHandler,
+  botIngestHandler,
+  botReserveHandler,
+  botVerifyCodeHandler,
+} from "@/lib/api/server/handlers/bot.handler";
+import {
+  getBusinessTelegramHandler,
+  getBusinessUsageHandler,
+  getMyUsageHandler,
+  patchBusinessTelegramConfigHandler,
+  prepareBusinessTelegramHandler,
+  unlinkBusinessTelegramHandler,
+} from "@/lib/api/server/handlers/spaces.handler";
 import type { ApiResponse } from "@/types/api";
 
 type RouteContext = {
   body?: unknown;
   searchParams?: URLSearchParams;
   params?: Record<string, string>;
+  headers?: Headers;
 };
 
 type RouteHandler = (ctx: RouteContext) => Promise<ApiResponse<unknown>>;
@@ -78,6 +94,17 @@ const exactRoutes: Record<string, RouteHandler> = {
   "GET:admin/businesses": () => listAllBusinessesHandler(),
   "POST:admin/businesses": (ctx) => createBusinessHandler(ctx.body),
   "GET:profiles/search": (ctx) => searchProfileByInviteHandler(ctx.searchParams),
+  "GET:usage/me": () => getMyUsageHandler(),
+  "POST:bot/telegram/verify-code": (ctx) =>
+    botVerifyCodeHandler(ctx.body, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/bind-chat": (ctx) =>
+    botBindChatHandler(ctx.body, ctx.headers?.get("authorization")),
+  "GET:bot/telegram/binding": (ctx) =>
+    botGetBindingHandler(ctx.searchParams, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/reserve": (ctx) =>
+    botReserveHandler(ctx.body, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/ingest": (ctx) =>
+    botIngestHandler(ctx.body, ctx.headers?.get("authorization")),
 };
 
 function matchProductId(path: string): Record<string, string> | null {
@@ -118,6 +145,37 @@ function matchBusinessMembers(path: string): Record<string, string> | null {
 function matchBusinessMemberId(path: string): Record<string, string> | null {
   const m = /^businesses\/([^/]+)\/members\/([^/]+)$/.exec(path);
   return m ? { businessId: m[1], membershipId: m[2] } : null;
+}
+
+function matchBusinessUsage(path: string): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/usage$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessTelegram(path: string): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/telegram$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessTelegramPrepare(
+  path: string,
+): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/telegram\/prepare$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessTelegramConfig(
+  path: string,
+): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/telegram\/config$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessTelegramUnlink(
+  path: string,
+): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/telegram\/unlink$/.exec(path);
+  return m ? { businessId: m[1] } : null;
 }
 
 const patternRoutes: RouteEntry[] = [
@@ -217,6 +275,37 @@ const patternRoutes: RouteEntry[] = [
     match: matchBusinessMemberId,
     handler: (ctx) =>
       removeMemberHandler(ctx.params!.businessId, ctx.params!.membershipId),
+  },
+  {
+    kind: "pattern",
+    method: "GET",
+    match: matchBusinessUsage,
+    handler: (ctx) => getBusinessUsageHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "GET",
+    match: matchBusinessTelegram,
+    handler: (ctx) => getBusinessTelegramHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "POST",
+    match: matchBusinessTelegramPrepare,
+    handler: (ctx) => prepareBusinessTelegramHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "PATCH",
+    match: matchBusinessTelegramConfig,
+    handler: (ctx) =>
+      patchBusinessTelegramConfigHandler(ctx.params!.businessId, ctx.body),
+  },
+  {
+    kind: "pattern",
+    method: "POST",
+    match: matchBusinessTelegramUnlink,
+    handler: (ctx) => unlinkBusinessTelegramHandler(ctx.params!.businessId),
   },
 ];
 

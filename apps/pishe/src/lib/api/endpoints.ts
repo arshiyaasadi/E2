@@ -19,6 +19,21 @@ export const ENDPOINTS = {
     members: (id: string) => `/businesses/${id}/members`,
     member: (id: string, membershipId: string) =>
       `/businesses/${id}/members/${membershipId}`,
+    usage: (id: string) => `/businesses/${id}/usage`,
+    telegram: (id: string) => `/businesses/${id}/telegram`,
+    telegramPrepare: (id: string) => `/businesses/${id}/telegram/prepare`,
+    telegramConfig: (id: string) => `/businesses/${id}/telegram/config`,
+    telegramUnlink: (id: string) => `/businesses/${id}/telegram/unlink`,
+  },
+  usage: {
+    me: "/usage/me",
+  },
+  bot: {
+    verifyCode: "/bot/telegram/verify-code",
+    bindChat: "/bot/telegram/bind-chat",
+    binding: "/bot/telegram/binding",
+    reserve: "/bot/telegram/reserve",
+    ingest: "/bot/telegram/ingest",
   },
   products: {
     list: "/products",

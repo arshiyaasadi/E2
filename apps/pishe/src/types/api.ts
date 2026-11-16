@@ -65,3 +65,45 @@ export type LoginSessionResponse = {
   deviceLabel: string;
   ip: string | null;
 };
+
+export type FileSpaceUsageResponse = {
+  id: string;
+  kind: "USER" | "BUSINESS";
+  ownerProfileId: string | null;
+  businessId: string | null;
+  quotaBytes: string;
+  usedBytes: string;
+  remainingBytes: string;
+  updatedAt: string;
+};
+
+export type TelegramBindingResponse = {
+  id: string;
+  businessId: string;
+  telegramChatId: string | null;
+  telegramUserId: string | null;
+  registeredByProfileId: string;
+  status: "PENDING" | "ACTIVE" | "REVOKED";
+  title: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type TelegramIngestConfigResponse = {
+  storeText: boolean;
+  downloadPhoto: boolean;
+  downloadDocument: boolean;
+  downloadVideo: boolean;
+  downloadAudio: boolean;
+  maxMediaBytes: string;
+  updatedAt: string;
+};
+
+export type BusinessTelegramStateResponse = {
+  binding: TelegramBindingResponse | null;
+  config: TelegramIngestConfigResponse;
+  usage: FileSpaceUsageResponse;
+  deepLink: string | null;
+  botUsername: string;
+  businessCode: string;
+};

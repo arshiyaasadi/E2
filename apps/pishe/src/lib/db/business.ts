@@ -1,6 +1,10 @@
 import type { Business, BusinessLink, MembershipRole, Profile } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
 import { allocateUniqueBusinessCode } from "@/lib/db/codes";
+import {
+  ensureBusinessFileSpace,
+  ensureBusinessTelegramIngestConfig,
+} from "@/lib/db/spaces";
 
 export type BusinessWithLinks = Business & { links: BusinessLink[] };
 
@@ -48,7 +52,7 @@ export async function createBusiness(input: {
 }): Promise<BusinessWithLinks> {
   const code = await allocateUniqueBusinessCode();
   const slug = await ensureUniqueSlug(input.name);
-  return prisma.business.create({
+  const created = await prisma.business.create({
     data: {
       code,
       name: input.name.trim(),
@@ -69,6 +73,9 @@ export async function createBusiness(input: {
     },
     include: { links: { orderBy: { sortOrder: "asc" } } },
   });
+  await ensureBusinessFileSpace(created.id);
+  await ensureBusinessTelegramIngestConfig(created.id);
+  return created;
 }
 
 export async function updateBusiness(

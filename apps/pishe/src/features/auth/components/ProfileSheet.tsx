@@ -26,6 +26,8 @@ import {
   useSessionsQuery,
   useUpdateProfileMutation,
 } from "@/features/auth/queries";
+import { StorageMeter } from "@/features/spaces/components/StorageMeter";
+import { useMyUsageQuery } from "@/features/spaces/queries";
 import {
   formatJalaliDateTime,
   formatNowJalaliDateTime,
@@ -170,6 +172,7 @@ function CenterModal({
 
 export function ProfileOverlays() {
   const t = useTranslations("profile");
+  const tSpaces = useTranslations("spaces");
   const tCommon = useTranslations("common");
   const router = useRouter();
   const logout = useLogoutMutation();
@@ -178,6 +181,7 @@ export function ProfileOverlays() {
   const setTheme = useSetTheme();
   const { isLoading } = useMeQuery();
   const user = useAuthStore((s) => s.user);
+  const usageQuery = useMyUsageQuery(true);
   const {
     profileOpen,
     sessionsOpen,
@@ -280,6 +284,16 @@ export function ProfileOverlays() {
                       <Pencil className="size-4" aria-hidden />
                     </button>
                   </div>
+
+                  {usageQuery.data ? (
+                    <section className="rounded-xl border border-border bg-surface-2/60 p-pad-mol">
+                      <StorageMeter
+                        usedBytes={usageQuery.data.usedBytes}
+                        quotaBytes={usageQuery.data.quotaBytes}
+                        label={tSpaces("personalStorage")}
+                      />
+                    </section>
+                  ) : null}
 
                   {user?.inviteCode ? (
                     <section className="flex flex-col gap-atom-md">

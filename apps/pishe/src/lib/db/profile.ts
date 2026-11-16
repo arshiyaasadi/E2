@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db/prisma";
 import { allocateUniqueInviteCode } from "@/lib/db/codes";
+import { ensureUserFileSpace } from "@/lib/db/spaces";
 import type { Profile } from "@prisma/client";
 
 /**
@@ -14,6 +15,7 @@ export async function upsertProfileFromSession(input: {
     where: { keycloakSub: input.keycloakSub },
   });
   if (existing) {
+    await ensureUserFileSpace(existing.id);
     if (
       input.displayName &&
       input.displayName.trim() &&
@@ -28,13 +30,15 @@ export async function upsertProfileFromSession(input: {
   }
 
   const inviteCode = await allocateUniqueInviteCode();
-  return prisma.profile.create({
+  const created = await prisma.profile.create({
     data: {
       keycloakSub: input.keycloakSub,
       inviteCode,
       displayName: input.displayName?.trim() || null,
     },
   });
+  await ensureUserFileSpace(created.id);
+  return created;
 }
 
 export async function requireProfileBySub(

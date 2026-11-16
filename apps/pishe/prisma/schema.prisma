@@ -1,5 +1,5 @@
-// Pishe app DB — thin Profile (SSO link) + Business membership.
-// Postgres lives on Server host pg.abysso.ir (see Abysso Server services/pishe-db).
+// Pishe app DB — thin Profile (SSO link) + Business membership + file spaces / Telegram.
+// Postgres lives on Iran host pg.abysso.ir (see Abysso Server services/pishe-db).
 
 generator client {
   provider      = "prisma-client-js"
@@ -22,12 +22,15 @@ model Profile {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  memberships BusinessMembership[]
+  memberships             BusinessMembership[]
+  fileSpace               FileSpace?
+  telegramBindingsCreated BusinessTelegramBinding[] @relation("TelegramRegisteredBy")
+  fileObjectsCreated      FileObject[]              @relation("FileObjectCreatedBy")
 }
 
 model Business {
   id          String   @id @default(cuid())
-  /// Unique 6-digit project code (generated on create; reserved for future use).
+  /// Unique 6-digit project code (generated on create; used for Telegram bot register).
   code        String   @unique
   name        String
   slug        String   @unique
@@ -39,8 +42,11 @@ model Business {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  links       BusinessLink[]
-  memberships BusinessMembership[]
+  links          BusinessLink[]
+  memberships    BusinessMembership[]
+  fileSpace      FileSpace?
+  telegramBinding BusinessTelegramBinding?
+  telegramIngest BusinessTelegramIngestConfig?
 }
 
 model BusinessLink {
@@ -72,4 +78,95 @@ model BusinessMembership {
 
   @@unique([profileId, businessId])
   @@index([businessId])
+}
+
+enum FileSpaceKind {
+  USER
+  BUSINESS
+}
+
+enum FileObjectSource {
+  UPLOAD
+  TELEGRAM
+}
+
+enum TelegramBindingStatus {
+  PENDING
+  ACTIVE
+  REVOKED
+}
+
+/// Storage quota container — one USER space per Profile, one BUSINESS space per Business.
+model FileSpace {
+  id             String       @id @default(cuid())
+  kind           FileSpaceKind
+  ownerProfileId String?      @unique
+  businessId     String?      @unique
+  /// Defaults: USER 100 MiB, BUSINESS 2 GiB.
+  quotaBytes     BigInt
+  usedBytes      BigInt       @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  ownerProfile Profile?     @relation(fields: [ownerProfileId], references: [id], onDelete: Cascade)
+  business     Business?    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  objects      FileObject[]
+
+  @@index([kind])
+}
+
+model FileObject {
+  id                 String           @id @default(cuid())
+  spaceId            String
+  path               String
+  mime               String?
+  sizeBytes          BigInt           @default(0)
+  source             FileObjectSource @default(UPLOAD)
+  telegramMessageId  String?
+  telegramChatId     String?
+  createdByProfileId String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  space     FileSpace @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  createdBy Profile?  @relation("FileObjectCreatedBy", fields: [createdByProfileId], references: [id], onDelete: SetNull)
+
+  @@unique([spaceId, path])
+  @@index([telegramChatId])
+  @@index([source])
+}
+
+/// One allowlisted Telegram group per business.
+model BusinessTelegramBinding {
+  id                    String                @id @default(cuid())
+  businessId            String                @unique
+  telegramChatId        String?               @unique
+  telegramUserId        String?
+  registeredByProfileId String
+  status                TelegramBindingStatus @default(PENDING)
+  title                 String?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  business     Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  registeredBy Profile  @relation("TelegramRegisteredBy", fields: [registeredByProfileId], references: [id], onDelete: Cascade)
+
+  @@index([telegramUserId])
+  @@index([status])
+}
+
+model BusinessTelegramIngestConfig {
+  id               String   @id @default(cuid())
+  businessId       String   @unique
+  storeText        Boolean  @default(true)
+  downloadPhoto    Boolean  @default(true)
+  downloadDocument Boolean  @default(true)
+  downloadVideo    Boolean  @default(true)
+  downloadAudio    Boolean  @default(true)
+  /// Per-object media size cap (default 25 MiB).
+  maxMediaBytes    BigInt   @default(26214400)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 }

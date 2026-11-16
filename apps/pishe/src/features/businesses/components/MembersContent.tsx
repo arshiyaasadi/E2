@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { MessageCircle } from "lucide-react";
 import { Alert } from "@/components/atoms/Alert";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
@@ -19,6 +21,7 @@ import { ROUTES } from "@/config/routes";
 
 export function MembersContent({ businessId }: { businessId: string }) {
   const t = useTranslations("businesses");
+  const tSpaces = useTranslations("spaces");
   const businesses = useMyBusinessesQuery();
   const members = useMembersQuery(businessId);
   const addMut = useAddMemberMutation(businessId);
@@ -39,6 +42,15 @@ export function MembersContent({ businessId }: { businessId: string }) {
         { label: businessName },
       ]}
     >
+      <div className="mb-mol">
+        <Link href={ROUTES.businessTelegram(businessId)}>
+          <Button variant="outline" fullWidth>
+            <MessageCircle className="me-1 size-4" aria-hidden />
+            {tSpaces("telegramTitle")}
+          </Button>
+        </Link>
+      </div>
+
       <form
         className="mb-mol flex flex-col gap-mol rounded-2xl border border-border bg-surface p-pad-mol"
         onSubmit={async (e) => {

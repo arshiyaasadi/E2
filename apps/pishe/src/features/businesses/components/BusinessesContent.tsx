@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Users } from "lucide-react";
+import { MessageCircle, Users } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { Spinner } from "@/components/atoms/Spinner";
 import { AppTemplate } from "@/components/templates/AppTemplate";
@@ -13,6 +13,7 @@ import { useAuthStore } from "@/store/slices/auth.slice";
 
 export function BusinessesContent() {
   const t = useTranslations("businesses");
+  const tSpaces = useTranslations("spaces");
   const user = useAuthStore((s) => s.user);
   const query = useMyBusinessesQuery();
 
@@ -87,12 +88,20 @@ export function BusinessesContent() {
                     </p>
                   ) : null}
                 </div>
-                <Link href={ROUTES.businessMembers(business!.id)}>
-                  <Button size="sm" variant="outline">
-                    <Users className="me-1 size-4" aria-hidden />
-                    {t("openMembers")}
-                  </Button>
-                </Link>
+                <div className="flex shrink-0 flex-col gap-atom">
+                  <Link href={ROUTES.businessMembers(business!.id)}>
+                    <Button size="sm" variant="outline">
+                      <Users className="me-1 size-4" aria-hidden />
+                      {t("openMembers")}
+                    </Button>
+                  </Link>
+                  <Link href={ROUTES.businessTelegram(business!.id)}>
+                    <Button size="sm" variant="outline">
+                      <MessageCircle className="me-1 size-4" aria-hidden />
+                      {tSpaces("telegramNav")}
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </li>
           ))}

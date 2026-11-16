@@ -21,6 +21,14 @@ ENV NEXT_PUBLIC_APP_ENV=production
 ENV NEXT_PUBLIC_APP_NAME=Pishe
 ARG NEXT_PUBLIC_APP_URL=https://pishe.abysso.ir
 ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+# Placeholders for Next collect-phase imports of env.server (real values at runtime).
+ENV KEYCLOAK_BASE_URL=https://sso.abysso.ir
+ENV KEYCLOAK_REALM=pishe
+ENV KEYCLOAK_APP_CLIENT_ID=pishe-app
+ENV KEYCLOAK_APP_CLIENT_SECRET=build-placeholder
+ENV KEYCLOAK_BFF_CLIENT_ID=pishe-bff
+ENV KEYCLOAK_BFF_CLIENT_SECRET=build-placeholder
+ENV DATABASE_URL=postgresql://pishe:build@127.0.0.1:5432/pishe?schema=public
 WORKDIR /repo/apps/pishe
 RUN yarn prisma generate && yarn build
 
