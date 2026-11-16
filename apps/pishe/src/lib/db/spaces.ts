@@ -314,6 +314,27 @@ export async function findBusinessByCode(code: string) {
   return prisma.business.findUnique({ where: { code } });
 }
 
+async function pickBusinessRegistrantProfileId(
+  businessId: string,
+): Promise<string | null> {
+  const manager = await prisma.businessMembership.findFirst({
+    where: { businessId, role: "MANAGER" },
+    orderBy: { createdAt: "asc" },
+    select: { profileId: true },
+  });
+  if (manager) return manager.profileId;
+  const any = await prisma.businessMembership.findFirst({
+    where: { businessId },
+    orderBy: { createdAt: "asc" },
+    select: { profileId: true },
+  });
+  return any?.profileId ?? null;
+}
+
+/**
+ * Bot verify: attach telegramUserId to PENDING, or create PENDING from code
+ * when the business is unbound (no ACTIVE). Keeps one-group bind + security.
+ */
 export async function verifyTelegramCode(input: {
   code: string;
   telegramUserId: string;
@@ -321,23 +342,52 @@ export async function verifyTelegramCode(input: {
   const business = await findBusinessByCode(input.code);
   if (!business) return { ok: false as const, reason: "NOT_FOUND" as const };
 
-  const binding = await prisma.businessTelegramBinding.findUnique({
+  const existing = await prisma.businessTelegramBinding.findUnique({
     where: { businessId: business.id },
   });
-  if (!binding || binding.status !== "PENDING") {
-    return { ok: false as const, reason: "NOT_PENDING" as const };
+
+  if (existing?.status === "ACTIVE") {
+    return {
+      ok: false as const,
+      reason: "ALREADY_BOUND" as const,
+      business: { id: business.id, name: business.name, code: business.code },
+      binding: serializeBinding(existing),
+    };
   }
 
-  const membership = await prisma.businessMembership.findUnique({
-    where: {
-      profileId_businessId: {
-        profileId: binding.registeredByProfileId,
-        businessId: business.id,
+  let binding = existing;
+  if (!binding || binding.status !== "PENDING") {
+    const registrantId =
+      (binding?.registeredByProfileId &&
+        (await prisma.businessMembership.findUnique({
+          where: {
+            profileId_businessId: {
+              profileId: binding.registeredByProfileId,
+              businessId: business.id,
+            },
+          },
+          select: { profileId: true },
+        }))?.profileId) ||
+      (await pickBusinessRegistrantProfileId(business.id));
+    if (!registrantId) {
+      return { ok: false as const, reason: "FORBIDDEN" as const };
+    }
+    binding = await prepareTelegramBinding({
+      businessId: business.id,
+      registeredByProfileId: registrantId,
+    });
+  } else {
+    const membership = await prisma.businessMembership.findUnique({
+      where: {
+        profileId_businessId: {
+          profileId: binding.registeredByProfileId,
+          businessId: business.id,
+        },
       },
-    },
-  });
-  if (!membership) {
-    return { ok: false as const, reason: "FORBIDDEN" as const };
+    });
+    if (!membership) {
+      return { ok: false as const, reason: "FORBIDDEN" as const };
+    }
   }
 
   const updated = await prisma.businessTelegramBinding.update({
@@ -378,12 +428,17 @@ export async function bindTelegramChat(input: {
     return { ok: false as const, reason: "CHAT_TAKEN" as const };
   }
 
+  // Start paused: admin must press «ذخیره پیام‌ها» so only later messages ingest.
   const updated = await prisma.businessTelegramBinding.update({
     where: { id: binding.id },
     data: {
       telegramChatId: input.chatId,
       title: input.title?.trim() || null,
       status: "ACTIVE",
+      ingestPaused: true,
+      lastIngestedMessageId: null,
+      lastIngestedAt: null,
+      lastTelegramUpdateId: null,
     },
   });
 
@@ -392,6 +447,113 @@ export async function bindTelegramChat(input: {
     business: binding.business,
     binding: serializeBinding(updated),
   };
+}
+
+/**
+ * Admin «ذخیره پیام‌ها»: clear pause and set watermark to messageId so only
+ * subsequent Telegram messages (message_id > watermark) are ingested.
+ */
+export async function enableTelegramSaveFromHere(input: {
+  chatId: string;
+  messageId: string;
+}) {
+  const binding = await prisma.businessTelegramBinding.findFirst({
+    where: { telegramChatId: input.chatId, status: "ACTIVE" },
+    include: { business: { select: { id: true, name: true, code: true } } },
+  });
+  if (!binding) {
+    return { ok: false as const, reason: "NO_BINDING" as const };
+  }
+
+  const updated = await prisma.businessTelegramBinding.update({
+    where: { id: binding.id },
+    data: {
+      ingestPaused: false,
+      lastIngestedMessageId: input.messageId,
+      lastIngestedAt: new Date(),
+    },
+  });
+
+  const [config, space] = await Promise.all([
+    ensureBusinessTelegramIngestConfig(binding.businessId),
+    ensureBusinessFileSpace(binding.businessId),
+  ]);
+
+  return {
+    ok: true as const,
+    business: binding.business,
+    binding: serializeBinding(updated),
+    config: serializeIngestConfig(config),
+    usage: serializeSpace(space),
+  };
+}
+
+/** Bot /info — by group chatId and/or DM telegramUserId. */
+export async function getTelegramBotInfo(input: {
+  chatId?: string | null;
+  telegramUserId?: string | null;
+}) {
+  const chatId = input.chatId?.trim() || null;
+  const telegramUserId = input.telegramUserId?.trim() || null;
+
+  if (chatId) {
+    const active = await getActiveBindingByChat(chatId);
+    if (active) {
+      return {
+        ok: true as const,
+        scope: "chat" as const,
+        ...active,
+      };
+    }
+  }
+
+  if (telegramUserId) {
+    const pending = await prisma.businessTelegramBinding.findFirst({
+      where: { telegramUserId, status: "PENDING" },
+      include: {
+        business: { select: { id: true, name: true, code: true } },
+      },
+      orderBy: { updatedAt: "desc" },
+    });
+    if (pending) {
+      const [config, space] = await Promise.all([
+        ensureBusinessTelegramIngestConfig(pending.businessId),
+        ensureBusinessFileSpace(pending.businessId),
+      ]);
+      return {
+        ok: true as const,
+        scope: "pending" as const,
+        binding: serializeBinding(pending),
+        business: pending.business,
+        config: serializeIngestConfig(config),
+        usage: serializeSpace(space),
+      };
+    }
+
+    const activeByUser = await prisma.businessTelegramBinding.findFirst({
+      where: { telegramUserId, status: "ACTIVE" },
+      include: {
+        business: { select: { id: true, name: true, code: true } },
+      },
+      orderBy: { updatedAt: "desc" },
+    });
+    if (activeByUser) {
+      const [config, space] = await Promise.all([
+        ensureBusinessTelegramIngestConfig(activeByUser.businessId),
+        ensureBusinessFileSpace(activeByUser.businessId),
+      ]);
+      return {
+        ok: true as const,
+        scope: "user" as const,
+        binding: serializeBinding(activeByUser),
+        business: activeByUser.business,
+        config: serializeIngestConfig(config),
+        usage: serializeSpace(space),
+      };
+    }
+  }
+
+  return { ok: false as const, reason: "NOT_FOUND" as const };
 }
 
 export async function getActiveBindingByChat(chatId: string) {

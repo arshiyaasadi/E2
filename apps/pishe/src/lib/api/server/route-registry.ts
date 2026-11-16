@@ -43,7 +43,9 @@ import {
 import {
   botAdvanceCursorHandler,
   botBindChatHandler,
+  botEnableSaveHandler,
   botGetBindingHandler,
+  botInfoHandler,
   botIngestHandler,
   botReserveHandler,
   botShouldIngestHandler,
@@ -105,6 +107,10 @@ const exactRoutes: Record<string, RouteHandler> = {
     botBindChatHandler(ctx.body, ctx.headers?.get("authorization")),
   "GET:bot/telegram/binding": (ctx) =>
     botGetBindingHandler(ctx.searchParams, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/info": (ctx) =>
+    botInfoHandler(ctx.body, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/enable-save": (ctx) =>
+    botEnableSaveHandler(ctx.body, ctx.headers?.get("authorization")),
   "POST:bot/telegram/should-ingest": (ctx) =>
     botShouldIngestHandler(ctx.body, ctx.headers?.get("authorization")),
   "POST:bot/telegram/advance-cursor": (ctx) =>

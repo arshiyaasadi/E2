@@ -34,6 +34,8 @@ export const ENDPOINTS = {
     verifyCode: "/bot/telegram/verify-code",
     bindChat: "/bot/telegram/bind-chat",
     binding: "/bot/telegram/binding",
+    info: "/bot/telegram/info",
+    enableSave: "/bot/telegram/enable-save",
     shouldIngest: "/bot/telegram/should-ingest",
     advanceCursor: "/bot/telegram/advance-cursor",
     reserve: "/bot/telegram/reserve",

@@ -2,7 +2,9 @@ import { z } from "zod";
 import {
   advanceTelegramCursor,
   bindTelegramChat,
+  enableTelegramSaveFromHere,
   getActiveBindingByChat,
+  getTelegramBotInfo,
   recordTelegramIngest,
   reserveQuota,
   shouldIngestTelegramMessage,
@@ -99,6 +101,16 @@ const advanceSchema = z.object({
   updateId: z.union([z.string(), z.number()]).nullable().optional(),
 });
 
+const enableSaveSchema = z.object({
+  chatId: z.string().trim().min(1).max(64),
+  messageId: z.string().trim().min(1).max(64),
+});
+
+const infoSchema = z.object({
+  chatId: z.string().trim().min(1).max(64).nullable().optional(),
+  telegramUserId: z.string().trim().min(1).max(64).nullable().optional(),
+});
+
 export async function botVerifyCodeHandler(
   body: unknown,
   authHeader?: string | null,
@@ -113,10 +125,10 @@ export async function botVerifyCodeHandler(
   const result = await verifyTelegramCode(parsed.data);
   if (!result.ok) {
     if (result.reason === "NOT_FOUND") return notFound("Business code not found");
-    if (result.reason === "NOT_PENDING") {
-      return conflict("Start registration from Pishe first (PENDING required)");
+    if (result.reason === "ALREADY_BOUND") {
+      return conflict("Business already has an ACTIVE Telegram group binding");
     }
-    return forbidden("Registrant is not a business member");
+    return forbidden("No business member available to register Telegram binding");
   }
 
   return {
@@ -166,6 +178,60 @@ export async function botGetBindingHandler(
   if (!row) return notFound("No ACTIVE binding for chat");
 
   return { success: true, data: row };
+}
+
+export async function botInfoHandler(
+  body: unknown,
+  authHeader?: string | null,
+): Promise<ApiResponse<unknown>> {
+  if (!assertBotServiceToken(authHeader)) return unauthorized();
+
+  const parsed = infoSchema.safeParse(body ?? {});
+  if (!parsed.success) {
+    return validation(parsed.error.issues[0]?.message ?? "Invalid input");
+  }
+  if (!parsed.data.chatId && !parsed.data.telegramUserId) {
+    return validation("chatId or telegramUserId required");
+  }
+
+  const result = await getTelegramBotInfo(parsed.data);
+  if (!result.ok) return notFound("No Telegram binding found");
+
+  return {
+    success: true,
+    data: {
+      scope: result.scope,
+      business: result.business,
+      binding: result.binding,
+      config: result.config,
+      usage: result.usage,
+    },
+  };
+}
+
+export async function botEnableSaveHandler(
+  body: unknown,
+  authHeader?: string | null,
+): Promise<ApiResponse<unknown>> {
+  if (!assertBotServiceToken(authHeader)) return unauthorized();
+
+  const parsed = enableSaveSchema.safeParse(body);
+  if (!parsed.success) {
+    return validation(parsed.error.issues[0]?.message ?? "Invalid input");
+  }
+
+  const result = await enableTelegramSaveFromHere(parsed.data);
+  if (!result.ok) return notFound("No ACTIVE binding for chat");
+
+  return {
+    success: true,
+    data: {
+      business: result.business,
+      binding: result.binding,
+      config: result.config,
+      usage: result.usage,
+    },
+  };
 }
 
 export async function botReserveHandler(
