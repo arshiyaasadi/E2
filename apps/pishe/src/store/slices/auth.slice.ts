@@ -11,6 +11,9 @@ export type AuthUser = {
   avatarUrl: string | null;
   mustChangePassword: boolean;
   currency: "rial";
+  inviteCode: string | null;
+  isSuperAdmin: boolean;
+  profileId: string | null;
 };
 
 type AuthState = {

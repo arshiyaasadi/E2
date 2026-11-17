@@ -7,7 +7,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { FolderTree, LayoutGrid, ShoppingBag } from "lucide-react";
+import { Briefcase, LayoutGrid, ShoppingBag } from "lucide-react";
 import { BrandMark } from "@/components/atoms/BrandMark";
 import { useBottomActionsSlot } from "@/providers/BottomActionsProvider";
 import { cn } from "@/lib/cn";
@@ -15,6 +15,7 @@ import { ROUTES } from "@/config/routes";
 
 export function BottomNav() {
   const t = useTranslations("products.nav");
+  const tBiz = useTranslations("businesses");
   const pathname = usePathname();
   const { setSlotEl, hasActions } = useBottomActionsSlot();
 
@@ -34,12 +35,13 @@ export function BottomNav() {
       active: pathname.startsWith("/products"),
     },
     {
-      key: "categories",
-      href: "#",
-      label: t("categories"),
-      icon: FolderTree,
-      active: false,
-      disabled: true as const,
+      key: "businesses",
+      href: ROUTES.businesses,
+      label: tBiz("nav"),
+      icon: Briefcase,
+      active:
+        pathname.startsWith("/businesses") ||
+        pathname.startsWith("/admin/businesses"),
     },
     {
       key: "orders",
@@ -101,7 +103,7 @@ export function BottomNav() {
               );
             }
 
-            if (item.key === "categories" || item.key === "orders") {
+            if (item.key === "orders") {
               const Icon = item.icon!;
               return (
                 <span

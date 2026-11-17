@@ -1,14 +1,11 @@
-# Staging Environment
+# Staging environment
 
-Mirrors `production` topology at smaller scale.
+Mirrors production product topology at smaller scale.
 
-- Deployed automatically on merge to `main` (once CI/CD and cluster bind exist)
 - Synthetic or anonymized data
-- Target for restore rehearsals and platform upgrades
-- Separate secrets, databases, buckets, and network from `production`
-- Orchestrator: Kubernetes on Linux nodes
-- First workload: Keycloak identity (see `identity/`)
+- Separate secrets, databases, buckets, and network from production
+- **Host / IP bind:** not documented in E2 — use Abysso Server inventory when a staging host exists
 
-## Server bind
+## Identity
 
-Node inventory, kubeconfig, registry URL, and DNS are **not** committed yet. They will be added when server details are provided.
+Product overlays: `identity/`. Live SSO patterns follow Server `services/keycloak/` until a dedicated staging host is inventoried there.

@@ -21,6 +21,8 @@ function statusForError(code: string) {
       return 404;
     case "CONFLICT":
       return 409;
+    case "QUOTA_EXCEEDED":
+      return 413;
     case "SERVICE_UNAVAILABLE":
     case "KEYCLOAK_ERROR":
     case "FILE_SERVICE_ERROR":
@@ -35,6 +37,7 @@ export async function handleBffRequest(
   pathSegments: string[],
   body?: unknown,
   searchParams?: URLSearchParams,
+  headers?: Headers,
 ) {
   const path = pathSegments.join("/");
   const resolved = resolveRoute(method, path);
@@ -48,6 +51,7 @@ export async function handleBffRequest(
       body,
       searchParams,
       params: resolved.params,
+      headers,
     })) as ApiResponse<unknown>;
     if (!result.success) {
       return NextResponse.json(result, { status: statusForError(result.error.code) });

@@ -1,0 +1,183 @@
+// Pishe app DB — thin Profile (SSO link) + Business membership + file spaces / Telegram.
+// Postgres lives on Iran host pg.abysso.ir (see Abysso Server services/pishe-db).
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Thin app profile linked to Keycloak `sub`. Identity stays in SSO.
+model Profile {
+  id           String   @id @default(cuid())
+  keycloakSub  String   @unique
+  /// Unique 8-digit invite code (searchable).
+  inviteCode   String   @unique
+  displayName  String?
+  isSuperAdmin Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  memberships             BusinessMembership[]
+  fileSpace               FileSpace?
+  telegramBindingsCreated BusinessTelegramBinding[] @relation("TelegramRegisteredBy")
+  fileObjectsCreated      FileObject[]              @relation("FileObjectCreatedBy")
+}
+
+model Business {
+  id          String   @id @default(cuid())
+  /// Unique 6-digit project code (generated on create; used for Telegram bot register).
+  code        String   @unique
+  name        String
+  slug        String   @unique
+  description String?
+  logoUrl     String?
+  color       String?
+  /// Assignment date (تاریخ تخصیص).
+  assignedAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  links          BusinessLink[]
+  memberships    BusinessMembership[]
+  fileSpace      FileSpace?
+  telegramBinding BusinessTelegramBinding?
+  telegramIngest BusinessTelegramIngestConfig?
+}
+
+model BusinessLink {
+  id         String @id @default(cuid())
+  businessId String
+  title      String
+  url        String
+  sortOrder  Int    @default(0)
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+}
+
+enum MembershipRole {
+  MANAGER
+  ASSISTANT
+}
+
+model BusinessMembership {
+  id         String         @id @default(cuid())
+  profileId  String
+  businessId String
+  role       MembershipRole
+  createdAt  DateTime       @default(now())
+
+  profile  Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, businessId])
+  @@index([businessId])
+}
+
+enum FileSpaceKind {
+  USER
+  BUSINESS
+}
+
+enum FileObjectSource {
+  UPLOAD
+  TELEGRAM
+}
+
+enum TelegramBindingStatus {
+  PENDING
+  ACTIVE
+  REVOKED
+}
+
+/// Storage quota container — one USER space per Profile, one BUSINESS space per Business.
+model FileSpace {
+  id             String       @id @default(cuid())
+  kind           FileSpaceKind
+  ownerProfileId String?      @unique
+  businessId     String?      @unique
+  /// Defaults: USER 100 MiB, BUSINESS 2 GiB.
+  quotaBytes     BigInt
+  usedBytes      BigInt       @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  ownerProfile Profile?     @relation(fields: [ownerProfileId], references: [id], onDelete: Cascade)
+  business     Business?    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  objects      FileObject[]
+
+  @@index([kind])
+}
+
+model FileObject {
+  id                 String           @id @default(cuid())
+  spaceId            String
+  path               String
+  mime               String?
+  sizeBytes          BigInt           @default(0)
+  source             FileObjectSource @default(UPLOAD)
+  telegramMessageId  String?
+  telegramChatId     String?
+  /// Distinguishes meta vs media rows for the same Telegram message ("meta" | "media").
+  telegramArtifact   String?
+  createdByProfileId String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  space     FileSpace @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  createdBy Profile?  @relation("FileObjectCreatedBy", fields: [createdByProfileId], references: [id], onDelete: SetNull)
+
+  @@unique([spaceId, path])
+  /// Dedupe Telegram ingest: one artifact kind per message per space.
+  @@unique([spaceId, telegramChatId, telegramMessageId, telegramArtifact])
+  @@index([telegramChatId])
+  @@index([source])
+}
+
+/// One allowlisted Telegram group per business.
+model BusinessTelegramBinding {
+  id                    String                @id @default(cuid())
+  businessId            String                @unique
+  telegramChatId        String?               @unique
+  telegramUserId        String?
+  registeredByProfileId String
+  status                TelegramBindingStatus @default(PENDING)
+  title                 String?
+  /// Highest Telegram message_id successfully ingested for this binding's chat.
+  lastIngestedMessageId String?
+  lastIngestedAt        DateTime?
+  /// Last Bot API update_id observed for this binding (restart watermark).
+  lastTelegramUpdateId  BigInt?
+  /// When true, bot skips message ingest (binding stays ACTIVE).
+  ingestPaused          Boolean               @default(false)
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  business     Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  registeredBy Profile  @relation("TelegramRegisteredBy", fields: [registeredByProfileId], references: [id], onDelete: Cascade)
+
+  @@index([telegramUserId])
+  @@index([status])
+}
+
+model BusinessTelegramIngestConfig {
+  id               String   @id @default(cuid())
+  businessId       String   @unique
+  storeText        Boolean  @default(true)
+  downloadPhoto    Boolean  @default(true)
+  downloadDocument Boolean  @default(true)
+  downloadVideo    Boolean  @default(true)
+  downloadAudio    Boolean  @default(true)
+  /// Per-object media size cap (default 25 MiB).
+  maxMediaBytes    BigInt   @default(26214400)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}

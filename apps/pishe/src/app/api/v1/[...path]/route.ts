@@ -15,23 +15,23 @@ async function readJsonBody(request: Request) {
 export async function GET(request: Request, context: RouteContext) {
   const { path } = await context.params;
   const searchParams = new URL(request.url).searchParams;
-  return handleBffRequest("GET", path, undefined, searchParams);
+  return handleBffRequest("GET", path, undefined, searchParams, request.headers);
 }
 
 export async function POST(request: Request, context: RouteContext) {
   const { path } = await context.params;
   const body = await readJsonBody(request);
-  return handleBffRequest("POST", path, body);
+  return handleBffRequest("POST", path, body, undefined, request.headers);
 }
 
 export async function PATCH(request: Request, context: RouteContext) {
   const { path } = await context.params;
   const body = await readJsonBody(request);
-  return handleBffRequest("PATCH", path, body);
+  return handleBffRequest("PATCH", path, body, undefined, request.headers);
 }
 
 export async function DELETE(request: Request, context: RouteContext) {
   const { path } = await context.params;
   const body = await readJsonBody(request);
-  return handleBffRequest("DELETE", path, body);
+  return handleBffRequest("DELETE", path, body, undefined, request.headers);
 }

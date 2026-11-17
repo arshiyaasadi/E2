@@ -8,8 +8,8 @@ One identity provider for the whole platform. No service manages its own usernam
 
 - **Keycloak** ([ADR 0001](../architecture/decisions/0001-keycloak-as-identity-provider.md)).
 - Source: git submodule at `platform/identity/upstream/`, pin in `platform/identity/VERSION`.
-- Runtime: container image built from the pinned source, deployed on Kubernetes.
-- Database: dedicated PostgreSQL per environment (not Keycloak `dev-file`).
+- Runtime (production): Docker Compose on the Abysso Server inventory host — see Server `services/keycloak/` (image pin `quay.io/keycloak/keycloak` matching `VERSION`). Kubernetes manifests remain a future/reference path ([deploy.md](../../platform/identity/docs/deploy.md)).
+- Database: dedicated PostgreSQL per environment (Compose volume on the Server host today; not Keycloak `dev-file`).
 
 ## Roles vs permissions
 

@@ -1,0 +1,133 @@
+# CI/CD for Pishe (apps/pishe) → GHCR + SSH deploy to Iran /opt/pishe (pishe.abysso.ir)
+#
+# Channel tag is :main. Live Iran may keep an operational pin (e.g. :telegram-journey).
+# develop merges must NOT auto-deploy (would clobber that pin). Deploy only on main
+# or workflow_dispatch; non-:main host pins are preserved unless force_main_channel.
+name: pishe-cd
+
+on:
+  pull_request:
+    paths:
+      - "apps/pishe/**"
+      - ".github/workflows/pishe.yml"
+      - "pipelines/ci/github-actions/pishe.yml"
+  push:
+    # Production CD channel only — do not deploy from develop or feature branches.
+    branches: [main]
+    paths:
+      - "apps/pishe/**"
+      - ".github/workflows/pishe.yml"
+      - "pipelines/ci/github-actions/pishe.yml"
+  workflow_dispatch:
+    inputs:
+      force_main_channel:
+        description: "Overwrite host PISHE_IMAGE with GHCR :main (cutover from operational pins)"
+        required: false
+        type: boolean
+        default: false
+
+env:
+  SERVICE: pishe
+  DOCKERFILE: apps/pishe/Dockerfile
+  REGISTRY: ${{ vars.IMAGE_REGISTRY }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tag }}
+      image: ${{ steps.meta.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Image metadata
+        id: meta
+        run: |
+          SHA=$(echo "${{ github.sha }}" | cut -c1-12)
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "tag=$SHA" >> "$GITHUB_OUTPUT"
+          echo "image=${{ env.REGISTRY }}/${{ env.SERVICE }}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to registry
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build (PR — no push)
+        if: github.event_name == 'pull_request'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE }}
+          push: false
+          tags: ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.tag }}
+          build-args: |
+            NEXT_PUBLIC_APP_URL=https://pishe.abysso.ir
+
+      - name: Build and push
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE }}
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.tag }}
+            ${{ steps.meta.outputs.image }}:main
+          build-args: |
+            NEXT_PUBLIC_APP_URL=https://pishe.abysso.ir
+
+  deploy:
+    needs: build
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          FORCE_MAIN_CHANNEL: ${{ github.event_name == 'workflow_dispatch' && inputs.force_main_channel || false }}
+          CHANNEL_IMAGE: ${{ needs.build.outputs.image }}:main
+        with:
+          host: ${{ secrets.PISHE_DEPLOY_HOST }}
+          username: ${{ secrets.PISHE_DEPLOY_USER }}
+          key: ${{ secrets.PISHE_DEPLOY_SSH_KEY }}
+          envs: FORCE_MAIN_CHANNEL,CHANNEL_IMAGE
+          script: |
+            set -euo pipefail
+            cd /opt/pishe
+            CHANNEL_IMAGE="${CHANNEL_IMAGE}"
+            FORCE_MAIN_CHANNEL="${FORCE_MAIN_CHANNEL:-false}"
+            CURRENT=""
+            if [[ -f .env ]] && grep -q '^PISHE_IMAGE=' .env; then
+              CURRENT="$(grep '^PISHE_IMAGE=' .env | head -n1 | cut -d= -f2-)"
+            fi
+            IMAGE="$CHANNEL_IMAGE"
+            if [[ -n "$CURRENT" && "$CURRENT" != *:main && "$FORCE_MAIN_CHANNEL" != "true" ]]; then
+              echo "Preserving operational host pin: $CURRENT (channel would be $CHANNEL_IMAGE)"
+              echo "Set workflow_dispatch force_main_channel=true for intentional :main cutover."
+              exit 0
+            fi
+            echo "Deploying $IMAGE"
+            if [[ -n "${{ secrets.REGISTRY_PASSWORD }}" ]]; then
+              echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ghcr.io -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin || true
+            fi
+            if grep -q '^PISHE_IMAGE=' .env; then
+              sed -i "s|^PISHE_IMAGE=.*|PISHE_IMAGE=${IMAGE}|" .env
+            else
+              echo "PISHE_IMAGE=${IMAGE}" >> .env
+            fi
+            export PISHE_IMAGE="$IMAGE"
+            docker compose pull
+            docker compose up -d
+            sleep 3
+            curl -sfS -m 20 http://127.0.0.1:3010/api/v1/health
+            docker compose ps

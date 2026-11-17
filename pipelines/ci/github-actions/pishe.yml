@@ -1,0 +1,8 @@
+# Template mirror — active workflow: ../../.github/workflows/pishe.yml
+# See apps/pishe/Dockerfile and Server services/pishe for runtime.
+name: pishe-cd (template)
+# Kept in sync with .github/workflows/pishe.yml
+#
+# CD channel tag: :main. Auto-deploy only on push to main (not develop).
+# Operational host pins (e.g. :telegram-journey on Iran) are preserved unless
+# workflow_dispatch force_main_channel=true.

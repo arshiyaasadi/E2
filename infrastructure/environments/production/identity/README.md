@@ -1,7 +1,5 @@
-# Production identity overlay
+# Production identity overlay (reference)
 
-- Hostname: `sso.abysso.ir`
-- IngressClass: `traefik`
-- Replicas: 1 (single-node bind)
+**Live SSO bind:** Docker Compose via Abysso Server `services/keycloak/` on the Server inventory host. See Server `docs/dns-sso.md` for `sso.abysso.ir`.
 
-Apply Secrets from `platform/identity/deploy/kubernetes/secret.example.yaml` on the node before or with the overlay.
+This kustomize overlay is retained as a **future / reference** Kubernetes path (`sso.abysso.ir`, Traefik, image channel `ghcr.io/arshiyaasadi/keycloak:main`). Do not treat it as the current host source of truth — host IPs and SSH live only in Server inventory.

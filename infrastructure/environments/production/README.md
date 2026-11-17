@@ -1,34 +1,22 @@
-# Production Environment
+# Production environment (product overlays)
 
-Serves real users.
+Serves real users. **Host IPs, SSH, and nginx binds are not documented here** — use the Abysso Server control-plane repo (`inventory/`, `services/`).
 
-- Deployed only from approved release tags through the pipeline (manual k3s bind allowed for first bring-up)
-- Orchestrator: **k3s** on the edge Linux node ([ADR 0007](../../../docs/architecture/decisions/0007-traefik-gateway-on-k3s.md))
-- Gateway: Traefik; TLS via cert-manager Let's Encrypt
-- First single-node bind uses **1 replica** per workload; raise when agents exist
+## SSO / Keycloak (live)
 
-## DNS
-
-| Host | Public | Notes |
-|---|---|---|
-| `sso.abysso.ir` | Yes | Keycloak |
-| `file.abysso.ir` | Yes | MinIO Console (OIDC) |
-| `noz.abysso.ir` | Yes | SigNoz UI |
-| `pg.abysso.ir` | No | In-cluster only; no Ingress |
-
-Operator creates public A records for the three public hosts to the edge node address. Do not publish `pg.abysso.ir`.
+Production Kicklok runs as **Docker Compose** from Server `services/keycloak/` (`sso.abysso.ir`). Product realms/seeds stay in `platform/identity/`.
 
 ## Overlays in this directory
 
-| Path | Component |
-|---|---|
-| `identity/` | Keycloak + Postgres |
-| `storage/` | MinIO (S3 ClusterIP + Console Ingress) |
-| `file-service/` | file-service (ClusterIP M2M) |
-| `observability/` | SigNoz + Ingress |
+| Path | Component | Note |
+|---|---|---|
+| `identity/` | Keycloak kustomize | Reference / future cluster path — not live SSO |
+| `storage/` | Object storage | Product manifests |
+| `file-service/` | file-service | Product manifests |
+| `observability/` | SigNoz | Product manifests |
 
-Apply order: cluster prerequisites (cert-manager, ClusterIssuer) → identity → storage → file-service → observability.
+Historical note: ADRs 0002/0007/0009 describe k3s + Traefik. That path is paused for SSO while Compose is the approved runtime.
 
 ## Secrets
 
-Materialize Secrets on the node from `secret.example.yaml` templates. Never commit real values or kubeconfig.
+Never commit real values or kubeconfig. Server host paths hold live SSO secrets (`/opt/keycloak/.env`).

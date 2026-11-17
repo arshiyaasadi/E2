@@ -28,12 +28,46 @@ import {
   mediaUsageHandler,
   patchProductHandler,
 } from "@/lib/api/server/handlers/products.handler";
+import {
+  addMemberHandler,
+  createBusinessHandler,
+  deleteBusinessHandler,
+  getBusinessHandler,
+  listAllBusinessesHandler,
+  listMembersHandler,
+  listMyBusinessesHandler,
+  patchBusinessHandler,
+  removeMemberHandler,
+  searchProfileByInviteHandler,
+} from "@/lib/api/server/handlers/businesses.handler";
+import {
+  botAdvanceCursorHandler,
+  botBindChatHandler,
+  botEnableSaveHandler,
+  botGetBindingHandler,
+  botInfoHandler,
+  botIngestHandler,
+  botReserveHandler,
+  botShouldIngestHandler,
+  botVerifyCodeHandler,
+} from "@/lib/api/server/handlers/bot.handler";
+import {
+  getBusinessTelegramHandler,
+  getBusinessUsageHandler,
+  getMyUsageHandler,
+  patchBusinessTelegramConfigHandler,
+  pauseBusinessTelegramHandler,
+  prepareBusinessTelegramHandler,
+  resumeBusinessTelegramHandler,
+  unlinkBusinessTelegramHandler,
+} from "@/lib/api/server/handlers/spaces.handler";
 import type { ApiResponse } from "@/types/api";
 
 type RouteContext = {
   body?: unknown;
   searchParams?: URLSearchParams;
   params?: Record<string, string>;
+  headers?: Headers;
 };
 
 type RouteHandler = (ctx: RouteContext) => Promise<ApiResponse<unknown>>;
@@ -62,6 +96,29 @@ const exactRoutes: Record<string, RouteHandler> = {
   "GET:categories": () => listCategoriesHandler(),
   "POST:categories": (ctx) => createCategoryHandler(ctx.body),
   "GET:media/library": () => listMediaLibraryHandler(),
+  "GET:businesses": () => listMyBusinessesHandler(),
+  "GET:admin/businesses": () => listAllBusinessesHandler(),
+  "POST:admin/businesses": (ctx) => createBusinessHandler(ctx.body),
+  "GET:profiles/search": (ctx) => searchProfileByInviteHandler(ctx.searchParams),
+  "GET:usage/me": () => getMyUsageHandler(),
+  "POST:bot/telegram/verify-code": (ctx) =>
+    botVerifyCodeHandler(ctx.body, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/bind-chat": (ctx) =>
+    botBindChatHandler(ctx.body, ctx.headers?.get("authorization")),
+  "GET:bot/telegram/binding": (ctx) =>
+    botGetBindingHandler(ctx.searchParams, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/info": (ctx) =>
+    botInfoHandler(ctx.body, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/enable-save": (ctx) =>
+    botEnableSaveHandler(ctx.body, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/should-ingest": (ctx) =>
+    botShouldIngestHandler(ctx.body, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/advance-cursor": (ctx) =>
+    botAdvanceCursorHandler(ctx.body, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/reserve": (ctx) =>
+    botReserveHandler(ctx.body, ctx.headers?.get("authorization")),
+  "POST:bot/telegram/ingest": (ctx) =>
+    botIngestHandler(ctx.body, ctx.headers?.get("authorization")),
 };
 
 function matchProductId(path: string): Record<string, string> | null {
@@ -82,6 +139,71 @@ function matchCategoryId(path: string): Record<string, string> | null {
 function matchMediaUsage(path: string): Record<string, string> | null {
   const m = /^media\/([^/]+)\/usage$/.exec(path);
   return m ? { fileId: m[1] } : null;
+}
+
+function matchBusinessId(path: string): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchAdminBusinessId(path: string): Record<string, string> | null {
+  const m = /^admin\/businesses\/([^/]+)$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessMembers(path: string): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/members$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessMemberId(path: string): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/members\/([^/]+)$/.exec(path);
+  return m ? { businessId: m[1], membershipId: m[2] } : null;
+}
+
+function matchBusinessUsage(path: string): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/usage$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessTelegram(path: string): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/telegram$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessTelegramPrepare(
+  path: string,
+): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/telegram\/prepare$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessTelegramConfig(
+  path: string,
+): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/telegram\/config$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessTelegramUnlink(
+  path: string,
+): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/telegram\/unlink$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessTelegramPause(
+  path: string,
+): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/telegram\/pause$/.exec(path);
+  return m ? { businessId: m[1] } : null;
+}
+
+function matchBusinessTelegramResume(
+  path: string,
+): Record<string, string> | null {
+  const m = /^businesses\/([^/]+)\/telegram\/resume$/.exec(path);
+  return m ? { businessId: m[1] } : null;
 }
 
 const patternRoutes: RouteEntry[] = [
@@ -144,6 +266,86 @@ const patternRoutes: RouteEntry[] = [
     method: "GET",
     match: matchMediaUsage,
     handler: (ctx) => mediaUsageHandler(ctx.params!.fileId),
+  },
+  {
+    kind: "pattern",
+    method: "GET",
+    match: matchBusinessId,
+    handler: (ctx) => getBusinessHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "PATCH",
+    match: matchAdminBusinessId,
+    handler: (ctx) => patchBusinessHandler(ctx.params!.businessId, ctx.body),
+  },
+  {
+    kind: "pattern",
+    method: "DELETE",
+    match: matchAdminBusinessId,
+    handler: (ctx) => deleteBusinessHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "GET",
+    match: matchBusinessMembers,
+    handler: (ctx) => listMembersHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "POST",
+    match: matchBusinessMembers,
+    handler: (ctx) => addMemberHandler(ctx.params!.businessId, ctx.body),
+  },
+  {
+    kind: "pattern",
+    method: "DELETE",
+    match: matchBusinessMemberId,
+    handler: (ctx) =>
+      removeMemberHandler(ctx.params!.businessId, ctx.params!.membershipId),
+  },
+  {
+    kind: "pattern",
+    method: "GET",
+    match: matchBusinessUsage,
+    handler: (ctx) => getBusinessUsageHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "GET",
+    match: matchBusinessTelegram,
+    handler: (ctx) => getBusinessTelegramHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "POST",
+    match: matchBusinessTelegramPrepare,
+    handler: (ctx) => prepareBusinessTelegramHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "PATCH",
+    match: matchBusinessTelegramConfig,
+    handler: (ctx) =>
+      patchBusinessTelegramConfigHandler(ctx.params!.businessId, ctx.body),
+  },
+  {
+    kind: "pattern",
+    method: "POST",
+    match: matchBusinessTelegramUnlink,
+    handler: (ctx) => unlinkBusinessTelegramHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "POST",
+    match: matchBusinessTelegramPause,
+    handler: (ctx) => pauseBusinessTelegramHandler(ctx.params!.businessId),
+  },
+  {
+    kind: "pattern",
+    method: "POST",
+    match: matchBusinessTelegramResume,
+    handler: (ctx) => resumeBusinessTelegramHandler(ctx.params!.businessId),
   },
 ];
 

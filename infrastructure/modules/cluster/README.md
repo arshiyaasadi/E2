@@ -1,27 +1,17 @@
 # Module: cluster
 
-Kubernetes (k3s) control plane baseline for Linux edge and future agents.
+Kubernetes (k3s) baseline **retained for a future dedicated cluster**. Production Kicklok/SSO does **not** use this module today — see Abysso Server `services/keycloak/`.
 
 ## Contents
 
 | Path | Purpose |
 |---|---|
 | `README.md` | This file |
-| `docs/k3s-install.md` | Install and upgrade runbook |
-| `cert-manager/cluster-issuer.yaml` | Let's Encrypt HTTP-01 `ClusterIssuer` |
-| `kustomization.yaml` | Optional apply of issuer after cert-manager is installed |
+| `docs/k3s-install.md` | Archived install notes (no host IPs) |
+| `cert-manager/cluster-issuer.yaml` | Let's Encrypt HTTP-01 `ClusterIssuer` (future) |
+| `kustomization.yaml` | Optional apply of issuer after cert-manager |
 
 ## Rules
 
-- Linux OS on all nodes
 - No real IPs, SSH keys, or kubeconfig in Git
-- IngressClass name: `traefik` (k3s default)
-- TLS: cert-manager + `letsencrypt-prod`
-- Environments compose workloads under `infrastructure/environments/<env>/`
-
-## Apply order
-
-1. Install k3s (see `docs/k3s-install.md`)
-2. Install cert-manager
-3. `kubectl apply -k infrastructure/modules/cluster` (ClusterIssuer)
-4. Apply environment overlays (identity → storage → file-service → observability)
+- Host inventory lives only in the Server control-plane repo
